@@ -3,15 +3,15 @@
 This project demonstrates how to create a simple CRUD application with Play.
 
 # Prerequisites
-Scala
-Sbt
-Java8
+* Scala
+* Sbt
+* Java8
 
 # Installation
 * run activator
 * Go to localhost:8888
 * Open the application play-scala-intro
-+ "http://127.0.0.1:8888/app/play-scala-intro/#run/system"
+* "http://127.0.0.1:8888/app/play-scala-intro/#run/hi-stock"
 * Wait to load the application
 * Compile
 * Run
