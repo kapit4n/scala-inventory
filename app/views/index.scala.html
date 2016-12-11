@@ -1,0 +1,17 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Pagina Principal") {
+    @examples.templates.nav(handler)
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="clientes">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

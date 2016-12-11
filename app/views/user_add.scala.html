@@ -1,0 +1,30 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateUserForm], types: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div>
+        @restrict(roles = List(Array("userList"))) {
+            <a href="/user_list" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+
+    @form(routes.UserController.add()) {
+        <div class="container">
+        <div>
+            @inputText(row("name"), 'id -> "name")
+            @inputText(row("carnet"), 'id -> "carnet")
+            @inputText(row("telefono"), 'id -> "phone")
+            @inputText(row("login"), 'id -> "login")
+            @inputText(row("password"), 'id -> "password")
+            @inputText(row("direccion"), 'id -> "direccion")
+            @inputText(row("Salary"), 'id -> "Salary")
+            @select(field = row("type_1"), options = options(types), 'id -> "type1")
+            <input type="submit" id="addSubmit" value="Guardar" class="btn btn-primary btn-sm"/>
+            <a href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
+        </div>
+        </div>
+    }
+
+}

@@ -1,0 +1,84 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountReport, children: Seq[DiscountDetail])(implicit messages: Messages, request: Request[Any])
+@import helper._
+@import be.objectify.deadbolt.scala.views.html._
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("discountReportList"))) {
+            <a href="/discountReport_list" class="btn btn-info btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("discountReportEdit"))) {
+            <a href="/discountReport_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("discountReportDelete"))) {
+           <a href="/discountReport_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Start date: </div>
+            <div style="display: inline-block;" id="startDate">@row.startDate</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> End Date: </div>
+            <div style="display: inline-block;" id="endDate">@row.endDate</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Total: </div>
+            <div style="display: inline-block;" id="total">@row.total</div>
+        </div>
+    </div>
+    <div class="container">
+        <a id="addCustomer" href="/discountDetail_add/@row.id" class="btn btn-primary btn-sm">Add Customeres</a>
+        <a href="/discountReport_generarReport/@row.id" class="btn btn-primary btn-sm">Generar reporte</a>
+        <a href="/discountReport_show_pdf/@row.id" class="btn btn-info btn-sm">PDF</a>
+    </div>
+
+    <div style="font-size: larger; font-weight: 800;">
+        Lista de Customeres
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="descuentos_rows">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Discount</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- children) {
+                    <tr>
+                        <td>
+                            @restrictOr(roles = List(Array("customerShow"))) {
+                               <a href="/customer_show/@child.customerId">@child.customerName
+                            </a> 
+                            }{
+                                @child.customerName                                    
+                            }
+                        </td>
+                        <td>@child.status</td>
+                        <td>@child.discount</td>
+                        <td>
+                           @restrict(roles = List(Array("discountDetailEdit"))) {
+                               <a href="/discountDetail_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                           }
+                           @restrict(roles = List(Array("discountDetailDelete"))) {
+                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                           }
+                           @restrict(roles = List(Array("discountDetailShow"))) {
+                               <a href="/discountDetail_show/@child.id" class="btn btn-info btn-sm">view</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}

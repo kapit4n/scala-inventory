@@ -1,0 +1,29 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, parentId: Long, searchForm: Form[SearchProductForm], rowForm: Form[CreateRequestRowForm], requests: Map[String, String], products: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Create") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestShow"))) {
+            <a href="/productRequest_show/@parentId" class="btn btn-info btn-sm">Order</a> 
+        }
+    </div>
+
+    <div style="container">
+        @form(routes.RequestRowController.searchProductPost()) {
+            @inputText(searchForm("search"))
+            <input id="searchSubmit" type="submit" value="Search Product" class="btn btn-primary btn-sm"/>
+        }        
+    </div>
+
+    @form(routes.RequestRowController.add()) {
+        @select(field = rowForm("requestId"), options = options(requests), 'id -> "requestId")
+        @select(field = rowForm("productId"), options = options(products), 'id -> "productId")
+        @inputText(rowForm("quantity"), 'id -> "quantity")
+        @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="/productRequest_show/@parentId" class="btn btn-primary btn-sm"> Cancelar</a>
+    }
+}
+

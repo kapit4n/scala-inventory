@@ -1,0 +1,35 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchCustomerForm], rowForm: Form[CreateRequestRowCustomerForm], requests: Map[String, String], products: Map[String, String], customers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("New") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("requestRowShow"))) {
+            <a href="/requestRow_show/@requestRowId" class="btn btn-info btn-sm">Detail of Order</a> 
+        }
+    </div>
+
+    <div style="display: inline-block;">
+        @form(routes.RequestRowCustomerController.searchCustomerPost()) {
+            @inputText(searchForm("search"), 'id -> "search")
+            <input id="searchSubmit" type="submit" value="Search Customer" class="btn btn-primary btn-sm"/>
+        }        
+    </div>
+
+    @form(routes.RequestRowCustomerController.add()) {
+        @select(field = rowForm("productId"), options = options(products), 'id -> "productId")
+        @select(field = rowForm("customerId"), options = options(customers), 'id -> "customerId")
+        @inputText(rowForm("quantity"), 'id -> "quantity")
+        @inputText(rowForm("price"), 'id -> "price")
+        @inputText(rowForm("totalPrice"), 'id -> "totalPrice")
+        @inputText(rowForm("paid"), 'id -> "paid")
+        @inputText(rowForm("credit"), 'id -> "credit")
+        @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
+        @select(field = rowForm("measureId"), options = options(measures), 'id -> "measureId")
+        @inputText(rowForm("observation"), 'id -> "observation")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="/requestRow_show/@requestRowId" class="btn btn-primary btn-sm">Cancelar</a>
+        @select(field = rowForm("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
+    }
+}

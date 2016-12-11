@@ -1,0 +1,142 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, a510: Account, a410: Account, a540: Account, a440: Account, a530: Account, a430: Account, a450: Account,  ADADC: Account, a570: Account, a470: Account, a580: Account, a480: Account, ACEI: Account, a460: Account)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Financial Statement") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Financial Statement</strong>
+        </h4>
+    </div>
+
+    <div class="table table-bordered">
+    <table class="table table-bordered">
+        <tr>
+            <td>@a510.code</td>
+            <td>@a510.name</td>
+            <td>@(a510.credit - a510.debit)</td>
+        </tr>
+        <tr>
+            <td>@a410.code</td>
+            <td>@a410.name</td>
+            <td>@(a410.debit - a410.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO FINANCIERO BRUTO</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit)</td>
+        </tr>
+        <tr>
+            <td>@a540.code</td>
+            <td>@a540.name</td>
+            <td>@(a540.credit - a540.debit)</td>
+        </tr>
+        <tr>
+            <td>@a440.code</td>
+            <td>@a440.name</td>
+            <td>@(a440.debit - a440.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO DE OPERACION BRUTO</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit)</td>
+        </tr>
+
+        <tr>
+            <td>@a530.code</td>
+            <td>@a530.name</td>
+            <td>@(a530.credit - a530.debit)</td>
+        </tr>
+        <tr>
+            <td>@a430.code</td>
+            <td>@a430.name</td>
+            <td>@(a430.debit - a430.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO DE OPERACION DESPUES DE INCOBRABLES</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit)</td>
+        </tr>
+
+        <tr>
+            <td>@a450.code</td>
+            <td>@a450.name</td>
+            <td>@(a450.debit - a450.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO DE OPERACION NETO</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit)</td>
+        </tr>
+
+        <tr>
+            <td>@ADADC.code</td>
+            <td>@ADADC.name</td>
+            <td>@(ADADC.debit - ADADC.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO DESPUES DE AJUSTE DE DIFERENCIA DE CAMBIO Y M.V.</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit - ADADC.debit + ADADC.credit)</td>
+        </tr>
+
+
+        <tr>
+            <td>@a570.code</td>
+            <td>@a570.name</td>
+            <td>@(a570.credit - a570.debit)</td>
+        </tr>
+        <tr>
+            <td>@a470.code</td>
+            <td>@a470.name</td>
+            <td>@(a470.debit - a470.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO NETO DEL EJERCICIO ANTES DE AJUSTE DE GESTIONES ANT.</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit - ADADC.debit + ADADC.credit + a570.credit - a570.debit - a470.debit + a470.credit)</td>
+        </tr>
+        
+
+        <tr>
+            <td>@a580.code</td>
+            <td>@a580.name</td>
+            <td>@(a580.credit - a580.debit)</td>
+        </tr>
+        <tr>
+            <td>@a480.code</td>
+            <td>@a480.name</td>
+            <td>@(a480.debit - a480.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO NETO DEL EJERCICIO ANTES DE AJUSTE DE GESTIONES ANT.</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit - ADADC.debit + ADADC.credit + a570.credit - a570.debit - a470.debit + a470.credit + a580.credit - a580.debit - a480.debit + a480.credit)</td>
+        </tr>
+
+        <tr>
+            <td>@ACEI.code</td>
+            <td>@ACEI.name</td>
+            <td>@(ACEI.debit - ACEI.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO ANTES DE IMPUESTOS</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit - ADADC.debit + ADADC.credit + a570.credit - a570.debit - a470.debit + a470.credit + a580.credit - a580.debit - a480.debit + a480.credit - ACEI.debit + ACEI.credit)</td>
+        </tr>
+
+        <tr>
+            <td>@a460.code</td>
+            <td>@a460.name</td>
+            <td>@(a460.debit - a460.credit)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>RESULTADO NETO DE LA GESTION.</td>
+            <td>@(a510.credit - a510.debit - a410.debit + a410.credit + a540.credit - a540.debit - a440.debit + a440.credit + a530.credit - a530.debit - a430.debit + a430.credit - a450.debit + a450.credit - ADADC.debit + ADADC.credit + a570.credit - a570.debit - a470.debit + a470.credit + a580.credit - a580.debit - a480.debit + a480.credit - ACEI.debit + ACEI.credit - a460.debit + a460.credit)</td>
+        </tr>
+
+    </table>
+    </div>
+}

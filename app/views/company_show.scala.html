@@ -1,0 +1,65 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Company, customeres: Seq[Customer])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+    <div>
+            <div>
+        @restrict(roles = List(Array("companyList"))) {
+            <a href="/company_list" class="btn btn-info btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("companyEdit"))) {
+            <a href="/company_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("companyDelete"))) {
+           <a href="/company_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+            <div style="display: inline-block;"> Code: </div>
+            <div style="display: inline-block;" id="name">@row.id</div>
+    </div>
+    </div>
+    <div class="container">
+        <div>Products</div>
+        <div class="table table-bordered">
+            <table class="table table-bordered" id="productos">
+                <thead>
+                    <tr>
+                        <th>Name ofl Customer</th>
+                        <th>-----------</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(req <- customeres) {
+                        <tr>
+                            <td>
+                                @restrictOr(roles = List(Array("customerShow"))) {
+                                   <a href="/customer_show/@req.id">@req.name
+                                </a> 
+                                }{
+                                    @req.name                                    
+                                }
+                            </td>
+                            <td>
+                               @restrict(roles = List(Array("customerEdit"))) {
+                                   <a href="/customer_update/@req.id" class="btn btn-primary btn-sm">Edit</a> 
+                               }
+                               @restrict(roles = List(Array("customerDelete"))) {
+                                   <a href="/customer_remove/@req.id" class="btn btn-danger btn-sm">Remove</a>
+                               }
+                               @restrict(roles = List(Array("customerShow"))) {
+                                   <a href="/customer_show/@req.id" class="btn btn-info btn-sm">view</a>
+                               }
+                           </td> 
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}

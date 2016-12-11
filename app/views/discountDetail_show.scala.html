@@ -1,0 +1,32 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: DiscountDetail)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("discountReportShow"))) {
+            <a href="/discountReport_show/@row.discountReport" class="btn btn-info btn-sm">Report</a> 
+        }
+        @restrict(roles = List(Array("discountDetailEdit"))) {
+           <a href="/discountDetail_update/@row.id" class="btn btn-primary btn-sm">Edit</a>
+        }
+        @restrict(roles = List(Array("discountDetailDelete"))) {
+           <a href="/discountDetail_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Customer: </div>
+            <div style="display: inline-block;" id="customerName">@row.customerName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Discount: </div>
+            <div style="display: inline-block;" id="discount">@row.discount</div>
+        </div>
+    </div>
+}

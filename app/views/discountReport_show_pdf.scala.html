@@ -1,0 +1,44 @@
+@(discounts: Seq[DiscountDetail], stardDate: String, endDate: String, total: String, setting: Setting)
+@import helper._
+
+@main("view") {
+    <div class="container">
+        <br />
+        <div>
+            Company: @setting.name
+        </div>
+        <div>
+            CEO: @setting.president
+        </div>
+        <div>
+            <div style="display: inline-block; width: 150px;" >Date de Inicio: </div>
+            <div style="display: inline-block; width: 150px;" id="startDate">@stardDate </div>
+            <div style="display: inline-block; width: 150px;">Date Final: </div>
+            <div style="display: inline-block; width: 150px;" id="endDate">@endDate </div>
+        </div>
+        <div>
+            <div style="display: inline-block; width: 150px;"> Total: </div>
+            <div style="display: inline-block; width: 150px;" id="total"> @total Bs </div>
+        </div>
+    </div>
+
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Discount</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(discount <- discounts) {
+                <tr>
+                <td>@discount.customerName</td>
+                <td>@discount.discount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+}

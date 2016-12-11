@@ -1,0 +1,99 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductRequest, children: Seq[RequestRow])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestByInsumoList"))) {
+            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("productRequestByInsumoEdit"))) {
+            <a href="/productRequestByInsumo_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("productRequestByInsumoDelete"))) {
+           <a href="/productRequestByInsumo_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+        @restrict(roles = List(Array("productRequestByInsumoSend"))) {
+            @if(row.status == "borrador") {
+                <a href="/productRequestByInsumo_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+            }
+        }
+        @restrict(roles = List(Array("productRequestByInsumoFinish"))) {
+            @if(row.status == "enviado") {
+                <a href="/productRequestByInsumo_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+            }
+        }
+    </div>
+
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;" id="date">@row.date</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Insumo User: </div>
+            <div style="display: inline-block;" id="userName">@row.userName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Module: </div>
+            <div style="display: inline-block;" id="moduleName">@row.moduleName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
+        </div>
+    </div>
+    <div>
+        @restrict(roles = List(Array("requestRowByInsumoCreate"))) {
+            <div style="display: inline-block;"> <a id="addDetail" href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">Add Detalle</a> </div>
+        }
+    </div>
+
+    <div>Lista Detail of Order</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- children) {
+                    <tr>
+                        <td>
+                            @restrictOr(roles = List(Array("productShow"))) {
+                               <a href="/product_show/@child.productId">@child.productName
+                            </a> 
+                            }{
+                                @child.productName                                    
+                            }
+                        </td>
+                        <td>@child.quantity</td>
+                        <td>@child.price</td>
+                        <td>@child.status</td>
+                        <td>
+                           @restrict(roles = List(Array("requestRowByInsumoShow"))) {
+                               <a href="/requestRowByInsumo_show/@child.id" class="btn btn-info btn-sm">view</a>
+                           }
+                           @restrict(roles = List(Array("requestRowByInsumoEdit"))) {
+                               <a href="/requestRowByInsumo_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                           }
+                           @restrict(roles = List(Array("requestRowByInsumoDelete"))) {
+                               <a href="/requestRowByInsumo_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                           }
+                           @if(child.status != "entregado") {
+                            <a href="/requestRowByInsumo_fill/@child.id" class="btn btn-primary btn-sm">Entregar</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}

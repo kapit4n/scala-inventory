@@ -1,0 +1,43 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Setting)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("settingEdit"))) {
+            <a href="/setting_update" class="btn btn-primary btn-sm">Edit</a> 
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> CEO: </div>
+            <div style="display: inline-block;" id="president">@row.president</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+    </div>
+    <div class="container">
+        @restrict(roles = List(Array("logEntry"))) {
+            <a id="log_entry" href="/logEntry_list" class="btn btn-link">Events</a>
+        }
+        
+        @restrict(roles = List(Array("measure"))) {
+            | <a id="measure_list" href="/measure_list" class="btn btn-link">Measures</a>
+        }
+
+        @restrict(roles = List(Array("account"))) {
+            | <a id="account_list" href="/account_list" class="btn btn-link">Accounts</a>
+        }
+
+        @restrict(roles = List(Array("user"))) {
+            | <a id="user_list" href="/user_list" class="btn btn-link">Users</a>
+        }
+    </div>
+}

@@ -1,0 +1,39 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, transaccionDetails: Seq[TransactionDetail])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Libro mayor") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Books of the mayor</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+        <table id="details" class="table table-bordered">
+        <thead>
+                <tr>
+                    <th>Numero</th>
+                    <th>Code</th>
+                    <th>Name of Account</th>
+                    <th>Saldos A Diciembre(Debe)</th>
+                    <th>Saldos A Diciembre(Haber)</th>
+                    <th>Movimiento (1 a 38 Enero)</th>
+                    <th>Saldos a Enero 30</th>
+                </tr>
+            </thead>
+        <tbody>
+            @for(transaccionDetail <- transaccionDetails) {
+                <tr>
+                    <td>#</td>
+                    <td>Account Code</td>
+                    <td>Account name</td>
+                    <td>@(transaccionDetail.debit)</td>
+                    <td>@(transaccionDetail.credit)</td>
+                    <td>@(transaccionDetail.credit - transaccionDetail.debit)</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+    </div>
+}

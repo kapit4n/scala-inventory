@@ -1,0 +1,28 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: TransactionDetail, rowForm: Form[UpdateTransactionDetailForm], accounts: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Update") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("transactionShow"))) {
+            <a href="/transaction_show/@row.transactionId" class="btn btn-primary btn-sm">Asiento Diario</a> 
+        }
+        @restrict(roles = List(Array("transactionDetailShow"))) {
+            <a href="/transactionDetail_show/@row.id" class="btn btn-info btn-sm">view</a> 
+        }
+        @restrict(roles = List(Array("transactionDetailDelete"))) {
+           <a href="/transactionDetail_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    @form(routes.TransactionDetailController.updatePost()) {
+        @select(field = rowForm("accountId"), options = options(accounts))
+        @inputText(rowForm("debit"), 'id -> "debitInput")
+        @inputText(rowForm("credit"), 'id -> "creditInput")
+        <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
+        <a href="/transactionDetail_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+        @inputText(rowForm("transactionId"), 'hidden -> "true", '_label -> "")
+    }
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transactionDetail_add.js")'></script>
+}

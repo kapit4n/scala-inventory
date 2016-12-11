@@ -1,0 +1,141 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, modules: Seq[RequestRowCustomer], drivers: Seq[RequestRowCustomer])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestByInsumoShow"))) {
+            <a id="goRequest" href="/productRequestByInsumo_show/@row.requestId" class="btn btn-info btn-sm">Order</a>
+        }
+        @restrict(roles = List(Array("requestRowEdit"))) {
+            <a href="/requestRowByInsumo_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("requestRowDelete"))) {
+           <a href="/requestRowByInsumo_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Request:</div>
+            <div style="display: inline-block;" id="requestId">@row.requestId</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Product: </div>
+            <div style="display: inline-block;" id="productName">
+            @restrictOr(roles = List(Array("productShow"))) {
+               <a href="/product_show/@row.productId">@row.productName </a>
+            }{
+                @row.productName
+            }
+        </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Quantity: </div>
+            <div style="display: inline-block;" id="quantity">@row.quantity</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Pagado: </div>
+            <div style="display: inline-block;" id="quantity">@row.paid</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Transporte: </div>
+            <div style="display: inline-block;" id="quantity">@row.paidDriver</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
+        </div>
+    </div>
+    <div>
+            <div style="display: inline-block;"> <a id="payModule" href="/requestRowModule_add/@row.id"  class="btn btn-primary btn-sm">Pago del Modulo</a> </div>
+            <div style="display: inline-block;"> <a id="payTransport" href="/requestRowDriver_add/@row.id"  class="btn btn-primary btn-sm">Pagar al Transportador</a> </div>
+    </div>
+
+    <div>Pagos</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Modulo</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- modules) {
+                    <tr>
+                        <td>
+                            @restrictOr(roles = List(Array("moduleShow"))) {
+                               <a href="/customer_show/@child.customerId">@child.customerName
+                            </a> 
+                            }{
+                                @child.customerName
+                            }
+                        </td>
+                        <td>@child.quantity</td>
+                        <td>@child.price</td>
+                        <td>@child.status</td>
+                        <td>
+                           @restrict(roles = List(Array("requestRowModuleEdit"))) {
+                               <a href="/requestRowModule_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                           }
+                           @restrict(roles = List(Array("requestRowModuleDelete"))) {
+                               <a href="/requestRowCustomer_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                           }
+                           @restrict(roles = List(Array("requestRowModuleShow"))) {
+                               <a href="/requestRowCustomer_show/@child.id" class="btn btn-info btn-sm">view</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div>Pagos a Transportistas</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Transportista</th>
+                    <th>Quantity</th>
+                    <th>Monto Pagado</th>
+                    <th>Status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- drivers) {
+                    <tr>
+                        <td>
+                            @restrictOr(roles = List(Array("moduleShow"))) {
+                               <a href="/customer_show/@child.customerId">@child.customerName
+                            </a> 
+                            }{
+                                @child.customerName
+                            }
+                        </td>
+                        <td>@child.quantity</td>
+                        <td>@child.paid</td>
+                        <td>@child.status</td>
+                        <td>
+                           @restrict(roles = List(Array("requestRowModuleEdit"))) {
+                               <a href="/requestRowDriver_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                           }
+                           @restrict(roles = List(Array("requestRowModuleDelete"))) {
+                               <a href="/requestRowCustomer_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                           }
+                           @restrict(roles = List(Array("requestRowModuleShow"))) {
+                               <a href="/requestRowCustomer_show/@child.id" class="btn btn-info btn-sm">view</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}

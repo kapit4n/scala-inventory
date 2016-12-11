@@ -1,0 +1,23 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, vendor: Form[CreateVendorForm])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add vendor") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("vendorList"))) {
+            <a href="/vendor_list" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+    @form(routes.VendorController.addVendor()) {
+        <div class="container">
+            @inputText(vendor("name"), 'id -> "name")
+            @inputText(vendor("telefono"), 'id -> "phone")
+            @inputText(vendor("direccion"), 'id -> "address")
+            @inputText(vendor("contacto"), 'id -> "contact")
+            @inputText(vendor("account"), 'id -> "accountValue")
+            <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
+            <a href="/vendor_list" class="btn btn-primary btn-sm">Cancelar</a>
+        </div>
+    }
+}

@@ -1,0 +1,29 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, rowForm: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Update") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestShow"))) {
+            <a href="/productRequest_show/@row.requestId" class="btn btn-primary btn-sm">Order</a> 
+        }
+        @restrict(roles = List(Array("requestRowShow"))) {
+           <a href="/requestRow_show/@row.id" class="btn btn-info btn-sm">view</a>
+        }
+        @restrict(roles = List(Array("requestRowDelete"))) {
+           <a href="/requestRow_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    @form(routes.RequestRowController.updatePost()) {
+        @select(field = rowForm("productId"), options = options(productos))
+        @inputText(rowForm("quantity"))
+        @inputText(rowForm("price"))
+        @inputText(rowForm("status"))
+        @select(field = rowForm("measureId"), options = options(measures))
+        <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
+        <a href="/requestRow_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+        @select(field = rowForm("requestId"), options = options(requests), 'hidden -> "true", '_label -> "")
+    }
+}

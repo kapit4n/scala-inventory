@@ -1,0 +1,60 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, activos: Seq[Account], pasivos: Seq[Account], patrimonios: Seq[Account])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Balance sheet") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Balance sheet</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+    <table class="table table-bordered">
+        <tr>
+            <td>
+                <div><b>ACTIVOS</b></div>
+                <table id="activos_table" style="width: 100%;">
+                    <tbody>
+                        @for(activo <- activos) {
+                            <tr>
+                                <td>@activo.code @activo.name</td>
+                                <td style="padding: @((activo.code.length - 0) * 5)px">@(activo.debit - activo.credit)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <div><b>PASIVOS</b></div>
+                <table id="pasivo_table" style="width: 100%;">
+                    <tbody>
+                        @for(pasivo <- pasivos) {
+                            <tr>
+                                <td>@pasivo.code @pasivo.name</td>
+                                <td style="padding: @((pasivo.code.length - 0) * 5)px">@(pasivo.credit - pasivo.debit)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div><b>PATRIMONIO</b></div>
+                <table id="patrimonio_table" style="width: 100%;">
+                    <tbody>
+                        @for(patrimonio <- patrimonios) {
+                            <tr>
+                                <td>@patrimonio.code @patrimonio.name</td>
+                                <td style="padding: @((patrimonio.code.length - 0) * 5)px">@(patrimonio.credit - patrimonio.debit)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td><b>Total activo:</b> @(activos(0).debit - activos(0).credit)</td>
+            <td><b>Total pasivo + patrimonio:</b> @(pasivos(0).credit -  pasivos(0).debit + patrimonios(0).credit - patrimonios(0).debit)</td>
+        </tr>
+    </table>
+    </div>
+}

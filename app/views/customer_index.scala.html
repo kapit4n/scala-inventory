@@ -1,0 +1,118 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateCustomerForm], rowSearch: Form[SearchCustomerForm], customers: Seq[Customer], total: Int, currentPage: Int, interval: Int)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Lista") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("customerCreate"))) {
+            <a href="/customer_add" class="btn btn-primary btn-sm">New</a> 
+        }
+        @restrict(roles = List(Array("customerList"))) {
+            <a href="/customer_list/1" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+    <div class="container">
+        @form(routes.CustomerController.searchCustomerPost()) {
+            @inputText(rowSearch("search"))
+            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+        }   
+    </div>
+
+    <div class="table table-bordered">
+        <table class="table table-bordered conted" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>CI</th>
+                    <th>Phone</th>
+                    <th>Account</th>
+                    <th>Modulo</th>
+                    <th>Company</th>
+                    <th>---</th>
+                </tr>
+                <tr>
+                    <th colspan="7">
+                        Pages
+                            @if(1 == currentPage) {
+                                <a href="/customer_list/1" style="color: red;">1</a>
+                            } else {
+                                <a href="/customer_list/1">1</a>....
+                            }
+                            @for(index <- (currentPage - 3) until (currentPage + 3)) {
+                                @if(index > 1 && index < (total/interval + 1)) {
+                                    @if(index == currentPage) {
+                                        - <a href="/customer_list/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/customer_list/@index">@index</a>
+                                    }
+                                }
+                            }
+                            @if((total/interval + 1) == currentPage) {
+                                - <a href="/customer_list/@(total/interval + 1)" style="color: red;">@(total/interval + 1)</a>
+                            } else {
+                                ...<a href="/customer_list/@(total/interval + 1)">@(total/interval + 1)</a>
+                            }
+                        (Total: @total)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(customer <- customers) {
+                <tr>
+                    <td></td>
+                    <td>@customer.name</td>
+                    <td>@customer.carnet</td>
+                    <td>@customer.telefono</td>
+                    <td>@customer.account</td>
+                    <td>@customer.module</td>
+                    <td>@customer.companyName</td>
+                    <td>
+                        @restrict(roles = List(Array("productEdit"))) {
+                            <a href="/customer_update/@customer.id" class="btn btn-primary btn-sm">Edit</a> 
+                        }
+                        @restrict(roles = List(Array("productDelete"))) {
+                            <a href="/customer_remove/@customer.id" class="btn btn-danger btn-sm">Remove</a>
+                        }
+                        @restrict(roles = List(Array("productShow"))) {
+                            <a href="/customer_show/@customer.id" class="btn btn-info btn-sm">view</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="7">
+                        Pages
+                            @if(1 == currentPage) {
+                                <a href="/customer_list/1" style="color: red;">1</a>
+                            } else {
+                                <a href="/customer_list/1">1</a>....
+                            }
+                            @for(index <- (currentPage - 3) until (currentPage + 3)) {
+                                @if(index > 1 && index < (total/interval + 1)) {
+                                    @if(index == currentPage) {
+                                        - <a href="/customer_list/@index" style="color: red;"><b>@index</b></a>
+                                    }
+                                    @if(index != currentPage) {
+                                        - <a href="/customer_list/@index">@index</a>
+                                    }
+                                }
+                            }
+                            @if((total/interval + 1) == currentPage) {
+                                - <a href="/customer_list/@(total/interval + 1)" style="color: red;">@(total/interval + 1)</a>
+                            } else {
+                                ...<a href="/customer_list/@(total/interval + 1)">@(total/interval + 1)</a>
+                            }
+                        (Total: @total)
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        <style type="text/css">
+        </style>
+    </div>
+}

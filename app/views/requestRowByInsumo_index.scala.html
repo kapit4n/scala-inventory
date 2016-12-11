@@ -1,0 +1,24 @@
+@(products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Add") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_index.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Home</span></a>
+    </div>
+    <div>List of Orders</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>requestId</th>
+                    <th>productId</th>
+                    <th>quantity</th>
+                    <th>status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

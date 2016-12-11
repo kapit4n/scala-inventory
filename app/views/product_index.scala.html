@@ -1,0 +1,70 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rowSearch: Form[SearchProductForm], rows: Seq[Product])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productCreate"))) {
+                                <a href="/product_add" class="btn btn-primary btn-sm">New</a> 
+        }
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+
+    <div class="container">
+        @form(routes.ProductController.searchProductPost()) {
+            @inputText(rowSearch("search"))
+            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+        }
+    </div>
+
+    <div class="container">
+        Product List
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered conted" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Cost</th>
+                    <th>Percent</th>
+                    <th>Price</th>
+                    <th>Measure</th>
+                    <th>In Stock</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td></td>
+                        <td>@row.name</td>
+                        <td>@row.cost</td>
+                        <td>@row.percent</td>
+                        <td>@row.price</td>
+                        <td>@row.measureName</td>                        
+                        <td>@row.currentAmount</td>
+                        <td>
+                            @restrict(roles = List(Array("productEdit"))) {
+                                <a href="/product_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("productDelete"))) {
+                                <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("productShow"))) {
+                                <a href="/product_show/@row.id" class="btn btn-info btn-sm">view</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+               
+            </tfoot>
+        </table>
+    </div>
+}

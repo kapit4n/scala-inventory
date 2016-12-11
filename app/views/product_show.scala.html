@@ -1,0 +1,113 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("productEdit"))) {
+           <a href="/product_update/@row.id" class="btn btn-primary btn-sm">Edit</a>
+        }
+        @restrict(roles = List(Array("productDelete"))) {
+           <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div >
+            <div>
+                <div style="display: inline-block;">Name: </div>
+                <div style="display: inline-block;" id="name">@row.name</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Cost: </div>
+                <div style="display: inline-block;" id="cost">@row.cost</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Percent: </div>
+                <div style="display: inline-block;" id="percent">@row.percent</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Price: </div>
+                <div style="display: inline-block;" id="price">@row.price</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Description: </div>
+                <div style="display: inline-block;" id="description">@row.description</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">Unit of Measure: </div>
+                <div style="display: inline-block;" id="measure">@row.measureName</div>
+            </div>
+            <div>
+                <div style="display: inline-block;">In Stock: </div>
+                <div style="display: inline-block;" id="currentAmount">@row.currentAmount</div>
+            </div>
+            
+        </div>
+        <div class="container">
+            <img src="@routes.Assets.versioned("images/@(row.id)_product.jpg")" width="200">
+            @helper.form(action = routes.ProductController.upload(row.id), 'enctype -> "multipart/form-data") {
+                <input type="file" name="picture">
+                <input type="submit">
+            }
+        </div>
+        <div class="container">
+                <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Add Inventory</a> </div>
+            </div>
+            <div class="table table-bordered">
+                <table class="table table-bordered" id="rows">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Measure</th>
+                            <th>Quantity</th>
+                            <th>In stock</th>
+                            @restrict(roles = List(Array("productInv"))) {
+                                <th>-----------</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(child <- children) {
+                            <tr>
+                                <td>
+                                    @restrictOr(roles = List(Array("vendorShow"))) {
+                                       <a href="/vendor_show/@child.vendorId">@child.vendorName
+                                    </a> 
+                                    }{
+                                        @child.vendorName                                    
+                                    }
+                                </td>
+                                <td>
+                                    @restrictOr(roles = List(Array("measureShow"))) {
+                                       <a href="/measure_show/@child.measureId">@child.measureName
+                                    </a> 
+                                    }{
+                                        @child.measureName                                    
+                                    }
+                                </td>
+                                <td>@child.amount</td>
+                                <td>@child.amountLeft</td>
+                                @restrict(roles = List(Array("productInv"))) {
+                                    <td>
+                                       @restrict(roles = List(Array("productInvEdit"))) {
+                                           <a href="/productInv_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                                       }
+                                       @restrict(roles = List(Array("productInvDelete"))) {
+                                           <a href="/productInv_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                                       }
+                                       @restrict(roles = List(Array("productInvShow"))) {
+                                           <a href="/productInv_show/@child.id" class="btn btn-info btn-sm">view</a>
+                                       }
+                                   </td> 
+                               }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+    </div>
+}

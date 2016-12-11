@@ -1,0 +1,51 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, companys: Seq[Company])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Lista") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("companyCreateDEV"))) {
+            <a href="/company_add" class="btn btn-primary btn-sm">New</a> 
+        }
+        @restrict(roles = List(Array("companyListDEV"))) {
+            <a href="/company_list/1" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+
+    <div class="table table-bordered">
+        <table class="table table-bordered conted" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(company <- companys) {
+                <tr>
+                    <td></td>
+                    <td>@company.id</td>
+                    <td>@company.name</td>
+                    <td>
+                        @restrict(roles = List(Array("companyEdit"))) {
+                            <a href="/company_update/@company.id" class="btn btn-primary btn-sm">Edit</a> 
+                        }
+                        @restrict(roles = List(Array("companyDelete"))) {
+                            <a href="/company_remove/@company.id" class="btn btn-danger btn-sm">Remove</a>
+                        }
+                        @restrict(roles = List(Array("companyShow"))) {
+                            <a href="/company_show/@company.id" class="btn btn-info btn-sm">view</a>
+                        }
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+        <style type="text/css">
+        </style>
+    </div>
+}

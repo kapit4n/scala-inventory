@@ -1,0 +1,62 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, searchForm: Form[SearchAccountForm], rows: Seq[Account])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("accountCreate"))) {
+            <a href="/account_add" class="btn btn-primary btn-sm">New</a> 
+        }
+    </div>
+    
+
+    <div style="container">
+        @form(routes.AccountController.searchAccountPost()) {
+            @inputText(searchForm("search"))
+            <input type="submit" value="Search Account" class="btn btn-primary btn-sm"/>
+        }        
+    </div>
+
+
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Parent</th>
+                    <th>Description</th>
+                    <th>Child</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td></td>
+                        <td>@row.code</td>
+                        <td>@row.name</td>
+                        <td>@row.type_1</td>
+                        <td>@row.parent</td>
+                        <td>@row.description</td>
+                        <td>@row.child</td>
+                        <td>
+                            @restrict(roles = List(Array("accountEdit"))) {
+                                <a name="edit" href="/account_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("accountDelete"))) {
+                                <a name="delete" href="/account_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("accountShow"))) {
+                                <a name="show" href="/account_show/@row.id" class="btn btn-info btn-sm">view</a>
+                            }
+                        </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

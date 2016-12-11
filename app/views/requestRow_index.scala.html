@@ -1,0 +1,42 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rows: Seq[RequestRow])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add") {
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Home</span></a>
+    </div>
+    <div>List of Orders</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>productId</th>
+                    <th>quantity</th>
+                    <th>status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(row <- rows) {
+                    <tr>
+                        <td>@row.productId</td>
+                        <td>@row.quantity</td>
+                        <td>@row.status</td>
+                        <td>
+                            @restrict(roles = List(Array("requestRowEdit"))) {
+                                <a href="/requestRow_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("requestRowDelete"))) {
+                                <a href="/requestRow_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("requestRowShow"))) {
+                                <a href="/requestRow_show/@row.id" class="btn btn-info btn-sm">view</a>
+                            }
+                        </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

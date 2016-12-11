@@ -1,0 +1,11 @@
+@(row: Form[CreateProductInvForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Add") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInv_request_row.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Home</span></a>
+    </div>
+    
+}

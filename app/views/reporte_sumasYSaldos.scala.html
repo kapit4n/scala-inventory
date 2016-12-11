@@ -1,0 +1,47 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, accounts: Seq[Account])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Trial Balance") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Trial Balance</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+        <table id="details" style="width: 100%;" class="table table-bordered">
+        <thead>
+                <tr>
+                    <th>Nro</th>
+                    <th>Accounts</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Debit Result</th>
+                    <th>Credit Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(account <- accounts) {
+                    <tr>
+                        <td>#</td>
+                        <td>@account.name</td>
+                        <td>@account.debit</td>
+                        <td>@account.credit</td>
+                        <td>
+                            @if((account.debit - account.credit) > 0) {
+                                @(account.debit - account.credit)
+                            }
+                        </td>
+                        <td>
+                            @if((account.credit - account.debit) > 0) {
+                                @(account.credit - account.debit)
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

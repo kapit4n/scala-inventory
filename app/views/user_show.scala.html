@@ -1,0 +1,113 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: User, roles: Seq[Roles], assignedRoles: Seq[UserRole])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("userList"))) {
+            <a href="/user_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("userEdit"))) {
+            <a href="/user_update/@row.id" class="btn btn-info btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("userDelete"))) {
+           <a href="/user_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> CI: </div>
+            <div style="display: inline-block;" id="carnet">@row.carnet</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Phone: </div>
+            <div style="display: inline-block;" id="telefono">@row.telefono</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Address: </div>
+            <div style="display: inline-block;" id="direccion">@row.direccion</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Salary: </div>
+            <div style="display: inline-block;" id="Salary">@row.Salary</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;" id="type_1">@row.type_1</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Login: </div>
+            <div style="display: inline-block;" id="type_1">@row.login</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Password: </div>
+            <div style="display: inline-block;" id="type_1">@row.password</div>
+        </div>
+    </div>
+    <div class="container">
+        <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Assigned Permission</a> </div>
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    @restrict(roles = List(Array("productInv"))) {
+                        <th>-----------</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- assignedRoles) {
+                    <tr>
+                        </td>
+                        <td>@child.roleName</td>
+                        @restrict(roles = List(Array("role"))) {
+                            <td>
+                               @restrict(roles = List(Array("roleDelete"))) {
+                                   <a href="/role_remove/@child.id" class="btn btn-danger btn-sm">Remove</a> 
+                               }
+                           </td> 
+                       }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+     <div class="container">
+        <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Permission List</a> </div>
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    @restrict(roles = List(Array("productInv"))) {
+                        <th>-----------</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- roles) {
+                    <tr>
+                        </td>
+                        <td>@child.roleName</td>
+                        @restrict(roles = List(Array("role"))) {
+                            <td>
+                               @restrict(roles = List(Array("roleEdit"))) {
+                                   <a href="/role_assign/@row.id/@child.roleCode" class="btn btn-primary btn-sm">Add</a> 
+                               }
+                           </td> 
+                       }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

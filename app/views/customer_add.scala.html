@@ -1,0 +1,26 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateCustomerForm], modules: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productList"))) {
+            <a href="/customer_list/1" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+    @form(routes.CustomerController.add()) {
+        @inputText(row("name"), '_label -> "Name", 'id -> "name")
+        @inputText(row("carnet"), 'id -> "ci")
+        @inputText(row("telefono"), 'id -> "phone")
+        @inputText(row("direccion"), 'id -> "address")
+        @inputText(row("account"), 'id -> "accountId")
+        @select(field = row("module"), options = options(modules), 'id -> "moduleId")
+        @inputText(row("acopio"), 'id -> "acopio")
+        @inputText(row("promedio"), 'id -> "avg")
+        @inputText(row("excedent"), 'id -> "excedent")
+        @inputText(row("pleno"), 'id -> "pleno")
+        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
+        <a href="customer_list/1" class="btn btn-primary btn-sm">Cancelar</a>
+    }
+}

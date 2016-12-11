@@ -1,0 +1,74 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, children: Seq[ProductRequest])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Orders") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestCreate"))) {
+            <a href="/productRequest_add" class="btn btn-primary btn-sm">New</a> 
+        }
+    </div>
+    <div class="container">List of Orders</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Store</th>
+                    <th>Status</th>
+                    <th>Detail</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(row <- children) {
+                    <tr>
+                        <td>@row.date</td>
+                        <td>
+                            @restrictOr(roles = List(Array("userShow"))) {
+                               <a href="/user_show/@row.employee">@row.employeeName
+                            </a> 
+                            }{
+                                @row.employeeName                                    
+                            }
+                        </td>
+                        <td>
+                            @restrictOr(roles = List(Array("userShow"))) {
+                               <a href="/user_show/@row.storekeeper">@row.storekeeperName
+                            </a> 
+                            }{
+                                @row.storekeeperName                                    
+                            }
+                        </td>
+
+                        <td>@row.status</td>
+                        <td>@row.detail</td>
+                        <td>
+                            @restrict(roles = List(Array("productRequestEdit"))) {
+                                <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("productRequestDelete"))) {
+                                <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("productRequestShow"))) {
+                                <a href="/productRequest_show/@row.id" class="btn btn-info btn-sm">view</a>
+                            }
+                            @restrict(roles = List(Array("productRequestSend"))) {
+                                @if(row.status == "borrador") {
+                                    <a href="/productRequest_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+                                }
+                            }
+                            @restrict(roles = List(Array("productRequestFinish"))) {
+                                @if(row.status == "enviado") {
+                                    <a href="/productRequest_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+                                }
+                            }
+                        </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,30 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: LogEntryShow)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("logEntryList"))) {
+            <a href="/logEntry_list" class="btn btn-primary btn-sm">List</a> 
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Accion: </div>
+            <div style="display: inline-block;" id="name">@row.action</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Tabla: </div>
+            <div style="display: inline-block;" id="president">@row.tableName1</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;" id="president">@row.createdAt</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+    </div>
+}

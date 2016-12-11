@@ -1,0 +1,133 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Account, children: Seq[Account], transactions: Seq[TransactionDetail])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("accountList"))) {
+            <a href="/account_list" class="btn btn-info btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("accountEdit"))) {
+            <a href="/account_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+        }
+        @restrict(roles = List(Array("accountDelete"))) {
+           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Code: </div>
+            <div style="display: inline-block;" id="code">@row.code</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;" id="type_1">@row.type_1</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Child: </div>
+            <div style="display: inline-block;" id="child">@row.child</div>
+        </div>
+    </div>
+
+    <div>Accounts dependientes</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="children">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- children) {
+                    <tr>
+                        <td>
+                            @child.id
+                        </td>
+                        <td>
+                            @child.code
+                        </td>
+                        <td>
+                            @child.name
+                        </td>
+                        <td>
+                            @restrict(roles = List(Array("accountEdit"))) {
+                                <a href="/account_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("accountDelete"))) {
+                                <a href="/account_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("accountShow"))) {
+                                <a href="/account_show/@child.id" class="btn btn-info btn-sm">view</a>
+                            }
+                        </td> 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div>Detalle</div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Folio</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(child <- transactions) {
+                    <tr>
+                        <td>
+                            @child.transactionDate
+                        </td>
+                        <td>
+                            @child.id
+                        </td>
+                        <td>
+                            @child.debit
+                        </td>
+                        <td>
+                            @child.credit
+                        </td>
+                        <td>
+                           @restrict(roles = List(Array("transactionDetailEdit"))) {
+                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                           }
+                           @restrict(roles = List(Array("transactionDetailDelete"))) {
+                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                           }
+                           @restrict(roles = List(Array("transactionDetailShow"))) {
+                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">view</a>
+                           }
+                       </td> 
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td></td>
+                    <td><div style="display: inline-block;" id="totalDebit"></div></td>
+                    <td><div style="display: inline-block;" id="totalCredit"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+}

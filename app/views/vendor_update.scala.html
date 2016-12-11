@@ -1,0 +1,28 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Vendor, rowForm: Form[UpdateVendorForm])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Update") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("vendorList"))) {
+            <a href="/vendor_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("vendorShow"))) {
+           <a href="/vendor_show/@row.id" class="btn btn-info btn-sm">view</a>
+        }
+        @restrict(roles = List(Array("vendorDelete"))) {
+           <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    @form(routes.VendorController.updatePost()) {
+        @inputText(rowForm("name"))
+        @inputText(rowForm("telefono"))
+        @inputText(rowForm("direccion"))
+        @inputText(rowForm("contacto"))
+        @inputText(rowForm("account"))
+        <input type="submit" class="btn btn-primary btn-sm" value="Update"/>
+        <a href="/vendor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+    }
+}

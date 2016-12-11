@@ -1,0 +1,20 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Setting, rowForm: Form[UpdateSettingForm])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Update Modulo") {
+	@examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("settingShow"))) {
+           <a href="/setting_show" class="btn btn-info btn-sm">view</a>
+        }
+    </div>
+    @form(routes.SettingController.updatePost()) {
+        @inputText(rowForm("name"), 'id -> "settingName")
+        @inputText(rowForm("president"), 'id -> "president")
+        @inputText(rowForm("description"), 'id -> "description")
+        <input id="updateSubmit" type="submit" value="Update"  class="btn btn-primary btn-sm"/>
+        <a href="/setting_show" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+    }
+}

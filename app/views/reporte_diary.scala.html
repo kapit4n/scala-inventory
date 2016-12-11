@@ -1,0 +1,48 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, transaccions: Seq[Transaction])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Journal Entry") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        <h4 class="media-heading">
+            <strong>Journal Entry</strong>
+        </h4>
+    </div>
+    <div class="table table-bordered">
+        <table id="details" style="width: 100%;" class="table table-bordered">
+        <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Code</th>
+                    <th>Detail and Account</th>
+                    <th>Folio</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                </tr>
+            </thead>
+        <tbody>
+            @for(transaccion <- transaccions) {
+                <tr>
+                    <td>@(transaccion.date)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @for(detail <- transaccion.details) {
+                <tr>
+                    <td></td>
+                    <td>@(detail.accountCode)</td>
+                    <td>@(detail.accountName)</td>
+                    <td>@(detail.id)</td>
+                    <td>@(detail.debit)</td>
+                    <td>@(detail.credit)</td>
+                </tr>
+                }
+            }
+        </tbody>
+        </table>
+    </div>
+}

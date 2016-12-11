@@ -1,0 +1,30 @@
+@import helper._
+
+@main("Add") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_index.js")'></script>
+    <div>
+        <a href="/" >Home</a>
+    </div>
+        <div>
+        <a href="/product_list" class="btn btn-info btn-sm">Add</a>
+    </div>
+    <div>
+        Product List
+    </div>
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                     <th>Name</th>
+                    <th>Cost</th>
+                    <th>Percent</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Unit of Measure</th>
+                    <th>In Stock</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

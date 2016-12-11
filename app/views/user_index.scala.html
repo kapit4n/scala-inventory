@@ -1,0 +1,47 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, users: Seq[User])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("userCreate"))) {
+            <a href="/user_add" class="btn btn-primary btn-sm">Add</a> 
+        }
+    </div>
+    
+    <div class="table table-bordered">
+        <table class="table table-bordered" id="rows">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>CI</th>
+                    <th>Phone</th>
+                    <th>Type</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(row <- users) {
+                    <tr>
+                        <td>@row.name</td>
+                        <td>@row.carnet</td>
+                        <td>@row.telefono</td>
+                        <td>@row.type_1</td>
+                        <td>
+                            @restrict(roles = List(Array("userEdit"))) {
+                                <a href="/user_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                            }
+                            @restrict(roles = List(Array("userDelete"))) {
+                                <a href="/user_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                            }
+                            @restrict(roles = List(Array("userShow"))) {
+                                <a href="/user_show/@row.id" class="btn btn-info btn-sm">view</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

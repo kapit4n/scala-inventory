@@ -1,0 +1,21 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateModuleForm], companys: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("moduleList"))) {
+          <a href="/module_list" class="btn btn-primary btn-sm">Lista</a> 
+        }
+    </div>
+    @form(routes.ModuleController.add()) {
+        @inputText(row("name"), 'id -> "name")
+        @inputText(row("president"), 'id -> "president")
+        @inputText(row("description"), 'id -> "description")
+        @select(field = row("companyId"), options = options(companys), 'id -> "companyId")
+        <input id="addSubmit" type="submit" value="Add Modulo" class="btn btn-primary btn-sm"/>
+        <a href="/module_list" class="btn btn-primary btn-sm">Cancelar</a>
+    }
+}

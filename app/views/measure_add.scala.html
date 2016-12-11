@@ -1,0 +1,19 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateMeasureForm], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+
+@import helper._
+
+@main("Add") {
+    @examples.templates.nav(handler)
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/measure_index.js")'></script>
+    <div>
+        <a href="/">Home</a>
+    </div>
+    @form(routes.MeasureController.add()) {
+        @inputText(row("name"), 'id -> "name")
+        @inputText(row("quantity"), 'id -> "quantity")
+        @inputText(row("description"), 'id -> "description")
+        @select(field = row("measureId"), options = options(measures), 'id -> "measureParent")
+        <input id="addSubmit" type="submit" value="Add Unit of Measure" class="btn btn-primary btn-sm"/>
+        <a href="measure_list" class="btn btn-primary btn-sm">Cancelar</a>
+    }
+}

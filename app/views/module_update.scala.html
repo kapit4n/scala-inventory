@@ -1,0 +1,27 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Module, rowForm: Form[UpdateModuleForm], companys: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("Update Modulo") {
+	@examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("moduleList"))) {
+            <a href="/module_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("moduleShow"))) {
+           <a href="/module_show/@row.id" class="btn btn-info btn-sm">view</a>
+        }
+        @restrict(roles = List(Array("moduleDelete"))) {
+           <a href="/module_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    @form(routes.ModuleController.updatePost()) {
+        @inputText(rowForm("name"))
+        @inputText(rowForm("president"))
+        @inputText(rowForm("description"))
+        @select(field = rowForm("companyId"), options = options(companys))
+        <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
+        <a href="/module_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
+    }
+}

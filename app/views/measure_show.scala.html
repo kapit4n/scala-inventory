@@ -1,0 +1,37 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Measure)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div>
+        @restrict(roles = List(Array("measureList"))) {
+            <a href="/measure_list" class="btn btn-primary btn-sm">List</a> 
+        }
+        @restrict(roles = List(Array("measureEdit"))) {
+           <a href="/measure_update/@row.id" class="btn btn-primary btn-sm">Edit</a>
+        }
+        @restrict(roles = List(Array("measureDelete"))) {
+           <a href="/measure_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+        }
+    </div>
+    
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;" id="name">@row.name</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Units: </div>
+            <div style="display: inline-block;" id="quantity">@row.quantity</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Measure: </div>
+            <div style="display: inline-block;" id="description">@row.measureName</div>
+        </div>
+    </div>
+}
