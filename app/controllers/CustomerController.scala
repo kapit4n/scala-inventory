@@ -21,24 +21,11 @@ import security.MyDeadboltHandler
 
 class CustomerController @Inject() (
   repo: CustomerRepository, repoRequests: RequestRowCustomerRepository,
-  repoModule: ModuleRepository, repoCustomer: CustomerRepository, repoDiscount: DiscountDetailRepository,
+  repoCustomer: CustomerRepository, repoDiscount: DiscountDetailRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  var modules = getModuleNamesMap()
   var interval = 30
   var updatedRow: Customer = _
-
-  def getModuleNamesMap(): Map[String, String] = {
-    Await.result(repoModule.getListNames().map {
-      case (res1) =>
-        val cache = collection.mutable.Map[String, String]()
-        res1.foreach {
-          case (key: Long, value: String) =>
-            cache put (key.toString(), value)
-        }
-        cache.toMap
-    }, 3000.millis)
-  }
 
   def getTotal(): Int = {
     Await.result(repo.getTotal().map {
@@ -59,14 +46,12 @@ class CustomerController @Inject() (
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "account" -> text,
-      "module" -> longNumber)(CreateCustomerForm.apply)(CreateCustomerForm.unapply)
+      "account" -> text)(CreateCustomerForm.apply)(CreateCustomerForm.unapply)
   }
 
   def addGet() = Action.async { implicit request =>
     repo.list(0 * interval, interval).map { res =>
-      modules = getModuleNamesMap()
-      Ok(views.html.customer_add(new MyDeadboltHandler, newForm, modules))
+      Ok(views.html.customer_add(new MyDeadboltHandler, newForm))
     }
   }
 
@@ -105,7 +90,6 @@ class CustomerController @Inject() (
       },
       res => {
         customers = searchCustomer(res.search)
-        modules = getModuleNamesMap()
         var total = getTotal()
         var currentPage = 1
         Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)))
@@ -117,32 +101,21 @@ class CustomerController @Inject() (
     Ok(generator.toBytes(views.html.reporte_customeres(), "http://localhost:9000/")).as("application/pdf")
   }
 
-  def getModuleById(id: Long): Module = {
-    Await.result(repoModule.getById(id).map(res => res(0)), 2000.millis)
-  }
-
   def add = Action.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.customer_add(new MyDeadboltHandler, errorForm, modules)))
+        Future.successful(Ok(views.html.customer_add(new MyDeadboltHandler, errorForm)))
       },
       res => {
-        val module = getModuleById(res.module)
         repo.create(res.name, res.carnet, res.telefono, res.direccion,
-          res.account, res.module, module.name,
+          res.account,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
             Redirect(routes.CustomerController.show(resNew.id))
           }
       })
-  }
-
-  def getCustomersByModule(id: Long) = Action.async {
-    repo.list(0, interval).map { res =>
-      Ok(Json.toJson(res))
-    }
   }
 
   def getCustomeres(page: Int) = Action.async {
@@ -166,7 +139,6 @@ class CustomerController @Inject() (
       "telefono" -> number,
       "direccion" -> nonEmptyText,
       "account" -> text,
-      "module" -> longNumber,
       "totalDebt" -> of[Double],
       "numberPayment" -> number)(UpdateCustomerForm.apply)(UpdateCustomerForm.unapply)
   }
@@ -212,7 +184,6 @@ class CustomerController @Inject() (
 
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
-    modules = getModuleNamesMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
@@ -222,10 +193,9 @@ class CustomerController @Inject() (
         "telefono" -> updatedRow.telefono.toString(),
         "direccion" -> updatedRow.direccion,
         "account" -> updatedRow.account.toString(),
-        "module" -> updatedRow.module.toString(),
         "totalDebt" -> updatedRow.totalDebt.toString(),
         "numberPayment" -> updatedRow.numberPayment.toString())
-      Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), modules))
+      Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
     }
   }
 
@@ -255,13 +225,12 @@ class CustomerController @Inject() (
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, errorForm, modules)))
+        Future.successful(Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, errorForm)))
       },
       res => {
         repo.update(
           res.id, res.name, res.carnet, res.telefono,
-          res.direccion, res.account, res.module,
-          modules(res.module.toString()), "Company Name",
+          res.direccion, res.account, "Company Name",
           res.totalDebt, res.numberPayment,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
@@ -273,11 +242,11 @@ class CustomerController @Inject() (
 
 case class CreateCustomerForm(
   name: String, carnet: Int, telefono: Int,
-  direccion: String, account: String, module: Long)
+  direccion: String, account: String)
 
 case class UpdateCustomerForm(
   id: Long, name: String, carnet: Int, telefono: Int,
-  direccion: String, account: String, module: Long,
+  direccion: String, account: String,
   totalDebt: Double, numberPayment: Int)
 
 case class SearchCustomerForm(search: String)

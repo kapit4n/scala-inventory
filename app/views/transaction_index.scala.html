@@ -6,10 +6,10 @@
   @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionCreate"))) {
-           <a href="/transaction_add/1" class="btn btn-primary btn-sm">Registrar Ingreso</a> 
+           <a href="/transaction_add/1" class="btn btn-primary btn-sm">Registrar Income</a> 
         }
         @restrict(roles = List(Array("transactionCreate"))) {
-           <a href="/transaction_add/2" class="btn btn-primary btn-sm">Registrar Egreso</a> 
+           <a href="/transaction_add/2" class="btn btn-primary btn-sm">Registrar Outcome</a> 
         }
     </div>
     <div>Lista de Asientos diarios</div>

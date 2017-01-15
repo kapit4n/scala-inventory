@@ -28,14 +28,12 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
     def account = column[String]("account")
-    def module = column[Long]("module")
-    def moduleName = column[String]("moduleName")
     def companyName = column[String]("companyName")
     def totalDebt = column[Double]("totalDebt")
     def numberPayment = column[Int]("numberPayment")
     def position = column[String]("position")
     def * = (
-      id, name, carnet, telefono, direccion, account, module, moduleName,
+      id, name, carnet, telefono, direccion, account,
       companyName, totalDebt, numberPayment, position) <> ((Customer.apply _).tupled, Customer.unapply)
   }
 
@@ -50,22 +48,22 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
   private val tableQCompany = TableQuery[CompanysTable]
 
   def create(name: String, carnet: Int, telefono: Int, direccion: String,
-    account: String, module: Long, moduleName: String,
+    account: String,
     userId: Long, userName: String): Future[Customer] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCTOR, userId, userName, name);
     (tableQ.map(
       p => (
         p.name, p.carnet, p.telefono, p.direccion, p.account,
-        p.module, p.moduleName, p.companyName, p.totalDebt, p.numberPayment,
+        p.companyName, p.totalDebt, p.numberPayment,
         p.position)) returning tableQ.map(_.id) into (
         (nameAge, id) =>
           Customer(
             id, nameAge._1, nameAge._2,
-            nameAge._3, nameAge._4, nameAge._5,
-            nameAge._6, nameAge._7, nameAge._8,
-            nameAge._9, nameAge._10, nameAge._11))) += (
+            nameAge._3, 
+            nameAge._4, nameAge._5, nameAge._6,
+            nameAge._7, nameAge._8, nameAge._9))) += (
           name, carnet, telefono, direccion, account,
-          module, moduleName, "", 0, 0, "Customer")
+          "", 0, 0, "Customer")
   }
 
   def list(start: Int, interval: Int): Future[Seq[Customer]] = db.run {
@@ -92,8 +90,7 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
   // update required to copy
   def update(
     id: Long, name: String, carnet: Int, telefono: Int,
-    direccion: String, account: String, module: Long,
-    moduleName: String, companyName: String,
+    direccion: String, account: String, companyName: String,
     totalDebt: Double, numberPayment: Int,
     userId: Long, userName: String): Future[Seq[Customer]] = db.run {
     repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCTOR, userId, userName, name);
@@ -105,12 +102,8 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     db.run(q3.update(telefono))
     val q4 = for { c <- tableQ if c.id === id } yield c.account
     db.run(q4.update(account))
-    val q5 = for { c <- tableQ if c.id === id } yield c.module
-    db.run(q5.update(module))
     val q6 = for { c <- tableQ if c.id === id } yield c.direccion
     db.run(q6.update(direccion))
-    val q7 = for { c <- tableQ if c.id === id } yield c.moduleName
-    db.run(q7.update(moduleName))
     val q8 = for { c <- tableQ if c.id === id } yield c.totalDebt
     db.run(q8.update(totalDebt))
     val q9 = for { c <- tableQ if c.id === id } yield c.numberPayment

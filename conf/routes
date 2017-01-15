@@ -41,7 +41,6 @@ POST    /customer_update             	controllers.CustomerController.updatePost
 
 POST    /customer                 		controllers.CustomerController.add
 GET     /customeresPage/:page			controllers.CustomerController.getCustomeres(page: Int)
-GET     /customersByModule/:id			controllers.CustomerController.getCustomersByModule(id: Long)
 GET     /customer_report    			controllers.CustomerController.getCustomeresReport
 GET     /customer_list/:page   		controllers.CustomerController.index(page: Int)
 GET     /company_list   			controllers.CustomerController.index_company
@@ -61,18 +60,6 @@ GET     /accounts         			controllers.AccountController.getAccounts
 GET     /account_list         		controllers.AccountController.index
 GET     /account_add         		controllers.AccountController.addGet
 
-# modules routes
-GET     /module_show/:id 			controllers.ModuleController.show(id: Long)
-GET     /module_update/:id        	controllers.ModuleController.getUpdate(id: Long)
-GET     /module_remove/:id        	controllers.ModuleController.delete(id: Long)
-GET     /modules/:id 				controllers.ModuleController.getById(id: Long)
-POST    /module_update             	controllers.ModuleController.updatePost
-
-POST    /module                 		controllers.ModuleController.add
-GET     /modules         			controllers.ModuleController.getModules
-GET     /modules_report    			controllers.ModuleController.getModulesReport
-GET     /module_list         		controllers.ModuleController.index
-GET     /module_add         		controllers.ModuleController.addGet
 
 # logEntry rows
 GET     /logEntry_show/:id 			controllers.LogEntryController.show(id: Long)
@@ -254,7 +241,6 @@ GET     /requestRowByInsumo_add/:requestId         	controllers.RequestRowByInsu
 # Now for Product requests Rows Customers
 GET     /requestRowCustomer_show/:id 				controllers.RequestRowCustomerController.show(id: Long)
 GET     /requestRowCustomer_update/:id        		controllers.RequestRowCustomerController.getUpdate(id: Long)
-GET     /requestRowModule_update/:id        		controllers.RequestRowCustomerController.getModuleUpdate(id: Long)
 GET     /requestRowDriver_update/:id        		controllers.RequestRowCustomerController.getDriverUpdate(id: Long)
 GET     /requestRowCustomer_send/:id        		controllers.RequestRowCustomerController.getSend(id: Long)
 GET     /requestRowCustomer_fill/:id        		controllers.RequestRowCustomerController.getAccept(id: Long)
@@ -263,17 +249,14 @@ GET     /requestRowCustomer_remove/:id        		controllers.RequestRowCustomerCo
 GET     /requestRowCustomers/:id 					controllers.RequestRowCustomerController.getById(id: Long)
 GET     /requestRowCustomersByRequestRow/:id 		controllers.RequestRowCustomerController.getByRequestRow(id: Long)
 POST    /requestRowCustomer_update             	controllers.RequestRowCustomerController.updatePost
-POST    /requestRowModule_update             		controllers.RequestRowCustomerController.updateModulePost
 POST    /requestRowDriver_update             		controllers.RequestRowCustomerController.updateDriverPost
 
 POST    /requestRowCustomer                 		controllers.RequestRowCustomerController.add
-POST    /requestRowModule                 			controllers.RequestRowCustomerController.addModule
 POST    /requestRowDriver                 			controllers.RequestRowCustomerController.addDriver
 GET     /requestRowCustomers         				controllers.RequestRowCustomerController.getRequestRowCustomers
 GET     /requestRowCustomer_list         			controllers.RequestRowCustomerController.index
 GET     /requestRowCustomersByCustomer/:id    	controllers.RequestRowCustomerController.requestRowCustomersByCustomer(id: Long)
 GET     /requestRowCustomer_add/:requestRowId		controllers.RequestRowCustomerController.addGet(requestRowId: Long)
-GET     /requestRowModule_add/:requestRowId			controllers.RequestRowCustomerController.addModuleGet(requestRowId: Long)
 GET     /requestRowDriver_add/:requestRowId			controllers.RequestRowCustomerController.addDriverGet(requestRowId: Long)
 
 #POST    /insumo                 		controllers.InsumoController.addInsumo
@@ -295,10 +278,10 @@ GET     /transaction_remove/:id        				controllers.TransactionController.del
 GET     /transactions/:id 							controllers.TransactionController.getById(id: Long)
 
 GET     /transaction_show/:id 						controllers.TransactionController.show(id: Long)
-POST    /transaction_updateIngreso     				controllers.TransactionController.updatePostIngreso
-POST    /transaction_updateEgreso      				controllers.TransactionController.updatePostEgreso
-POST    /transaction_addIngreso                		controllers.TransactionController.addIngreso
-POST    /transaction_addEgreso                		controllers.TransactionController.addEgreso
+POST    /transaction_updateIncome     				controllers.TransactionController.updatePostIncome
+POST    /transaction_updateOutcome      				controllers.TransactionController.updatePostOutcome
+POST    /transaction_addIncome                		controllers.TransactionController.addIncome
+POST    /transaction_addOutcome                		controllers.TransactionController.addOutcome
 GET     /transaction_add/:type         				controllers.TransactionController.addGet(type: Long)
 
 GET     /transactions         						controllers.TransactionController.getTransactions

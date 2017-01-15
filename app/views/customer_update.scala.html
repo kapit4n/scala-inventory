@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Customer, rowForm: Form[UpdateCustomerForm], modules: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Customer, rowForm: Form[UpdateCustomerForm])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -22,7 +22,6 @@
             @inputText(rowForm("carnet"))
             @inputText(rowForm("telefono"))
             @inputText(rowForm("direccion"))
-            @select(field = rowForm("module"), options = options(modules))
             @inputText(rowForm("account"))
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
             @inputText(rowForm("numberPayment"))

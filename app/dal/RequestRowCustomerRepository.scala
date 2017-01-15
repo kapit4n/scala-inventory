@@ -26,7 +26,7 @@ class RequestRowCustomerRepository @Inject() (dbConfigProvider: DatabaseConfigPr
     def requestRowId = column[Long]("requestRowId")
     def productId = column[Long]("productId")
     def productName = column[String]("productName")
-    def customerId = column[Long]("customerId") // customer, module, driver
+    def customerId = column[Long]("customerId") // customer, driver
     def customerName = column[String]("customerName")
     def quantity = column[Int]("quantity") // amount of products
     def price = column[Double]("price") // unit price of the product
@@ -36,7 +36,7 @@ class RequestRowCustomerRepository @Inject() (dbConfigProvider: DatabaseConfigPr
     def status = column[String]("status") // completed, credit, 
     def measureId = column[Long]("measureId") // measure of the paid
     def measureName = column[String]("measureName")
-    def type_1 = column[String]("type") // customer, module, driver
+    def type_1 = column[String]("type") // customer, driver
     def observation = column[String]("payType") // observations of the pay
     def * = (id, requestRowId, productId, productName, customerId, customerName,
       quantity, price, totalPrice, paid, credit, status, measureId, measureName, type_1, observation) <>
@@ -83,10 +83,6 @@ class RequestRowCustomerRepository @Inject() (dbConfigProvider: DatabaseConfigPr
 
   def listByParent(id: Long): Future[Seq[RequestRowCustomer]] = db.run {
     tableQ.filter(_.requestRowId === id).result
-  }
-
-  def listModulesByParent(id: Long): Future[Seq[RequestRowCustomer]] = db.run {
-    tableQ.filter(x => x.requestRowId === id && x.type_1 === "module").result
   }
 
   def listDriversByParent(id: Long): Future[Seq[RequestRowCustomer]] = db.run {

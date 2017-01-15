@@ -21,7 +21,7 @@ import security.MyDeadboltHandler
 class AccountController @Inject() (repo: AccountRepository, repoDetails: TransactionDetailRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
-  val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO", "EGRESO" -> "EGRESO", "INGRESO" -> "INGRESO")
+  val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO", "OUTCOME" -> "OUTCOME", "INCOME" -> "INCOME")
   var udpatedRow: Account = _
 
   val newForm: Form[CreateAccountForm] = Form {

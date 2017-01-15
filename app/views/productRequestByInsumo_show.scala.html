@@ -36,17 +36,13 @@
             <div style="display: inline-block;" id="userName">@row.userName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Module: </div>
-            <div style="display: inline-block;" id="moduleName">@row.moduleName</div>
-        </div>
-        <div>
             <div style="display: inline-block;"> Status: </div>
             <div style="display: inline-block;" id="status">@row.status</div>
         </div>
     </div>
     <div>
         @restrict(roles = List(Array("requestRowByInsumoCreate"))) {
-            <div style="display: inline-block;"> <a id="addDetail" href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">Add Detalle</a> </div>
+            <div style="display: inline-block;"> <a id="addDetail" href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">Add Detail</a> </div>
         }
     </div>
 

@@ -121,12 +121,6 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
     }, 3000.millis)
   }
 
-  def getRequestRowModules(requestRowId: Long): Seq[RequestRowCustomer] = {
-    Await.result(repoRowCustomer.listModulesByParent(requestRowId).map { res =>
-      res
-    }, 3000.millis)
-  }
-
   def getRequestRowDrivers(requestRowId: Long): Seq[RequestRowCustomer] = {
     Await.result(repoRowCustomer.listDriversByParent(requestRowId).map { res =>
       res
@@ -137,11 +131,10 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   def show(id: Long) = Action.async { implicit request =>
     // get the productRequestRow
     // products = getProductRequestRows(id)
-    val requestRowModules = getRequestRowModules(id)
     val requestRowDrivers = getRequestRowDrivers(id)
     repo.getById(id).map { res =>
       productRequestId = res(0).requestId
-      Ok(views.html.requestRowByInsumo_show(new MyDeadboltHandler, res(0), requestRowModules, requestRowDrivers))
+      Ok(views.html.requestRowByInsumo_show(new MyDeadboltHandler, res(0), requestRowDrivers))
     }
   }
 

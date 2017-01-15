@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchDriverForm], rowForm: Form[CreateRequestRowDriverForm], requests: Map[String, String], products: Map[String, String], customers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, rowForm: Form[CreateRequestRowDriverForm], requests: Map[String, String], products: Map[String, String], customers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -8,13 +8,6 @@
         @restrict(roles = List(Array("requestRowShow"))) {
             <a href="/requestRow_show/@requestRowId" class="btn btn-info btn-sm">Detail of Order</a> 
         }
-    </div>
-
-    <div style="display: inline-block;">
-        @form(routes.RequestRowCustomerController.searchCustomerPost()) {
-            @inputText(searchForm("search"))
-            <input type="submit" value="Search Customer" class="btn btn-primary btn-sm"/>
-        }        
     </div>
 
     @form(routes.RequestRowCustomerController.addDriver()) {

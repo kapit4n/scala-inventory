@@ -44,7 +44,7 @@ class TransactionRepository @Inject() (
 
   private val tableQ = TableQuery[TransactionTable]
 
-  def createIngreso(
+  def createIncome(
     date: String, type_1: String, description: String,
     createdBy: Long, createdByName: String,
     userId: Long, userName: String): Future[Transaction] = db.run {
@@ -102,7 +102,7 @@ class TransactionRepository @Inject() (
   }
 
   // update required to copy
-  def updateIngreso(
+  def updateIncome(
     id: Long, date: String, type_1: String, description: String,
     userId: Long, userName: String): Future[Seq[Transaction]] = db.run {
     repoLog.createLogEntry(repoLog.UPDATE, repoLog.TRANSACTION, userId, userName, date + " " + type_1 + " " + description);

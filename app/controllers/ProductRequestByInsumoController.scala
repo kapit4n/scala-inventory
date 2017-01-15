@@ -21,20 +21,18 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository,
-  repoUser: UserRepository, repoModule: ModuleRepository, repoInsUser: UserRepository,
+  repoUser: UserRepository, repoInsUser: UserRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateProductRequestByInsumoForm] = Form {
     mapping(
       "date" -> text,
       "userId" -> longNumber,
-      "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text)(CreateProductRequestByInsumoForm.apply)(CreateProductRequestByInsumoForm.unapply)
   }
 
   var users = getUsersMap()
-  var modules = getModulesMap()
 
   def index = Action.async { implicit request =>
     repo.list().map { res =>
@@ -48,19 +46,17 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
     } else {
       users = getUsersMap()
     }
-    modules = getModulesMap()
-    Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, newForm, users, modules))
+    Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, newForm, users))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, errorForm, users, modules)))
+        Future.successful(Ok(views.html.productRequestByInsumo_add(new MyDeadboltHandler, errorForm, users)))
       },
       res => {
         repo.createByInsumo(
           res.date, res.userId, users(res.userId.toString),
-          res.moduleId, modules(res.moduleId.toString),
           res.status, res.detail, "insumo",
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
@@ -99,7 +95,6 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
       "id" -> longNumber,
       "date" -> text,
       "userId" -> longNumber,
-      "moduleId" -> longNumber,
       "status" -> text,
       "detail" -> text)(UpdateProductRequestByInsumoForm.apply)(UpdateProductRequestByInsumoForm.unapply)
   }
@@ -126,15 +121,14 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
       case (res) =>
         val anyData = Map(
           "id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(),
-          "userId" -> res.toList(0).userId.toString(), "moduleId" -> res.toList(0).moduleId.toString(),
+          "userId" -> res.toList(0).userId.toString(),
           "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
         if (request.session.get("role").getOrElse("0").toLowerCase == "user") {
           users = getEmployeeNamesMap(request.session.get("userId").getOrElse("0").toLong)
         } else {
           users = getUsersMap()
         }
-        modules = getModulesMap()
-        Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, updateForm.bind(anyData), users, modules))
+        Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, updateForm.bind(anyData), users))
     }
   }
 
@@ -190,18 +184,6 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
     }, 3000.millis)
   }
 
-  def getModulesMap(): Map[String, String] = {
-    Await.result(repoModule.list().map {
-      case (res1) =>
-        val cache = collection.mutable.Map[String, String]()
-        res1.foreach { user =>
-          cache put (user.id.toString, user.name)
-        }
-
-        cache.toMap
-    }, 3000.millis)
-  }
-
   // delete required
   def delete(id: Long) = Action.async {
     val requestRows = getChildren(id)
@@ -224,12 +206,12 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.productRequestByInsumo_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String]())))
       },
       res => {
         repo.updateByInsumo(
           res.id, res.date, res.userId, users(res.userId.toString),
-          res.moduleId, modules(res.moduleId.toString), res.status, res.detail, "insumo",
+          res.status, res.detail, "insumo",
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
             Redirect(routes.ProductRequestByInsumoController.show(res.id))
@@ -238,6 +220,6 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestRepository
   }
 }
 
-case class CreateProductRequestByInsumoForm(date: String, userId: Long, moduleId: Long, status: String, detail: String)
+case class CreateProductRequestByInsumoForm(date: String, userId: Long, status: String, detail: String)
 
-case class UpdateProductRequestByInsumoForm(id: Long, date: String, userId: Long, moduleId: Long, status: String, detail: String)
+case class UpdateProductRequestByInsumoForm(id: Long, date: String, userId: Long, status: String, detail: String)

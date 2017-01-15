@@ -34,15 +34,6 @@
                                 @row.userName                                    
                             }
                         </td>
-                        <td>
-                            @restrictOr(roles = List(Array("moduleShow"))) {
-                               <a href="/module_show/@row.moduleId">@row.moduleName
-                            </a>
-                            }{
-                                @row.moduleName
-                            }
-                        </td>
-
                         <td>@row.status</td>
                         <td>@row.detail</td>
                         <td>

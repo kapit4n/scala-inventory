@@ -25,35 +25,27 @@
             <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Description: </div>
-            <div style="display: inline-block;" id="description">@row.description</div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Elaborado Por: </div>
+            <div style="display: inline-block;"> Registed By: </div>
             <div style="display: inline-block;" id="description">@row.createdByName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Autorizado Por: </div>
-            <div style="display: inline-block;" id="description">@row.autorizedByName</div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Recibido Por: </div>
-            <div style="display: inline-block;" id="description">@row.receivedByName</div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">@row.description</div>
         </div>
     </div>
 
     <div class="container">
-        <a id="addDetail" href="/transactionDetail_addGet/@row.id" class="btn btn-primary btn-sm">Add Detalle</a> 
+        <a id="addDetail" href="/transactionDetail_addGet/@row.id" class="btn btn-primary btn-sm">Add Detail</a> 
     </div>
 
-    <div class="container">Accounts y Detalle</div>
+    <div class="container">Accounts y Detail</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
                     <th>Account</th>
-                    <th>Debe</th>
-                    <th>Haber</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
                     <th>-----------</th>
                 </tr>
             </thead>

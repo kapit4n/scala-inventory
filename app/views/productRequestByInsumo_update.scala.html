@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rowId: Long, row: Form[UpdateProductRequestByInsumoForm], users: Map[String, String], modules: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, rowId: Long, row: Form[UpdateProductRequestByInsumoForm], users: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -18,7 +18,6 @@
     @form(routes.ProductRequestByInsumoController.updatePost()) {
         @inputText(row("date"))
         @select(field = row("userId"), options = options(users))
-        @select(field = row("moduleId"), options = options(modules))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
         <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>

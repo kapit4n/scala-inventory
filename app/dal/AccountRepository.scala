@@ -75,13 +75,13 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, rep
   }
 
   def getChilAccountsByType(type_1: String): Future[Seq[Account]] = db.run {
-    if (type_1 == "Ingreso") {
+    if (type_1 == "Income") {
       tableQ.filter(p => p.child === true && (
-        p.type_1 === "INGRESO" || p.type_1 === "PATRIMONIO" ||
+        p.type_1 === "INCOME" || p.type_1 === "PATRIMONIO" ||
         p.type_1 === "ACTIVO" || p.type_1 === "PASIVO")).sortBy(m => (m.code)).result
     } else {
       tableQ.filter(p => p.child === true && (
-        p.type_1 === "EGRESO" || p.type_1 === "PATRIMONIO" ||
+        p.type_1 === "OUTCOME" || p.type_1 === "PATRIMONIO" ||
         p.type_1 === "ACTIVO" || p.type_1 === "PASIVO")).sortBy(m => (m.code)).result
     }
   }

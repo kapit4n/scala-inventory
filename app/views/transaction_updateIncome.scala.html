@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction, rowForm: Form[UpdateTransactionFormEgreso], users: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Transaction, rowForm: Form[UpdateTransactionFormIncome])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -15,12 +15,10 @@
            <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
         }
     </div>
-    @form(routes.TransactionController.updatePostEgreso()) {
+    @form(routes.TransactionController.updatePostIncome()) {
         @inputDate(rowForm("date"))
-        @select(field = rowForm("type_1"), options = options(Map("Egreso" -> "Egreso")))
+        @select(field = rowForm("type_1"), options = options(Map("Income" -> "Income")))
         @inputText(rowForm("description"))
-        @select(field = rowForm("receivedBy"), options = options(users))
-        @select(field = rowForm("autorizedBy"), options = options(users))
         <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
         <a href="/transaction_show/@row.id" class="btn btn-primary btn-sm">Cancel</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, modules: Seq[RequestRowCustomer], drivers: Seq[RequestRowCustomer])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: RequestRow, drivers: Seq[RequestRowCustomer])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -48,51 +48,7 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a id="payModule" href="/requestRowModule_add/@row.id"  class="btn btn-primary btn-sm">Pago del Modulo</a> </div>
             <div style="display: inline-block;"> <a id="payTransport" href="/requestRowDriver_add/@row.id"  class="btn btn-primary btn-sm">Pagar al Transportador</a> </div>
-    </div>
-
-    <div>Pagos</div>
-    <div class="table table-bordered">
-        <table class="table table-bordered" id="rows">
-            <thead>
-                <tr>
-                    <th>Modulo</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>-----------</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(child <- modules) {
-                    <tr>
-                        <td>
-                            @restrictOr(roles = List(Array("moduleShow"))) {
-                               <a href="/customer_show/@child.customerId">@child.customerName
-                            </a> 
-                            }{
-                                @child.customerName
-                            }
-                        </td>
-                        <td>@child.quantity</td>
-                        <td>@child.price</td>
-                        <td>@child.status</td>
-                        <td>
-                           @restrict(roles = List(Array("requestRowModuleEdit"))) {
-                               <a href="/requestRowModule_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
-                           }
-                           @restrict(roles = List(Array("requestRowModuleDelete"))) {
-                               <a href="/requestRowCustomer_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
-                           }
-                           @restrict(roles = List(Array("requestRowModuleShow"))) {
-                               <a href="/requestRowCustomer_show/@child.id" class="btn btn-info btn-sm">view</a>
-                           }
-                       </td> 
-                    </tr>
-                }
-            </tbody>
-        </table>
     </div>
 
     <div>Pagos a Transportistas</div>
@@ -110,28 +66,9 @@
             <tbody>
                 @for(child <- drivers) {
                     <tr>
-                        <td>
-                            @restrictOr(roles = List(Array("moduleShow"))) {
-                               <a href="/customer_show/@child.customerId">@child.customerName
-                            </a> 
-                            }{
-                                @child.customerName
-                            }
-                        </td>
                         <td>@child.quantity</td>
                         <td>@child.paid</td>
                         <td>@child.status</td>
-                        <td>
-                           @restrict(roles = List(Array("requestRowModuleEdit"))) {
-                               <a href="/requestRowDriver_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
-                           }
-                           @restrict(roles = List(Array("requestRowModuleDelete"))) {
-                               <a href="/requestRowCustomer_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
-                           }
-                           @restrict(roles = List(Array("requestRowModuleShow"))) {
-                               <a href="/requestRowCustomer_show/@child.id" class="btn btn-info btn-sm">view</a>
-                           }
-                       </td> 
                     </tr>
                 }
             </tbody>
