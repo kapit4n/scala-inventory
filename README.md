@@ -1,11 +1,12 @@
-# Getting started with Play (Scala)
+# Hi-Stock (Scala)
 
-This project demonstrates how to create a simple CRUD application with Play.
+Hi Stock is a system that will help us to manage the stock in the store and have the reports of the movement of the products.
 
 # Prerequisites
 * Scala
 * Sbt
 * Java8
+* activator
 
 # Installation
 * run activator
@@ -18,6 +19,6 @@ This project demonstrates how to create a simple CRUD application with Play.
 * Go to localhost:9000
 * Open the application with sublime
 
-##Load dependencies with activator
+## Load dependencies with activator
 * activator libraryDependencies
 * activator "show dependencyClasspath"
