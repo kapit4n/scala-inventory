@@ -13,14 +13,13 @@ import scala.concurrent.{ Future, ExecutionContext, Await }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
+class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,repoLog: LogEntryRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import driver.api._
 
   private class AccountesTable(tag: Tag) extends Table[Account](tag, "account") {
-
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def code = column[String]("code")
     def name = column[String]("name")
