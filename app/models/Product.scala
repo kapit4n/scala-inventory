@@ -5,7 +5,7 @@ import play.api.libs.json._
 case class Product(
   id: Long, name: String, cost: Double,
   percent: Double, price: Double, description: String,
-  measureId: Long, measureName: String, currentAmount: Int,
+  measureId: Long, measureName: String, currentAmount: Int, stockLimit: Int,
   type_1: String)
 
 object Product {

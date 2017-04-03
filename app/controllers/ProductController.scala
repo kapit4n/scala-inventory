@@ -29,6 +29,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       "description" -> text,
       "measureId" -> longNumber,
       "currentAmount" -> number,
+      "stockLimit" -> number,
       "type_1" -> text)(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
@@ -80,6 +81,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
           res.name, res.cost, res.percent, res.cost + res.cost * res.percent, res.description,
           res.measureId, measures(res.measureId.toString),
           res.currentAmount,
+          res.stockLimit,
           res.type_1,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
@@ -131,6 +133,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
       "description" -> text,
       "measureId" -> longNumber,
       "currentAmount" -> number,
+      "stockLimit" -> number,
       "type_1" -> text)(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
@@ -164,6 +167,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
         "measureId" -> updatedRow.measureId.toString(),
         "measureName" -> updatedRow.measureName.toString(),
         "currentAmount" -> updatedRow.currentAmount.toString(),
+        "stockLimit" -> updatedRow.stockLimit.toString(),
         "type_1" -> updatedRow.type_1.toString())
       Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, types))
     }
@@ -193,7 +197,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
         repo.update(
           res.id, res.name, res.cost, res.percent, res.price,
           res.description, res.measureId, measures(res.measureId.toString),
-          res.currentAmount, res.type_1,
+          res.currentAmount, res.stockLimit, res.type_1,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
             Redirect(routes.ProductController.show(res.id))
@@ -229,9 +233,9 @@ case class SearchProductForm(search: String)
 
 case class CreateProductForm(
   name: String, cost: Double, percent: Double,
-  description: String, measureId: Long, currentAmount: Int, type_1: String)
+  description: String, measureId: Long, currentAmount: Int, stockLimit: Int, type_1: String)
 
 case class UpdateProductForm(
   id: Long, name: String, cost: Double,
   percent: Double, price: Double, description: String,
-  measureId: Long, currentAmount: Int, type_1: String)
+  measureId: Long, currentAmount: Int, stockLimit: Int, type_1: String)

@@ -34,6 +34,7 @@
                     <th>Percent</th>
                     <th>Price</th>
                     <th>Measure</th>
+                    <th>Stock limit</th>
                     <th>In Stock</th>
                     <th>-----------</th>
                 </tr>
@@ -47,6 +48,7 @@
                         <td>@row.percent</td>
                         <td>@row.price</td>
                         <td>@row.measureName</td>                        
+                        <td>@row.stockLimit</td>
                         <td>@row.currentAmount</td>
                         <td>
                             @restrict(roles = List(Array("productEdit"))) {
@@ -66,5 +68,7 @@
                
             </tfoot>
         </table>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_index.js")'></script>
+
     </div>
 }
