@@ -57,6 +57,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   var measures = getMeasureMap()
   var requestRows = getRequestRowsMap(0)
   var products = getProducts(0)
+  var currentProduct: Product = _
   var customers = getCustomers()
   var drivers = getDrivers()
   var updatedRow: RequestRowCustomer = _
@@ -94,10 +95,14 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
     products = getProducts(requestRow.productId)
+    currentProduct = getProduct(requestRow.productId)
     customers = getCustomers()
     measures = getMeasureMap()
-    Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm, requestRows,
-      products, customers, measures))
+
+    val anyData = Map("price" -> currentProduct.price.toString)
+
+    Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm.bind(anyData), requestRows,
+      products, currentProduct, customers, measures))
   }
 
   def addDriverGet(requestRowId: Long) = Action { implicit request =>
@@ -110,12 +115,13 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, newDriverForm, requestRows,
       products, drivers, measures))
   }
+
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
         Future.successful(Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, errorForm,
-          requestRows, products, customers, measures)))
+          requestRows, products, currentProduct, customers, measures)))
       },
       res => {
         repo.create(
@@ -257,6 +263,12 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
         cache put (product.id.toString(), product.name)
       }
       cache.toMap
+    }, 3000.millis)
+  }
+
+  def getProduct(id: Long): Product = {
+    Await.result(repoProduct.getById(id).map { res1 =>
+      res1(0)
     }, 3000.millis)
   }
 
@@ -421,7 +433,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     searchCustomerForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm,
-          newForm, requestRows, products, customers, measures)))
+          newForm, requestRows, products, currentProduct, customers, measures)))
       },
       res => {
         repoCustomer.searchCustomer(res.search).map { resCustomers =>
@@ -430,7 +442,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
             cache put (customer.id.toString(), customer.account.toString + ": " + customer.name.toString)
           }
           customers = cache.toMap
-          Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm, requestRows, products, customers, measures))
+          Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm, requestRows, products, currentProduct, customers, measures))
         }
       })
   }
