@@ -12,9 +12,9 @@
     @form(routes.VendorController.addVendor()) {
         <div class="container">
             @inputText(vendor("name"), 'id -> "name")
-            @inputText(vendor("telefono"), 'id -> "phone")
-            @inputText(vendor("direccion"), 'id -> "address")
-            @inputText(vendor("contacto"), 'id -> "contact")
+            @inputText(vendor("phone"), 'id -> "phone")
+            @inputText(vendor("address"), 'id -> "address")
+            @inputText(vendor("contact"), 'id -> "contact")
             @inputText(vendor("account"), 'id -> "accountValue")
             <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
             <a href="/vendor_list" class="btn btn-primary btn-sm">Cancelar</a>

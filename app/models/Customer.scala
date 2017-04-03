@@ -3,10 +3,10 @@ package models
 import play.api.libs.json._
 
 case class Customer(
-  id: Long, name: String, carnet: Int, telefono: Int,
-  direccion: String, account: String,
+  id: Long, name: String, carnet: Int, phone: Int,
+  address: String, account: String,
   companyName: String, totalDebt: Double,
-  numberPayment: Int, position: String)
+  position: String)
 
 object Customer {
   implicit val customerFormat = Json.format[Customer]

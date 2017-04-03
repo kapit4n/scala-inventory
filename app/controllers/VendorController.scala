@@ -21,9 +21,9 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   val newForm: Form[CreateVendorForm] = Form {
     mapping(
       "name" -> nonEmptyText,
-      "telefono" -> number,
-      "direccion" -> nonEmptyText,
-      "contacto" -> nonEmptyText,
+      "phone" -> number,
+      "address" -> nonEmptyText,
+      "contact" -> nonEmptyText,
       "account" -> longNumber)(CreateVendorForm.apply)(CreateVendorForm.unapply)
   }
 
@@ -44,8 +44,8 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       },
       vendor => {
         repo.create(
-          vendor.name, vendor.telefono, vendor.direccion,
-          vendor.contacto, vendor.account,
+          vendor.name, vendor.phone, vendor.address,
+          vendor.contact, vendor.account,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
             Redirect(routes.VendorController.show(resNew.id))
@@ -64,9 +64,9 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
     mapping(
       "id" -> longNumber,
       "name" -> nonEmptyText,
-      "telefono" -> number.verifying(min(0), max(9999999)),
-      "direccion" -> nonEmptyText,
-      "contacto" -> text,
+      "phone" -> number.verifying(min(0), max(9999999)),
+      "address" -> nonEmptyText,
+      "contact" -> text,
       "account" -> longNumber)(UpdateVendorForm.apply)(UpdateVendorForm.unapply)
   }
 
@@ -88,7 +88,7 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
-      val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name, "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "contacto" -> res.toList(0).contacto, "account" -> res.toList(0).account.toString())
+      val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name, "phone" -> res.toList(0).phone.toString(), "address" -> res.toList(0).address, "contact" -> res.toList(0).contact, "account" -> res.toList(0).account.toString())
       Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
     }
   }
@@ -115,8 +115,8 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       },
       res => {
         repo.update(
-          res.id, res.name, res.telefono, res.direccion,
-          res.contacto, res.account,
+          res.id, res.name, res.phone, res.address,
+          res.contact, res.account,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
             Redirect(routes.VendorController.show(res.id))
@@ -125,6 +125,6 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   }
 }
 
-case class CreateVendorForm(name: String, telefono: Int, direccion: String, contacto: String, account: Long)
+case class CreateVendorForm(name: String, phone: Int, address: String, contact: String, account: Long)
 
-case class UpdateVendorForm(id: Long, name: String, telefono: Int, direccion: String, contacto: String, account: Long)
+case class UpdateVendorForm(id: Long, name: String, phone: Int, address: String, contact: String, account: Long)

@@ -25,16 +25,15 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def carnet = column[Int]("carnet")
-    def telefono = column[Int]("telefono")
-    def direccion = column[String]("direccion")
+    def phone = column[Int]("phone")
+    def address = column[String]("address")
     def account = column[String]("account")
     def companyName = column[String]("companyName")
     def totalDebt = column[Double]("totalDebt")
-    def numberPayment = column[Int]("numberPayment")
     def position = column[String]("position")
     def * = (
-      id, name, carnet, telefono, direccion, account,
-      companyName, totalDebt, numberPayment, position) <> ((Customer.apply _).tupled, Customer.unapply)
+      id, name, carnet, phone, address, account,
+      companyName, totalDebt, position) <> ((Customer.apply _).tupled, Customer.unapply)
   }
 
   private class CompanysTable(tag: Tag) extends Table[Company](tag, "company") {
@@ -47,23 +46,22 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
   private val tableQ = TableQuery[CustomeresTable]
   private val tableQCompany = TableQuery[CompanysTable]
 
-  def create(name: String, carnet: Int, telefono: Int, direccion: String,
-    account: String,
-    userId: Long, userName: String): Future[Customer] = db.run {
+  def create(name: String, carnet: Int, phone: Int, address: String,
+    account: String, userId: Long, userName: String): Future[Customer] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCTOR, userId, userName, name);
     (tableQ.map(
       p => (
-        p.name, p.carnet, p.telefono, p.direccion, p.account,
-        p.companyName, p.totalDebt, p.numberPayment,
+        p.name, p.carnet, p.phone, p.address, p.account,
+        p.companyName, p.totalDebt, 
         p.position)) returning tableQ.map(_.id) into (
         (nameAge, id) =>
           Customer(
             id, nameAge._1, nameAge._2,
             nameAge._3, 
             nameAge._4, nameAge._5, nameAge._6,
-            nameAge._7, nameAge._8, nameAge._9))) += (
-          name, carnet, telefono, direccion, account,
-          "", 0, 0, "Customer")
+            nameAge._7, nameAge._8))) += (
+          name, carnet, phone, address, account,
+          "", 0, "Customer")
   }
 
   def list(start: Int, interval: Int): Future[Seq[Customer]] = db.run {
@@ -89,25 +87,23 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
 
   // update required to copy
   def update(
-    id: Long, name: String, carnet: Int, telefono: Int,
-    direccion: String, account: String, companyName: String,
-    totalDebt: Double, numberPayment: Int,
+    id: Long, name: String, carnet: Int, phone: Int,
+    address: String, account: String, companyName: String,
+    totalDebt: Double, 
     userId: Long, userName: String): Future[Seq[Customer]] = db.run {
     repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCTOR, userId, userName, name);
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
     db.run(q2.update(carnet))
-    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
-    db.run(q3.update(telefono))
+    val q3 = for { c <- tableQ if c.id === id } yield c.phone
+    db.run(q3.update(phone))
     val q4 = for { c <- tableQ if c.id === id } yield c.account
     db.run(q4.update(account))
-    val q6 = for { c <- tableQ if c.id === id } yield c.direccion
-    db.run(q6.update(direccion))
+    val q6 = for { c <- tableQ if c.id === id } yield c.address
+    db.run(q6.update(address))
     val q8 = for { c <- tableQ if c.id === id } yield c.totalDebt
     db.run(q8.update(totalDebt))
-    val q9 = for { c <- tableQ if c.id === id } yield c.numberPayment
-    db.run(q9.update(numberPayment))
 
     tableQ.filter(_.id === id).result
   }
@@ -157,14 +153,6 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     tableQ.filter(_.id === id).result
   }
 
-  // Update it when generate the report
-  def updateNumberPayment(id: Long, numberPayment: Int): Future[Seq[Customer]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.numberPayment
-    getById(id).map { row =>
-      db.run(q.update(row(0).numberPayment + numberPayment))
-    }
-    tableQ.filter(_.id === id).result
-  }
 
   def listByTotalDebt(): Future[Seq[Customer]] = db.run {
     tableQ.filter(_.totalDebt > 0.0).result

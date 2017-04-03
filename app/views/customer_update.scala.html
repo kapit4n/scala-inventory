@@ -20,11 +20,10 @@
     <div class="container">
             @inputText(rowForm("name"))
             @inputText(rowForm("carnet"))
-            @inputText(rowForm("telefono"))
-            @inputText(rowForm("direccion"))
+            @inputText(rowForm("phone"))
+            @inputText(rowForm("address"))
             @inputText(rowForm("account"))
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
-            @inputText(rowForm("numberPayment"))
             @inputText(rowForm("position"), 'readonly -> "readonly")
         <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
         <a href="/customer_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>

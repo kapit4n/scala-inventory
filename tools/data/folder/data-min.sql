@@ -1,8 +1,8 @@
-INSERT INTO user(id, name, carnet, telefono, direccion, Salary, type, login, password) VALUES 
-(1,'admin',222,333,'direccion',3000,'Admin','admin','admin'),
+INSERT INTO user(id, name, carnet, phone, address, Salary, type, login, password) VALUES 
+(1,'admin',222,333,'address',3000,'Admin','admin','admin'),
 (2,'admin2',7878,78798,'dir',78,'Admin','admin2','admin2'),
-(3,'insumo',789789,789789,'direccion',7878,'Insumo','insumo','insumo'),
-(4,'Employee 1',789789,789789,'direccion',890890,'Employee','employee','employee'),
+(3,'insumo',789789,789789,'address',7878,'Insumo','insumo','insumo'),
+(4,'Employee 1',789789,789789,'address',890890,'Employee','employee','employee'),
 (5,'Store',789789,789789,'Address',678678,'Store','alamcen','store');
 
 INSERT INTO company(id, name) VALUES
@@ -14,12 +14,7 @@ INSERT INTO company(id, name) VALUES
 ('10007','AMLECO');
 
 INSERT INTO customer VALUES 
-  (1, 'Daniel Campos', 0, 22333, 'Address', '2225', 1, 'Modulo 1', 'Asociacion', 10001, 133, 'acc', 0, 'position', '2016-06-17 23:53:08'),
-  (2, 'Juan Cespedez', 0, 22333, 'Address', '2383', 1, 'Module Name', 'Asociacion', 10001, 133, 'acc', 0, 'position', '2016-06-17 23:53:08'),
-  (3, 'Vaneza Mamani', 0, 22333, 'Address', '2472', 1, 'Module Name', 'Asociacion', 10001, 133, 'acc', 0, 'position', '2016-06-17 23:53:08'),
-  (4, 'Maria Arce', 0, 22333, 'Address', '2952', 1, 'Module Name', 'Asociacion', 10001, 133, 'no acc', 0, 'position', '2016-06-17 23:53:08'),
-  (5, 'Silvia Rocha', 0, 22333, 'Address', '10289', 1, 'Module Name', 'Asociacion', 10001, 180, 'acc', 0, 'position', '2016-06-17 23:53:08'),
-  (6, 'Hansel Arce', 0, 22333, 'Address', '3302', 1, 'Module Name', 'Asociacion', 10001, 206, 'acc', 0, 'position', '2016-06-17 23:53:08');
+  (1, 'Daniel Campos', 22333, 22333, 'Address', '2225','Company Name 1', 'status', 0, 'position', '2016-06-17 23:53:08');
 
 
 INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
@@ -29,7 +24,7 @@ INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VAL
 ('DI',	'Product 3',	'2',	'0',	'0', 'type1'),
 ('DI',	'Product 4',	'0',	'0',	'0', 'type1');
 
-INSERT INTO vendor(name, telefono, direccion, contacto, account) VALUES
+INSERT INTO vendor(name, phone, address, contact, account) VALUES
 
 ('Vendor 1',	'23423233',	'Address 1',	'Contact 1', 1),
 ('Vendor 2',	'23423423',	'Address 2',	'Contact 2', 2);

@@ -26,8 +26,8 @@ class UserController @Inject() (
     mapping(
       "name" -> nonEmptyText,
       "carnet" -> number,
-      "telefono" -> number,
-      "direccion" -> text,
+      "phone" -> number,
+      "address" -> text,
       "Salary" -> number,
       "type_1" -> text,
       "login" -> text,
@@ -77,7 +77,7 @@ class UserController @Inject() (
       },
       res => {
         repo.create(
-          res.name, res.carnet, res.telefono, res.direccion,
+          res.name, res.carnet, res.phone, res.address,
           res.Salary, res.type_1, res.login, res.password,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
@@ -98,8 +98,8 @@ class UserController @Inject() (
       "id" -> longNumber,
       "name" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
-      "telefono" -> number.verifying(min(0), max(9999999)),
-      "direccion" -> nonEmptyText,
+      "phone" -> number.verifying(min(0), max(9999999)),
+      "address" -> nonEmptyText,
       "Salary" -> number,
       "type_1" -> text,
       "login" -> text,
@@ -148,8 +148,8 @@ class UserController @Inject() (
       updateRow = res(0)
       val anyData = Map(
         "id" -> id.toString().toString(), "name" -> updateRow.name,
-        "carnet" -> updateRow.carnet.toString(), "telefono" -> updateRow.telefono.toString(),
-        "direccion" -> updateRow.direccion, "Salary" -> updateRow.Salary.toString(),
+        "carnet" -> updateRow.carnet.toString(), "phone" -> updateRow.phone.toString(),
+        "address" -> updateRow.address, "Salary" -> updateRow.Salary.toString(),
         "type_1" -> updateRow.type_1.toString(), "login" -> updateRow.login.toString(),
         "password" -> updateRow.password.toString())
       Ok(views.html.user_update(new MyDeadboltHandler, updateRow, updateForm.bind(anyData), types))
@@ -178,8 +178,8 @@ class UserController @Inject() (
       },
       res => {
         repo.update(
-          res.id, res.name, res.carnet, res.telefono,
-          res.direccion, res.Salary, res.type_1,
+          res.id, res.name, res.carnet, res.phone,
+          res.address, res.Salary, res.type_1,
           res.login, res.password,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
@@ -189,6 +189,6 @@ class UserController @Inject() (
   }
 }
 
-case class CreateUserForm(name: String, carnet: Int, telefono: Int, direccion: String, Salary: Int, type_1: String, login: String, password: String)
+case class CreateUserForm(name: String, carnet: Int, phone: Int, address: String, Salary: Int, type_1: String, login: String, password: String)
 
-case class UpdateUserForm(id: Long, name: String, carnet: Int, telefono: Int, direccion: String, Salary: Int, type_1: String, login: String, password: String)
+case class UpdateUserForm(id: Long, name: String, carnet: Int, phone: Int, address: String, Salary: Int, type_1: String, login: String, password: String)

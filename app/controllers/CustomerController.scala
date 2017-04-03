@@ -44,8 +44,8 @@ class CustomerController @Inject() (
     mapping(
       "name" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
-      "telefono" -> number.verifying(min(0), max(9999999)),
-      "direccion" -> nonEmptyText,
+      "phone" -> number.verifying(min(0), max(9999999)),
+      "address" -> nonEmptyText,
       "account" -> text)(CreateCustomerForm.apply)(CreateCustomerForm.unapply)
   }
 
@@ -109,7 +109,7 @@ class CustomerController @Inject() (
         Future.successful(Ok(views.html.customer_add(new MyDeadboltHandler, errorForm)))
       },
       res => {
-        repo.create(res.name, res.carnet, res.telefono, res.direccion,
+        repo.create(res.name, res.carnet, res.phone, res.address,
           res.account,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
@@ -136,11 +136,10 @@ class CustomerController @Inject() (
       "id" -> longNumber,
       "name" -> nonEmptyText,
       "carnet" -> number,
-      "telefono" -> number,
-      "direccion" -> nonEmptyText,
+      "phone" -> number,
+      "address" -> nonEmptyText,
       "account" -> text,
-      "totalDebt" -> of[Double],
-      "numberPayment" -> number)(UpdateCustomerForm.apply)(UpdateCustomerForm.unapply)
+      "totalDebt" -> of[Double])(UpdateCustomerForm.apply)(UpdateCustomerForm.unapply)
   }
 
   val searchForm: Form[SearchCustomerForm] = Form {
@@ -190,11 +189,10 @@ class CustomerController @Inject() (
         "id" -> id.toString().toString(),
         "name" -> updatedRow.name,
         "carnet" -> updatedRow.carnet.toString(),
-        "telefono" -> updatedRow.telefono.toString(),
-        "direccion" -> updatedRow.direccion,
+        "phone" -> updatedRow.phone.toString(),
+        "address" -> updatedRow.address,
         "account" -> updatedRow.account.toString(),
-        "totalDebt" -> updatedRow.totalDebt.toString(),
-        "numberPayment" -> updatedRow.numberPayment.toString())
+        "totalDebt" -> updatedRow.totalDebt.toString())
       Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
     }
   }
@@ -229,9 +227,9 @@ class CustomerController @Inject() (
       },
       res => {
         repo.update(
-          res.id, res.name, res.carnet, res.telefono,
-          res.direccion, res.account, "Company Name",
-          res.totalDebt, res.numberPayment,
+          res.id, res.name, res.carnet, res.phone,
+          res.address, res.account, "Company Name",
+          res.totalDebt,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
             Redirect(routes.CustomerController.show(res.id))
@@ -241,12 +239,12 @@ class CustomerController @Inject() (
 }
 
 case class CreateCustomerForm(
-  name: String, carnet: Int, telefono: Int,
-  direccion: String, account: String)
+  name: String, carnet: Int, phone: Int,
+  address: String, account: String)
 
 case class UpdateCustomerForm(
-  id: Long, name: String, carnet: Int, telefono: Int,
-  direccion: String, account: String,
-  totalDebt: Double, numberPayment: Int)
+  id: Long, name: String, carnet: Int, phone: Int,
+  address: String, account: String,
+  totalDebt: Double)
 
 case class SearchCustomerForm(search: String)

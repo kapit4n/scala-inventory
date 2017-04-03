@@ -17,9 +17,9 @@
     </div>
     @form(routes.VendorController.updatePost()) {
         @inputText(rowForm("name"))
-        @inputText(rowForm("telefono"))
-        @inputText(rowForm("direccion"))
-        @inputText(rowForm("contacto"))
+        @inputText(rowForm("phone"))
+        @inputText(rowForm("address"))
+        @inputText(rowForm("contact"))
         @inputText(rowForm("account"))
         <input type="submit" class="btn btn-primary btn-sm" value="Update"/>
         <a href="/vendor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>

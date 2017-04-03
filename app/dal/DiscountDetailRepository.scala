@@ -72,7 +72,7 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   // I will need the customer totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
   def generarReport(requestRows: Seq[Customer], discountReportId: Long) = {
     var totalDiscount = 0.0
-    requestRows.foreach {
+    /*requestRows.foreach {
       case (customer) =>
         if (customer.numberPayment > 0 && customer.totalDebt > 0) {
           totalDiscount = totalDiscount + customer.totalDebt / customer.numberPayment;
@@ -85,7 +85,7 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
           insertResult.map(insertResultRow => repoCustomer.updateNumberPayment(customer.id, -1).map(mm => println("DONE")));
         }
     }
-    repoDiscount.updateTotal(discountReportId, totalDiscount)
+    repoDiscount.updateTotal(discountReportId, totalDiscount)*/
     println(totalDiscount)
   }
 

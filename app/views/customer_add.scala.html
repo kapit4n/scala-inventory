@@ -12,8 +12,8 @@
     @form(routes.CustomerController.add()) {
         @inputText(row("name"), '_label -> "Name", 'id -> "name")
         @inputText(row("carnet"), 'id -> "ci")
-        @inputText(row("telefono"), 'id -> "phone")
-        @inputText(row("direccion"), 'id -> "address")
+        @inputText(row("phone"), 'id -> "phone")
+        @inputText(row("address"), 'id -> "address")
         @inputText(row("account"), 'id -> "accountId")
         <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
         <a href="customer_list/1" class="btn btn-primary btn-sm">Cancelar</a>
