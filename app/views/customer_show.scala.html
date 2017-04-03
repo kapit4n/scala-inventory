@@ -37,22 +37,22 @@
             <div style="display: inline-block;" id="account">@row.account</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Debt Total: </div>
+            <div style="display: inline-block;"> Total Debt: </div>
             <div style="display: inline-block;" id="totalDebt">@row.totalDebt</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Quantity De Pagos: </div>
+            <div style="display: inline-block;"> Quantity De Payments: </div>
             <div style="display: inline-block;" id="numberPayment">@row.numberPayment</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Next descuento: </div>
+            <div style="display: inline-block;"> Next Payment: </div>
             <div style="display: inline-block;" id="numberPayment">@if(row.numberPayment > 0) {
                     @(row.totalDebt/row.numberPayment)
                 }
             </div>
         </div>
         <div>
-            <div style="display: inline-block;"> Cargo: </div>
+            <div style="display: inline-block;"> Position: </div>
             <div style="display: inline-block;" id="position">@row.position</div>
         </div>
     </div>

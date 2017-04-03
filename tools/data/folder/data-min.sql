@@ -19,55 +19,21 @@ INSERT INTO customer VALUES
   (3, 'Vaneza Mamani', 0, 22333, 'Address', '2472', 1, 'Module Name', 'Asociacion', 10001, 133, 'acc', 0, 'position', '2016-06-17 23:53:08'),
   (4, 'Maria Arce', 0, 22333, 'Address', '2952', 1, 'Module Name', 'Asociacion', 10001, 133, 'no acc', 0, 'position', '2016-06-17 23:53:08'),
   (5, 'Silvia Rocha', 0, 22333, 'Address', '10289', 1, 'Module Name', 'Asociacion', 10001, 180, 'acc', 0, 'position', '2016-06-17 23:53:08'),
-  (6, 'Hansel Cuchallo', 0, 22333, 'Address', '3302', 1, 'Module Name', 'Asociacion', 10001, 206, 'acc', 0, 'position', '2016-06-17 23:53:08');
+  (6, 'Hansel Arce', 0, 22333, 'Address', '3302', 1, 'Module Name', 'Asociacion', 10001, 206, 'acc', 0, 'position', '2016-06-17 23:53:08');
 
-UPDATE customer SET companyName = "APL" WHERE companyId = '10001';
-UPDATE customer SET companyName = "ADEPLEC" WHERE companyId = '10002';
-UPDATE customer SET companyName = "ACRHOBOL" WHERE companyId = '10004';
-UPDATE customer SET companyName = "APLI" WHERE companyId = '10005';
-UPDATE customer SET companyName = "ALVA" WHERE companyId = '10006';
-UPDATE customer SET companyName = "AMLECO" WHERE companyId = '10007';
-UPDATE customer SET companyName = "ALVICO" WHERE companyId = '10008';
-UPDATE customer SET companyName = "ALDEPA" WHERE companyId = '10009';
-UPDATE customer SET companyName = "ADEPLECTRA" WHERE companyId = '100010';
-UPDATE customer SET companyName = "APLEVACC" WHERE companyId = '100011';
-UPDATE customer SET companyName = "APLIM" WHERE companyId = '100013';
-UPDATE customer SET companyName = "INDEPENDIENTES" WHERE companyId = '19999';
-UPDATE customer SET companyName = "APLE MAICA" WHERE companyId = '10014';
-UPDATE customer SET companyName = "A.L.M." WHERE companyId = '10012';
-UPDATE customer SET companyName = "ASO LATTE CLAKH" WHERE companyId = '10015';
-
-INSERT INTO product(vendorName, name, type) VALUES
-('AGP', 'Product 1', 'type1'),
-('AGP', 'Product 2', 'type1'),
-('AGP', 'Product 3', 'type1'),
-('AGP', 'Product 4', 'type1'),
-('AGP', 'Product 5', 'type1'),
-('AGP', 'Product 6', 'type1');
-
-INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
-('BI', 'Product 7', '1', '30.24', '30.24', 'type1'),
-('BI', 'Product 8', '2', '50.24', '100.48', 'type1'),
-('BI', 'Product 9', '0', '214.8', '0', 'type1'),
-('BI', 'Product 10', '12', '117.6', '1411.2', 'type1');
-
-INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
-('AG',	'Product 11',	'0',	'303',	'0', 'type1'),
-('AG',	'Product 12',	'3',	'119.3',	'357.9', 'type1'),
-('AG',	'Product 13',	'2',	'48.72',	'97.44', 'type1');
 
 INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
 
-('DI',	'Product 14',	'0',	'0',	'0', 'type1'),
-('DI',	'Product 15',	'0',	'0',	'0', 'type1'),
-('DI',	'Product 16',	'2',	'0',	'0', 'type1'),
-('DI',	'Product 17',	'0',	'0',	'0', 'type1');
+('DI',	'Product 1',	'0',	'0',	'0', 'type1'),
+('DI',	'Product 2',	'0',	'0',	'0', 'type1'),
+('DI',	'Product 3',	'2',	'0',	'0', 'type1'),
+('DI',	'Product 4',	'0',	'0',	'0', 'type1');
 
-INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
-('CLA BELLA',	'Product 18',	'1',	'1250',	'1250', 'type1'),
-('CLA BELLA',	'Product 19',	'0',	'1150',	'0', 'type1'),
-('CLA BELLA',	'Product 20',	'5',	'900',	'4500', 'type1'),
-('CLA BELLA',	'Product 21',	'0',	'0',	'0', 'type1');
+INSERT INTO vendor(name, telefono, direccion, contacto, account) VALUES
+
+('Vendor 1',	'23423233',	'Address 1',	'Contact 1', 1),
+('Vendor 2',	'23423423',	'Address 2',	'Contact 2', 2);
+
 
 INSERT INTO roles(roleName, roleCode) VALUES 
 ('Unit of Measure', "measure"),
@@ -285,4 +251,7 @@ INSERT INTO `account` VALUES (1,'1.0','ACTIVO','ACTIVO',0,'NO','',0,0,0,'2016-07
 
 UPDATE product SET measureId = 16, measureName="Unidad" where measureId = 0;
 
-UPDATE product SET cost = 10, percent = "0,1", price = 11 where cost = 0;
+UPDATE product SET cost = 10, percent = 0.1, price = 11 , price = 11 where cost = 0;
+
+UPDATE product SET stockLimit = 10;
+

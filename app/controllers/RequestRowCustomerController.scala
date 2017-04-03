@@ -99,7 +99,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     customers = getCustomers()
     measures = getMeasureMap()
 
-    val anyData = Map("price" -> currentProduct.price.toString)
+    val anyData = Map("price" -> currentProduct.price.toString, "totalPrice" -> (requestRow.quantity * currentProduct.price).toString, "quantity" -> requestRow.quantity.toString, "paid" -> (requestRow.quantity * currentProduct.price).toString, "credit" -> "0")
 
     Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm.bind(anyData), requestRows,
       products, currentProduct, customers, measures))

@@ -126,6 +126,7 @@ create table product (
   measureId INT DEFAULT 0,
   measureName VARCHAR(100) DEFAULT '',
   currentAmount INT  DEFAULT 0,
+  stockLimit INT  DEFAULT 0,
   vendorId INT DEFAULT 0,
   vendorName VARCHAR(100) DEFAULT '',
   vendorCode VARCHAR(50) DEFAULT '',
