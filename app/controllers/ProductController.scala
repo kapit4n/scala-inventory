@@ -18,7 +18,7 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductController @Inject() (repo: ProductRepository, repoProdInv: ProductInvRepository,
+class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRepository, repoProdInv: ProductInvRepository,
   repoUnit: MeasureRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateProductForm] = Form {
@@ -39,6 +39,7 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
   }
 
   var measures = getMeasureMap()
+  var vendors: Seq[Vendor] = getVendors()
   val types = scala.collection.immutable.Map[String, String]("Insumo" -> "Insumo", "Veterinaria" -> "Veterinaria")
   def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map {
@@ -143,11 +144,17 @@ class ProductController @Inject() (repo: ProductRepository, repoProdInv: Product
     }, 3000.millis)
   }
 
+  def getVendors(): Seq[Vendor] = {
+    Await.result(repoVendor.list().map { res =>
+      res
+    }, 3000.millis)
+  }
+
   // to copy
   def show(id: Long) = Action.async { implicit request =>
     val children = getChildren(id)
     repo.getById(id).map { res =>
-      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children))
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors))
     }
   }
 

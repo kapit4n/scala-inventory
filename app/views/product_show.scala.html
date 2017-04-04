@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv], vendors: Seq[Vendor])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -112,6 +112,77 @@
                         }
                     </tbody>
                 </table>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                            <div class="container">
+                                <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Assigned Vendors</a>
+                                </div>
+                            </div>
+                            <div class="table table-bordered">
+                                <table class="table table-bordered" id="rows">
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor Name</th>
+                                            @restrict(roles = List(Array("productEdit"))) {
+                                                <th>-----------</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for(assignedVendor <- vendors) {
+                                            <tr>
+                                                </td>
+                                                <td>@assignedVendor.name</td>
+                                                @restrict(roles = List(Array("role"))) {
+                                                    <td>
+                                                       @restrict(roles = List(Array("productEdit"))) {
+                                                           <a href="/vendor_remove/@assignedVendor.id" class="btn btn-danger btn-sm">Remove</a> 
+                                                       }
+                                                   </td> 
+                                               }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                         <div class="container">
+                            <div style="display: inline-block;"><a href="/productInvs_add/@row.id" class="btn btn-primary btn-sm">Available Vendors</a>
+                            </div>
+                        </div>
+                        <div class="table table-bordered">
+                            <table class="table table-bordered" id="rows">
+                                <thead>
+                                    <tr>
+                                        <th>Vendor Name</th>
+                                        @restrict(roles = List(Array("productEdit"))) {
+                                            <th>-----------</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for(vendor <- vendors) {
+                                        <tr>
+                                            </td>
+                                            <td>@vendor.name</td>
+                                            @restrict(roles = List(Array("role"))) {
+                                                <td>
+                                                   @restrict(roles = List(Array("productEdit"))) {
+                                                       <a href="/product_assign/@row.id/@vendor.id" class="btn btn-primary btn-sm">Add</a> 
+                                                   }
+                                               </td> 
+                                           }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
     </div>
 }
