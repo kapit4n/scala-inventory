@@ -2,6 +2,7 @@
 
 Hi Stock is a system that will help us to manage the stock in the store and have the reports of the movement of the products.
 
+
 # Prerequisites
 * Scala
 * Sbt
@@ -18,6 +19,10 @@ Hi Stock is a system that will help us to manage the stock in the store and have
 * Run
 * Go to localhost:9000
 * Open the application with sublime
+
+## mockup
+![Inventory Page](https://github.com/kapit4n/hi-stock/raw/master/tools/mockups/Inventory show page.png)
+
 
 ## Load dependencies with activator
 * activator libraryDependencies
