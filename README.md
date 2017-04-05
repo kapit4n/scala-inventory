@@ -21,7 +21,7 @@ Hi Stock is a system that will help us to manage the stock in the store and have
 * Open the application with sublime
 
 ## mockup
-![Inventory Page](https://github.com/kapit4n/hi-stock/raw/master/tools/mockups/Inventory show page.png)
+![Inventory](https://github.com/kapit4n/hi-stock/raw/tools/mockups/Inventory show page.png)
 
 
 ## Load dependencies with activator
