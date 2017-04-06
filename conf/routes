@@ -77,6 +77,10 @@ GET     /measure         			controllers.MeasureController.getMeasures
 GET     /measure_list         		controllers.MeasureController.index
 GET     /measure_add         		controllers.MeasureController.addGet
 
+GET     /vendor_assign/:id/:vendorId 		controllers.ProductController.assignVendor(id: Long, vendorId: Long)
+GET     /vendor_remove/:vendorId 			controllers.ProductController.removeVendor(vendorId: Long)
+
+
 # Now for users
 GET     /role_assign/:id/:roleCode 		controllers.UserController.assignRole(id: Long, roleCode: String)
 GET     /role_remove/:roleId 			controllers.UserController.removeRole(roleId: Long)
@@ -118,6 +122,7 @@ POST    /productUpload/:id             	controllers.ProductController.upload(id:
 POST    /product                 		controllers.ProductController.addProduct
 GET     /products         				controllers.ProductController.getProducts
 GET     /product_list         			controllers.ProductController.index
+GET     /product_reorder_list         	controllers.ProductController.reorder_index
 GET     /product_add         			controllers.ProductController.addGet
 
 # Now for product Invs

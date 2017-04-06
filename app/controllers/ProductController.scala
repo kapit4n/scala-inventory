@@ -18,8 +18,10 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRepository, repoProdInv: ProductInvRepository,
-  repoUnit: MeasureRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRepository,
+                                  repoProductVendor: ProductVendorRepository, repoProdInv: ProductInvRepository,
+                              repoUnit: MeasureRepository, val messagesApi: MessagesApi)
+                              (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateProductForm] = Form {
     mapping(
@@ -39,7 +41,9 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   }
 
   var measures = getMeasureMap()
-  var vendors: Seq[Vendor] = getVendors()
+  var productId: Long = _
+  var vendors: Seq[Vendor] = _
+  var productVendors: Seq[ProductVendor] = _
   val types = scala.collection.immutable.Map[String, String]("Insumo" -> "Insumo", "Veterinaria" -> "Veterinaria")
   def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map {
@@ -59,10 +63,31 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types))
   }
 
+  // to copy
+  def assignVendor(productId: Long, vendorId: Long) = Action.async { implicit request =>
+    //var vendor = getVendorById(vendorId)
+    repoProductVendor.createProductVendor(productId, /*vendor.name, */vendorId).map(res =>
+      Redirect(routes.ProductController.show(res.productId)))
+  }
+
+
+  // to copy
+  def removeVendor(id: Long) = Action.async { implicit request =>
+    repoProductVendor.deleteProductVendor(id).map(res =>
+      Redirect(routes.ProductController.show(productId)))
+  }
+
   var products: Seq[Product] = _
 
   def index = Action.async { implicit request =>
     repo.list().map { res =>
+      products = res
+      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
+    }
+  }
+
+  def reorder_index = Action.async { implicit request =>
+    repo.reorder_list().map { res =>
       products = res
       Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
     }
@@ -150,11 +175,20 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
+  def getVendorsByProduct(): Seq[ProductVendor] = {
+    Await.result(repoProductVendor.listVendorsByProductId(productId).map { res =>
+      res
+    }, 3000.millis)
+  }
+
   // to copy
   def show(id: Long) = Action.async { implicit request =>
+    productId = id
     val children = getChildren(id)
+    vendors = getVendors()
+    productVendors = getVendorsByProduct()
     repo.getById(id).map { res =>
-      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors))
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors, productVendors))
     }
   }
 

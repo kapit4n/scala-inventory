@@ -12,6 +12,9 @@
         @restrict(roles = List(Array("productList"))) {
             <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
         }
+        @restrict(roles = List(Array("productCreate"))) {
+                                <a href="/product_reorder_list" class="btn btn-primary btn-sm">Reorder List</a> 
+        }
     </div>
 
     <div class="container">

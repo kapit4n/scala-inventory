@@ -21,6 +21,7 @@ drop table IF EXISTS measure;
 drop table IF EXISTS setting;
 drop table IF EXISTS roles;
 drop table IF EXISTS userRole;
+drop table IF EXISTS productVendor;
 
 ## --- !Ups
 create table company (
@@ -184,6 +185,12 @@ create table userRole (
   userId INT,
   roleName VARCHAR(100),
   roleCode VARCHAR(50)
+);
+
+create table productVendor (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  productId INT,
+  vendorId INT
 );
 
 create table roles (
