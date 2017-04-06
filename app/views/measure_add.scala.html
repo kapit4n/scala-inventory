@@ -12,7 +12,7 @@
         @inputText(row("name"), 'id -> "name")
         @inputText(row("quantity"), 'id -> "quantity")
         @inputText(row("description"), 'id -> "description")
-        @select(field = row("measureId"), options = options(measures), 'id -> "measureParent")
+        @select(field = row("measureId"), options = options(measures), 'id -> "measureParentId")
         <input id="addSubmit" type="submit" value="Add Unit of Measure" class="btn btn-primary btn-sm"/>
         <a href="measure_list" class="btn btn-primary btn-sm">Cancelar</a>
     }

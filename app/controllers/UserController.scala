@@ -80,8 +80,8 @@ class UserController @Inject() (
           res.name, res.carnet, res.phone, res.address,
           res.Salary, res.type_1, res.login, res.password,
           request.session.get("userId").get.toLong,
-          request.session.get("userName").get.toString).map { _ =>
-            Redirect(routes.UserController.index)
+          request.session.get("userName").get.toString).map { resNew =>
+            Redirect(routes.UserController.show(resNew.id))
           }
       })
   }

@@ -2,7 +2,7 @@
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
-@main("Add vendor") {
+@main("Add Vendor") {
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("vendorList"))) {
@@ -15,9 +15,9 @@
             @inputText(vendor("phone"), 'id -> "phone")
             @inputText(vendor("address"), 'id -> "address")
             @inputText(vendor("contact"), 'id -> "contact")
-            @inputText(vendor("account"), 'id -> "accountValue")
+            @inputText(vendor("account"), 'id -> "account")
             <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
-            <a href="/vendor_list" class="btn btn-primary btn-sm">Cancelar</a>
+            <a id="cancel" href="/vendor_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
     }
 }

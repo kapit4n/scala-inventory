@@ -19,10 +19,10 @@
             @inputText(row("login"), 'id -> "login")
             @inputText(row("password"), 'id -> "password")
             @inputText(row("address"), 'id -> "address")
-            @inputText(row("Salary"), 'id -> "Salary")
-            @select(field = row("type_1"), options = options(types), 'id -> "type1")
+            @inputText(row("Salary"), 'id -> "salary")
+            @select(field = row("type_1"), options = options(types), 'id -> "typeId")
             <input type="submit" id="addSubmit" value="Guardar" class="btn btn-primary btn-sm"/>
-            <a href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
+            <a id="cancel" href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
         </div>
         </div>
     }
