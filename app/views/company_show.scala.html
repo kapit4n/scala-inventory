@@ -8,7 +8,7 @@
     <div>
             <div>
         @restrict(roles = List(Array("companyList"))) {
-            <a href="/company_list" class="btn btn-info btn-sm">@messages("list")</a> 
+            <a href="/company_list" class="btn btn-info btn-sm">@messages("toList")</a>
         }
         @restrict(roles = List(Array("companyEdit"))) {
             <a href="/company_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
@@ -17,7 +17,7 @@
            <a href="/company_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
-            <div style="display: inline-block;"> @messages("cancel"): </div>
+            <div style="display: inline-block;"> @messages("name"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
             <div style="display: inline-block;"> @messages("code"): </div>
             <div style="display: inline-block;" id="name">@row.id</div>

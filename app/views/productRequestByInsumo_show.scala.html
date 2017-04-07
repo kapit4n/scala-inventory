@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestByInsumoList"))) {
-            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">@messages("list")</a> 
+            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">@messages("toList")</a>
         }
         @restrict(roles = List(Array("productRequestByInsumoEdit"))) {
             <a href="/productRequestByInsumo_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 

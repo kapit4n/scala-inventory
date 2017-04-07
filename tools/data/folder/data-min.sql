@@ -250,3 +250,5 @@ UPDATE product SET cost = 10, percent = 0.1, price = 11 , price = 11 where cost 
 
 UPDATE product SET stockLimit = 10;
 
+INSERT INTO `setting`(id, name, president, language, description) VALUES 
+(1,'Dyamsoft Company','Luis Arce','us','Description'),

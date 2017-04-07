@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionList"))) {
-          <a href="/transaction_list" class="btn btn-info btn-sm">@messages("list")</a> 
+          <a href="/transaction_list" class="btn btn-info btn-sm">@messages("toList")</a>
         }
     </div>
     @form(routes.TransactionController.addIncome()) {

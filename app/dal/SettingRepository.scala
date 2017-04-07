@@ -25,16 +25,17 @@ class SettingRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def president = column[String]("president")
+    def language = column[String]("language")
     def description = column[String]("description")
-    def * = (id, name, president, description) <> ((Setting.apply _).tupled, Setting.unapply)
+    def * = (id, name, president, language, description) <> ((Setting.apply _).tupled, Setting.unapply)
   }
 
   private val tableQ = TableQuery[SettingsTable]
 
-  def create(name: String, president: String, description: String): Future[Setting] = db.run {
-    (tableQ.map(p => (p.name, p.president, p.description))
+  def create(name: String, president: String, language: String, description: String): Future[Setting] = db.run {
+    (tableQ.map(p => (p.name, p.president, p.language, p.description))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => Setting(id, nameAge._1, nameAge._2, nameAge._3))) += (name, president, description)
+      into ((nameAge, id) => Setting(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))) += (name, president, language, description)
   }
 
   // to cpy
@@ -48,13 +49,15 @@ class SettingRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // update required to copy
-  def update(id: Long, name: String, president: String, description: String): Future[Seq[Setting]] = db.run {
+  def update(id: Long, name: String, president: String, language: String, description: String): Future[Seq[Setting]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q2 = for { c <- tableQ if c.id === id } yield c.president
     db.run(q2.update(president))
-    val q3 = for { c <- tableQ if c.id === id } yield c.description
-    db.run(q3.update(description))
+    val q3 = for { c <- tableQ if c.id === id } yield c.language
+    db.run(q3.update(language))
+    val q4 = for { c <- tableQ if c.id === id } yield c.description
+    db.run(q4.update(description))
     tableQ.filter(_.id === id).result
   }
 

@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary btn-sm">@messages("list")</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">@messages("toList")</a>
         }
     </div>
     @form(routes.ProductController.addProduct()) {

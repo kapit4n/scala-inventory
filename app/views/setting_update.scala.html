@@ -12,6 +12,7 @@
     @form(routes.SettingController.updatePost()) {
         @inputText(rowForm("name"), 'id -> "settingName")
         @inputText(rowForm("president"), 'id -> "president")
+        @inputText(rowForm("language"), 'id -> "language")
         @inputText(rowForm("description"), 'id -> "description")
         <input id="updateSubmit" type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
         <a href="/setting_show" class="btn btn-primary btn-sm">@messages("cancel")</a>

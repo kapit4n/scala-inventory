@@ -81,6 +81,7 @@ create table setting (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   president VARCHAR(50),
+  language VARCHAR(50),
   description VARCHAR(2505)
 );
 

@@ -10,17 +10,17 @@
                                 <a href="/product_add" class="btn btn-primary btn-sm">@messages("new")</a> 
         }
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary btn-sm">@messages("list")</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">@messages("toList")</a>
         }
         @restrict(roles = List(Array("productCreate"))) {
-                                <a href="/product_reorder_list" class="btn btn-primary btn-sm">Reorder List</a> 
+                                <a href="/product_reorder_list" class="btn btn-primary btn-sm">@messages("listReorder")</a> 
         }
     </div>
 
     <div class="container">
         @form(routes.ProductController.searchProductPost()) {
             @inputText(rowSearch("search"))
-            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+            <input type="submit" value=@messages("search") class="btn btn-primary btn-sm"/>
         }
     </div>
 
@@ -36,7 +36,7 @@
                     <th>@messages("cost")</th>
                     <th>@messages("percent")</th>
                     <th>@messages("price")</th>
-                    <th>@messages("measure"): </th>
+                    <th>@messages("measure")</th>
                     <th>@messages("stockLimit")</th>
                     <th>@messages("inStock")</th>
                     <th>-----------</th>

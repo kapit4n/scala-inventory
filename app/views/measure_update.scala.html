@@ -6,7 +6,7 @@
 	@examples.templates.nav(handler)
 	<div>
         @restrict(roles = List(Array("measureList"))) {
-            <a href="/measure_list" class="btn btn-primary btn-sm">@messages("list")</a> 
+            <a href="/measure_list" class="btn btn-primary btn-sm">@messages("toList")</a>
         }
         @restrict(roles = List(Array("measureDelete"))) {
            <a href="/measure_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>

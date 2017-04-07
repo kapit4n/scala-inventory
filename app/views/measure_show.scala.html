@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("measureList"))) {
-            <a href="/measure_list" class="btn btn-primary btn-sm">@messages("list")</a> 
+            <a href="/measure_list" class="btn btn-primary btn-sm">@messages("toList")</a>
         }
         @restrict(roles = List(Array("measureEdit"))) {
            <a href="/measure_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a>
@@ -18,7 +18,7 @@
     
     <div class="container">
         <div>
-            <div style="display: inline-block;"> @messages("cancel"): </div>
+            <div style="display: inline-block;"> @messages("name"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>

@@ -27,6 +27,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
       "id" -> longNumber,
       "name" -> text,
       "president" -> text,
+      "language" -> text,
       "description" -> text)(UpdateSettingForm.apply)(UpdateSettingForm.unapply)
   }
 
@@ -37,7 +38,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
       if (res.size > 0) {
         updatedRow = res(0)
       } else {
-        updatedRow = Setting(0, "Name of Company", "Name CEO", "Description of the Company")
+        updatedRow = Setting(0, "Name of Company", "Name CEO", "us", "Description of the Company")
       }
       Ok(views.html.setting_show(new MyDeadboltHandler, updatedRow))
     }
@@ -52,6 +53,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
           "id" -> "0",
           "name" -> "Name Company",
           "president" -> "Name CEO",
+          "language" -> "us",
           "description" -> "Description of the empresa")
       } else {
         updatedRow = res(0)
@@ -59,6 +61,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
           "id" -> updatedRow.id.toString,
           "name" -> updatedRow.name.toString,
           "president" -> updatedRow.president.toString,
+          "language" -> updatedRow.language.toString,
           "description" -> updatedRow.description.toString)
       }
       Ok(views.html.setting_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
@@ -73,11 +76,11 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
       },
       res => {
         if (res.id > 0) {
-          repo.update(res.id, res.name, res.president, res.description).map { _ =>
+          repo.update(res.id, res.name, res.president, res.language, res.description).map { _ =>
             Redirect(routes.SettingController.show())
           }
         } else {
-          repo.create(res.name, res.president, res.description).map { _ =>
+          repo.create(res.name, res.president, res.language, res.description).map { _ =>
             Redirect(routes.SettingController.show())
           }
         }
@@ -86,4 +89,4 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
 }
 
 // Update required
-case class UpdateSettingForm(id: Long, name: String, president: String, description: String)
+case class UpdateSettingForm(id: Long, name: String, president: String, language: String, description: String)
