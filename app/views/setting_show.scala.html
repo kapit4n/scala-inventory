@@ -25,11 +25,11 @@
     </div>
     <div class="container">
         @restrict(roles = List(Array("logEntry"))) {
-            <a id="log_entry" href="/logEntry_list" class="btn btn-link">Events</a>
+            <a id="log_entry" href="/logEntry_list" class="btn btn-link">@messages("events")</a>
         }
         
         @restrict(roles = List(Array("measure"))) {
-            | <a id="measure_list" href="/measure_list" class="btn btn-link">Measures</a>
+            | <a id="measure_list" href="/measure_list" class="btn btn-link">@messages("measures")</a>
         }
 
         @restrict(roles = List(Array("account"))) {
@@ -37,7 +37,7 @@
         }
 
         @restrict(roles = List(Array("user"))) {
-            | <a id="user_list" href="/user_list" class="btn btn-link">Users</a>
+            | <a id="user_list" href="/user_list" class="btn btn-link">@messages("users")</a>
         }
     </div>
 }
