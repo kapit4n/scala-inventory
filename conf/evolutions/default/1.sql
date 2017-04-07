@@ -146,7 +146,6 @@ create table customer (
   companyName VARCHAR(100),
   status VARCHAR(30),
   totalDebt double,
-  position VARCHAR(30),
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

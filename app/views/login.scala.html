@@ -9,7 +9,7 @@
     </div>
     @form(routes.LoginController.login()) {
         @inputText(row("user"), 'id -> "Login")
-        @inputPassword(row("password"), 'id -> "Password"))
+        @inputPassword(row("password"), 'id -> "Password")
         <input id="submitLogin" type="submit" value=@messages("login") class="btn btn-primary btn-sm"/>
     }
 }

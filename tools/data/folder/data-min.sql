@@ -14,7 +14,7 @@ INSERT INTO company(id, name) VALUES
 ('10007','AMLECO');
 
 INSERT INTO customer VALUES 
-  (1, 'Daniel Campos', 22333, 22333, 'Address', '2225','Company Name 1', 'status', 0, 'position', '2016-06-17 23:53:08');
+  (1, 'Daniel Campos', 22333, 22333, 'Address', '2225','Company Name 1', 'status', 0, '2016-06-17 23:53:08');
 
 
 INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
@@ -251,4 +251,4 @@ UPDATE product SET cost = 10, percent = 0.1, price = 11 , price = 11 where cost 
 UPDATE product SET stockLimit = 10;
 
 INSERT INTO `setting`(id, name, president, language, description) VALUES 
-(1,'Dyamsoft Company','Luis Arce','us','Description'),
+(1,'Dyamsoft Company','Luis Arce','us','Description');

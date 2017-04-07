@@ -30,10 +30,9 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     def account = column[String]("account")
     def companyName = column[String]("companyName")
     def totalDebt = column[Double]("totalDebt")
-    def position = column[String]("position")
     def * = (
       id, name, carnet, phone, address, account,
-      companyName, totalDebt, position) <> ((Customer.apply _).tupled, Customer.unapply)
+      companyName, totalDebt) <> ((Customer.apply _).tupled, Customer.unapply)
   }
 
   private class CompanysTable(tag: Tag) extends Table[Company](tag, "company") {
@@ -52,16 +51,15 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     (tableQ.map(
       p => (
         p.name, p.carnet, p.phone, p.address, p.account,
-        p.companyName, p.totalDebt, 
-        p.position)) returning tableQ.map(_.id) into (
+        p.companyName, p.totalDebt)) returning tableQ.map(_.id) into (
         (nameAge, id) =>
           Customer(
             id, nameAge._1, nameAge._2,
             nameAge._3, 
             nameAge._4, nameAge._5, nameAge._6,
-            nameAge._7, nameAge._8))) += (
+            nameAge._7))) += (
           name, carnet, phone, address, account,
-          "", 0, "Customer")
+          "", 0)
   }
 
   def list(start: Int, interval: Int): Future[Seq[Customer]] = db.run {
@@ -104,7 +102,6 @@ class CustomerRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, re
     db.run(q6.update(address))
     val q8 = for { c <- tableQ if c.id === id } yield c.totalDebt
     db.run(q8.update(totalDebt))
-
     tableQ.filter(_.id === id).result
   }
 

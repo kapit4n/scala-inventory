@@ -138,3 +138,4 @@ boughtProducts = Productos comprados
 send = Enviar
 finish = Finalizar
 listReorder = Listar reorden
+language = Lenguage

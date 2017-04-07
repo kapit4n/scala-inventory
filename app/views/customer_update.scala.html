@@ -24,7 +24,6 @@
             @inputText(rowForm("address"))
             @inputText(rowForm("account"))
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
-            @inputText(rowForm("position"), 'readonly -> "readonly")
         <input type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
         <a href="/customer_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

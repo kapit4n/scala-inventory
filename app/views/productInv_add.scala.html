@@ -15,7 +15,7 @@
         @select(field = row("vendorId"), options = options(vendors))
         @select(field = row("measureId"), options = options(measures))
         @inputText(row("amount"))
-        <input type="submit" class="btn btn-primary btn-sm" value=@messages("save")/>
+        <input type="submit" class="btn btn-primary btn-sm" value=@messages("save") />
         <a href="/product_show/@productId" class="btn btn-primary btn-sm">@messages("cancel")</a>
     }
 }
