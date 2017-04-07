@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("vendorList"))) {
-            <a href="/vendor_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/vendor_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("vendorShow"))) {
-           <a href="/vendor_show/@row.id" class="btn btn-info btn-sm">view</a>
+           <a href="/vendor_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
         }
         @restrict(roles = List(Array("vendorDelete"))) {
-           <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.VendorController.updatePost()) {
@@ -21,8 +21,8 @@
         @inputText(rowForm("address"))
         @inputText(rowForm("contact"))
         @inputText(rowForm("account"))
-        <input type="submit" class="btn btn-primary btn-sm" value="Update"/>
-        <a href="/vendor_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" class="btn btn-primary btn-sm" value=@messages("update")/>
+        <a href="/vendor_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

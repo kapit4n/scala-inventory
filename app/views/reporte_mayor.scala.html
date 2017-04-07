@@ -6,16 +6,16 @@
     @examples.templates.nav(handler)
     <div class="container">
         <h4 class="media-heading">
-            <strong>Books of the mayor</strong>
+            <strong>@messages("mayorBooks")</strong>
         </h4>
     </div>
     <div class="table table-bordered">
         <table id="details" class="table table-bordered">
         <thead>
                 <tr>
-                    <th>Numero</th>
-                    <th>Code</th>
-                    <th>Name of Account</th>
+                    <th>@messages("number")</th>
+                    <th>@messages("code")</th>
+                    <th>@messages("accountName")</th>
                     <th>Saldos A Diciembre(Debit)</th>
                     <th>Saldos A Diciembre(Credit)</th>
                     <th>Movimiento (1 a 38 Enero)</th>
@@ -26,8 +26,8 @@
             @for(transaccionDetail <- transaccionDetails) {
                 <tr>
                     <td>#</td>
-                    <td>Account Code</td>
-                    <td>Account name</td>
+                    <td>@messages("accountCode")</td>
+                    <td>@messages("accountName")</td>
                     <td>@(transaccionDetail.debit)</td>
                     <td>@(transaccionDetail.credit)</td>
                     <td>@(transaccionDetail.credit - transaccionDetail.debit)</td>

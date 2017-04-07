@@ -6,20 +6,20 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("settingEdit"))) {
-            <a href="/setting_update" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/setting_update" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;"> @messages("cancel"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
-            <div style="display: inline-block;"> CEO: </div>
+            <div style="display: inline-block;"> @messages("ceo"): </div>
             <div style="display: inline-block;" id="president">@row.president</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;"> @messages("description"): </div>
             <div style="display: inline-block;" id="description">@row.description</div>
         </div>
     </div>
@@ -33,7 +33,7 @@
         }
 
         @restrict(roles = List(Array("account"))) {
-            | <a id="account_list" href="/account_list" class="btn btn-link">Accounts</a>
+            | <a id="account_list" href="/account_list" class="btn btn-link">@messages("accounts")</a>
         }
 
         @restrict(roles = List(Array("user"))) {

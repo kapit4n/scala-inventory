@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
     	@restrict(roles = List(Array("requestRowShow"))) {
-            <a href="/requestRow_show/@requestRow.requestRowId" class="btn btn-primary btn-sm">Detail of Order</a> 
+            <a href="/requestRow_show/@requestRow.requestRowId" class="btn btn-primary btn-sm">@messages("orderDetail")</a> 
         }
         @restrict(roles = List(Array("requestRowCustomerShow"))) {
-            <a href="/requestRowCustomer_show/@requestRow.id" class="btn btn-info btn-sm">view</a> 
+            <a href="/requestRowCustomer_show/@requestRow.id" class="btn btn-info btn-sm">@messages("view")</a> 
         }
         @restrict(roles = List(Array("requestRowCustomerDelete"))) {
-           <a href="/requestRowCustomer_remove/@requestRow.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/requestRowCustomer_remove/@requestRow.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.RequestRowCustomerController.updatePost()) {
@@ -26,8 +26,8 @@
         @inputText(row("status"))
         @select(field = row("measureId"), options = options(measures)))
         @inputText(row("observation"))
-        <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
-        <a href="/requestRowCustomer_show/@requestRow.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
+        <a href="/requestRowCustomer_show/@requestRow.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @select(field = row("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }

@@ -6,34 +6,34 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("vendorList"))) {
-            <a href="/vendor_list" class="btn btn-info btn-sm">List</a> 
+            <a href="/vendor_list" class="btn btn-info btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("vendorEdit"))) {
-           <a href="/vendor_update/@row.id" class="btn btn-primary btn-sm">Edit</a>
+           <a href="/vendor_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a>
         }
         @restrict(roles = List(Array("vendorDelete"))) {
-           <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;"> @messages("cancel"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Phone: </div>
+            <div style="display: inline-block;"> @messages("phone"): </div>
             <div style="display: inline-block;" id="phone">@row.phone</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Address: </div>
+            <div style="display: inline-block;"> @messages("address"): </div>
             <div style="display: inline-block;" id="address">@row.address</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Contact: </div>
+            <div style="display: inline-block;"> @messages("contact"): </div>
             <div style="display: inline-block;" id="contact">@row.contact</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Account: </div>
+            <div style="display: inline-block;"> @messages("account"): </div>
             <div style="display: inline-block;" id="account">@row.account</div>
         </div>
     </div>

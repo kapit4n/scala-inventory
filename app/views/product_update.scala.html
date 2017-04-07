@@ -6,10 +6,10 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("productDelete"))) {
-           <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.ProductController.updatePost()) {
@@ -22,8 +22,8 @@
         @inputText(rowForm("stockLimit"))
         @inputText(rowForm("currentAmount"))
         @select(field = rowForm("type_1"), options = options(types))
-        <input type="submit" class="btn btn-primary btn-sm" value="Update"/>
-        <a href="/product_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" class="btn btn-primary btn-sm" value=@messages("update")/>
+        <a href="/product_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

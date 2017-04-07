@@ -1,19 +1,19 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 <div class="row">
   <nav>
      <ul>
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/profile">@messages("profile")</a></li>
         @restrict(roles = List(Array("product"))) {
             <li>
-               <a id="product" href="/product_list">Products<span class="caret"></span></a>
+               <a id="product" href="/product_list">@messages("products")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a id="product_list" href="/product_list">List</a></li>
+                     <li><a id="product_list" href="/product_list">@messages("list")</a></li>
                      @restrict(roles = List(Array("productCreate"))) {
-                      <li><a id="product_add" href="/product_add">New</a></li>
+                      <li><a id="product_add" href="/product_add">@messages("new")</a></li>
                      }
                   </ul>
                </div>
@@ -21,12 +21,12 @@
         }
         @restrict(roles = List(Array("vendor"))) {
             <li>
-               <a id="vendor" href="/vendor_list">Vendors<span class="caret"></span></a>
+               <a id="vendor" href="/vendor_list">@messages("vendors")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a id="vendor_list" href="/vendor_list">List</a></li>
+                     <li><a id="vendor_list" href="/vendor_list">@messages("list")</a></li>
                      @restrict(roles = List(Array("vendorCreate"))) {
-                      <li><a id="vendor_add" href="/vendor_add">New</a></li>
+                      <li><a id="vendor_add" href="/vendor_add">@messages("new")</a></li>
                      }
                   </ul>
                </div>
@@ -34,12 +34,12 @@
         }
         @restrict(roles = List(Array("customer"))) {
             <li>
-               <a id="customer" href="/customer_list/1">Customers<span class="caret"></span></a>
+               <a id="customer" href="/customer_list/1">@messages("customers")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a id="customer_list" href="/customer_list/1">List</a></li>
+                     <li><a id="customer_list" href="/customer_list/1">@messages("list")</a></li>
                      @restrict(roles = List(Array("customerCreate"))) {
-                      <li><a id="customer_add" href="/customer_add">New</a></li>
+                      <li><a id="customer_add" href="/customer_add">@messages("new")</a></li>
                      }
                   </ul>
                </div>
@@ -47,12 +47,12 @@
         }
         @restrict(roles = List(Array("productRequest"))) {
             <li>
-               <a id="product_request" href="/productRequest_list">Orders<span class="caret"></span></a>
+               <a id="product_request" href="/productRequest_list">@messages("orders")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a id="product_request_list" href="/productRequest_list">List</a></li>
+                     <li><a id="product_request_list" href="/productRequest_list">@messages("list")</a></li>
                      @restrict(roles = List(Array("productRequestCreate"))) {
-                      <li><a id="product_request_add" href="/productRequest_add">New</a></li>
+                      <li><a id="product_request_add" href="/productRequest_add">@messages("new")</a></li>
                      }
                   </ul>
                </div>
@@ -61,24 +61,24 @@
 
         @restrict(roles = List(Array("report"))) {
             <li>
-               <a id="report" href="/reporte_list">Reports<span class="caret"></span></a>
+               <a id="report" href="/reporte_list">@messages("reports")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a href="/reporte_list">List</a></li>
+                     <li><a href="/reporte_list">@messages("list")</a></li>
                      @restrict(roles = List(Array("balanceShow"))) {
-                      <li><a id="report_balance" href="/reportes_balance">Balance sheet</a></li>
+                      <li><a id="report_balance" href="/reportes_balance">@messages("balanceSheet")</a></li>
                      }
                      @restrict(roles = List(Array("diaryShow"))) {
-                      <li><a id="report_diary" href="/reportes_diary">Daybook</a></li>
+                      <li><a id="report_diary" href="/reportes_diary">@messages("dayBook")</a></li>
                      }
                      @restrict(roles = List(Array("financeShow"))) {
-                      <li><a id="result_finance" href="/result_finance">Status de Resultados</a></li>
+                      <li><a id="result_finance" href="/result_finance">@messages("financeResult")</a></li>
                      }
                      @restrict(roles = List(Array("mayorShow"))) {
-                      <li><a id="report_mayor" href="/reportes_mayor">Libros del mayor</a></li>
+                      <li><a id="report_mayor" href="/reportes_mayor">@messages("mayorBook")</a></li>
                      }
                      @restrict(roles = List(Array("sumasSaldosShow"))) {
-                      <li><a id="report_sumas" href="/reportes_sumasYSaldos">Trial Balance</a></li>
+                      <li><a id="report_sumas" href="/reportes_sumasYSaldos">@messages("trialBalance")</a></li>
                      }
                   </ul>
                </div>
@@ -87,22 +87,22 @@
 
         @restrict(roles = List(Array("transaction"))) {
             <li>
-               <a id="transaction" href="/transaction_list">Transactions<span class="caret"></span></a>
+               <a id="transaction" href="/transaction_list">@messages("transactions")<span class="caret"></span></a>
                <div>
                   <ul>
-                     <li><a id="transaction_list" href="/transaction_list">List</a></li>
+                     <li><a id="transaction_list" href="/transaction_list">@messages("list")</a></li>
 
                      @restrict(roles = List(Array("transaction"))) {
-                      <li><a id="transaction_banking" href="/transaction_list">Banking</a></li>
+                      <li><a id="transaction_banking" href="/transaction_list">@messages("banking")</a></li>
                      }
                      @restrict(roles = List(Array("transaction"))) {
-                      <li><a id="transaction_sales" href="/transaction_list">Sales</a></li>
+                      <li><a id="transaction_sales" href="/transaction_list">@messages("sales")</a></li>
                      }
                      @restrict(roles = List(Array("transaction"))) {
-                      <li><a id="transaction_expenses" href="/transaction_list">Expenses</a></li>
+                      <li><a id="transaction_expenses" href="/transaction_list">@messages("expenses")</a></li>
                      }
                      @restrict(roles = List(Array("transaction"))) {
-                      <li><a id="transaction_registers" href="/transaction_list">Registers</a></li>
+                      <li><a id="transaction_registers" href="/transaction_list">@messages("registers")</a></li>
                      }
                      
                   </ul>
@@ -112,14 +112,14 @@
 
         @restrict(roles = List(Array("setting"))) {
             <li>
-               <a id="setting" href="/setting_show">Settings<span class="caret"></span></a>
+               <a id="setting" href="/setting_show">@messages("settings")<span class="caret"></span></a>
                <div>
                   <ul>
                      @restrict(roles = List(Array("settingShow"))) {
-                      <li><a id="setting_show" href="/setting_show">Show</a></li>
+                      <li><a id="setting_show" href="/setting_show">@messages("show")</a></li>
                      }
                      @restrict(roles = List(Array("settingEdit"))) {
-                      <li><a id="setting_update" href="/setting_update">Edit</a></li>
+                      <li><a id="setting_update" href="/setting_update">@messages("edit")</a></li>
                      }
                   </ul>
                </div>
@@ -129,6 +129,6 @@
   </nav>
 
   <div class="container">
-  <a href="/logout">Sign out</a>
+  <a href="/logout">@messages("singOut")</a>
 </div>
 </div>

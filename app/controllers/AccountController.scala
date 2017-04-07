@@ -34,7 +34,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       "description" -> text)(CreateAccountForm.apply)(CreateAccountForm.unapply)
   }
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       accounts = res
       Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts))
@@ -49,7 +49,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
   var parentAccounts: Map[String, String] = _
   var accounts: Seq[Account] = _
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, errorForm, yes_no, account_type, parentAccounts)))
@@ -64,13 +64,13 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       })
   }
 
-  def getAccounts = Action.async {
+  def getAccounts = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getAccountsReport = Action.async {
+  def getAccountsReport = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -101,7 +101,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     val children: Seq[Account] = accountChildrenSeq(id)
     val details = accountDetailsSeq(id)
     repo.getById(id).map { res =>
@@ -110,7 +110,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       udpatedRow = res(0)
       val anyData = Map(
@@ -127,28 +127,28 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       Redirect(routes.AccountController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def accountChildren(id: Long) = Action.async {
+  def accountChildren(id: Long) = LanguageAction.async {
     repo.getByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, errorForm, yes_no, account_type, getAccountNamesMap())))
@@ -181,7 +181,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       "search" -> text)(SearchAccountForm.apply)(SearchAccountForm.unapply)
   }
 
-  def searchParentAccountPost = Action.async { implicit request =>
+  def searchParentAccountPost = LanguageAction.async { implicit request =>
     searchAccountForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)))
@@ -198,7 +198,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       })
   }
 
-  def searchAccountPost = Action.async { implicit request =>
+  def searchAccountPost = LanguageAction.async { implicit request =>
     searchAccountForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)))

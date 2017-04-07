@@ -7,76 +7,76 @@
     <div class="container">
         @if(row.type_1 == "customer") {
             @restrict(roles = List(Array("requestRowShow"))) {
-                <a id="goRequestRow" href="/requestRow_show/@row.requestRowId" class="btn btn-info btn-sm">Detail of Order</a> 
+                <a id="goRequestRow" href="/requestRow_show/@row.requestRowId" class="btn btn-info btn-sm">@messages("orderDetail")</a> 
             }
         }
 
         @if(row.type_1 == "driver") {
             @restrict(roles = List(Array("requestRowShow"))) {
-                <a id="goRequestRow" href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">Detail of Order</a>
+                <a id="goRequestRow" href="/requestRowByInsumo_show/@row.requestRowId" class="btn btn-info btn-sm">@messages("orderDetail")</a>
             }
         }
 
 
         @if(row.type_1 == "customer") {
                 @restrict(roles = List(Array("requestRowCustomerEdit"))) {
-                    <a href="/requestRowCustomer_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                    <a href="/requestRowCustomer_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                 }
         }
 
         @if(row.type_1 == "driver") {
                 @restrict(roles = List(Array("requestRowCustomerEdit"))) {
-                    <a href="/requestRowDriver_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                    <a href="/requestRowDriver_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                 }
         }
 
         @restrict(roles = List(Array("requestRowCustomerDelete"))) {
-           <a href="/requestRowCustomer_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/requestRowCustomer_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;">Product: </div>
+            <div style="display: inline-block;">@messages("product"): </div>
             <div style="display: inline-block;" id="productName">@row.productName</div>
         </div>
         @if(row.type_1 == "customer") {
             <div>
-                <div style="display: inline-block;">Customer: </div>
+                <div style="display: inline-block;">@messages("customer"): </div>
                 <div style="display: inline-block;" id="customerName">@row.customerName</div>
             </div>
         }
         @if(row.type_1 == "driver") {
             <div>
-                <div style="display: inline-block;"> Transportador: </div>
+                <div style="display: inline-block;">@messages("driver"): </div>
                 <div style="display: inline-block;" id="customerName">@row.customerName</div>
             </div>
         }
         <div>
-            <div style="display: inline-block;"> Quantity: </div>
+            <div style="display: inline-block;"> @messages("quantity"): </div>
             <div style="display: inline-block;" id="quantity">@row.quantity</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Price: </div>
+            <div style="display: inline-block;">@messages("price"): </div>
             <div style="display: inline-block;" id="price">@row.price</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Total Price: </div>
+            <div style="display: inline-block;">@messages("totalPrice"): </div>
             <div style="display: inline-block;" id="totalPrice">@(row.totalPrice)</div>
         <div>
         </div>
-            <div style="display: inline-block;"> Pagado: </div>
+            <div style="display: inline-block;">@messages("paid"): </div>
             <div style="display: inline-block;" id="paid">@(row.paid)</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Debit: </div>
+            <div style="display: inline-block;">@messages("debit"): </div>
             <div style="display: inline-block;" id="credit">@(row.credit)</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;"> @messages("status"): </div>
             <div style="display: inline-block;" id="status">@row.status</div>
         <div>
         </div>
-            <div style="display: inline-block;"> Observaciones: </div>
+            <div style="display: inline-block;">@messages("obs"): </div>
             <div style="display: inline-block;" id="observation">@(row.observation)</div>
         </div>
     </div>

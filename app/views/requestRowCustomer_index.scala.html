@@ -5,18 +5,18 @@
 @main("Add") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_index.js")'></script>
     <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Home</span></a>
+        <a href="/"><span class="glyphicon glyphicon-plus">@messages("home")</span></a>
     </div>
-    <div>List of Orders</div>
+    <div>@messages("ordersList")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>requestId</th>
-                    <th>productId</th>
-                    <th>customerId</th>
-                    <th>quantity</th>
-                    <th>status</th>
+                    <th>@messages("requestId")</th>
+                    <th>@messages("productId")</th>
+                    <th>@messages("customerId")</th>
+                    <th>@messages("quantity")</th>
+                    <th>@messages("status")</th>
                     <th>-----------</th>
                 </tr>
             </thead>

@@ -1,4 +1,4 @@
-
+@()(implicit messages: Messages)
 @import helper._
 
 @main("Add") {
@@ -6,10 +6,10 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Vendor</th>
-                    <th>Discount</th>
-                    <th>Amoun Left</th>
+                    <th>@messages("product")</th>
+                    <th>@messages("vendor")</th>
+                    <th>@messages("discount")</th>
+                    <th>@messages("amountLeft")</th>
                     <th>-----------</th>
                 </tr>
             </thead>

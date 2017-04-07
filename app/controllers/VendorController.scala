@@ -27,17 +27,17 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       "account" -> longNumber)(CreateVendorForm.apply)(CreateVendorForm.unapply)
   }
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.vendor_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     Ok(views.html.vendor_add(new MyDeadboltHandler, newForm))
   }
 
-  def addVendor = Action.async { implicit request =>
+  def addVendor = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.vendor_add(new MyDeadboltHandler, errorForm)))
@@ -53,7 +53,7 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       })
   }
 
-  def getVendores = Action.async {
+  def getVendores = LanguageAction.async {
     repo.list().map { vendores =>
       Ok(Json.toJson(vendores))
     }
@@ -71,21 +71,21 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.vendor_show(new MyDeadboltHandler, res(0)))
     }
   }
 
   // to copy
-  def profile(id: Long) = Action {
+  def profile(id: Long) = LanguageAction {
     Redirect(routes.VendorController.show(id))
   }
 
   var updatedRow: Vendor = _
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name, "phone" -> res.toList(0).phone.toString(), "address" -> res.toList(0).address, "contact" -> res.toList(0).contact, "account" -> res.toList(0).account.toString())
@@ -94,21 +94,21 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   }
 
   // delete required
-  def delete(id: Long) = Action.async { implicit request =>
+  def delete(id: Long) = LanguageAction.async { implicit request =>
     repo.delete(id).map { res =>
       Redirect(routes.VendorController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, errorForm)))

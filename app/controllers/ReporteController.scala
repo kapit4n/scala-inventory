@@ -26,18 +26,18 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       "cliente" -> number.verifying(min(0), max(140)))(CreateReportForm.apply)(CreateReportForm.unapply)
   }
 
-  def index = Action { implicit request =>
+  def index = LanguageAction { implicit request =>
     Ok(views.html.reporte_index(new MyDeadboltHandler))
   }
 
-  def balance = Action { implicit request =>
+  def balance = LanguageAction { implicit request =>
     val activos = getByActivo()
     val pasivos = getByPasivo()
     val patrimonios = getByPatrimonio()
     Ok(views.html.reporte_balance(new MyDeadboltHandler, activos, pasivos, patrimonios))
   }
 
-  def diary = Action { implicit request =>
+  def diary = LanguageAction { implicit request =>
     val transactions = getTransactions()
     transactions.foreach { transaction =>
       Await.result(repoTransDetails.listByTransaction(transaction.id).map {
@@ -49,12 +49,12 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
     Ok(views.html.reporte_diary(new MyDeadboltHandler, transactions))
   }
 
-  def mayor = Action { implicit request =>
+  def mayor = LanguageAction { implicit request =>
     val details = getTransactionDetails()
     Ok(views.html.reporte_mayor(new MyDeadboltHandler, details))
   }
 
-  def sumasYSaldos = Action { implicit request =>
+  def sumasYSaldos = LanguageAction { implicit request =>
     val accounts = getChilAccounts()
     Ok(views.html.reporte_sumasYSaldos(new MyDeadboltHandler, accounts))
   }
@@ -69,7 +69,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
   //  RAI = RAIYI - ACEI
   //  RNG = RAI - 460
 
-  def resultFinance = Action { implicit request =>
+  def resultFinance = LanguageAction { implicit request =>
     val account510: Seq[Account] = getAccountByCode("510")
     val account410: Seq[Account] = getAccountByCode("410")
     val account540: Seq[Account] = getAccountByCode("540")
@@ -99,7 +99,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
     }
   }
 
-  def resultFinance1 = Action { implicit request =>
+  def resultFinance1 = LanguageAction { implicit request =>
     val account510: Seq[Account] = getAccountByCode("510")
     val account410: Seq[Account] = getAccountByCode("410")
     val account540: Seq[Account] = getAccountByCode("540")
@@ -171,7 +171,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
     }, 1000.millis)
   }
 
-  def addReport = Action.async { implicit request =>
+  def addReport = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.reporte_index(new MyDeadboltHandler)))
@@ -183,7 +183,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       })
   }
 
-  def getReports = Action.async {
+  def getReports = LanguageAction.async {
     repo.list().map { reportes =>
       Ok(Json.toJson(reportes))
     }

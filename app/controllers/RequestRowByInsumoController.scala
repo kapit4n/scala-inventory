@@ -52,14 +52,14 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
     }, 3000.millis)
   }
 
-  def index() = Action.async { implicit request =>
+  def index() = LanguageAction.async { implicit request =>
     productRequestId = 0
     repo.list().map { res =>
       Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
     }
   }
   var requestIdParm: Long = 0
-  def addGet(requestId: Long) = Action { implicit request =>
+  def addGet(requestId: Long) = LanguageAction { implicit request =>
     unidades = getMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
     products = getProductsMap()
@@ -67,7 +67,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
     Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)))
@@ -91,13 +91,13 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
       })
   }
 
-  def getRequestRows = Action.async {
+  def getRequestRows = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getRequestRowsByParent(id: Long) = Action.async {
+  def getRequestRowsByParent(id: Long) = LanguageAction.async {
     repo.listByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -128,7 +128,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     // get the productRequestRow
     // products = getProductRequestRows(id)
     val requestRowDrivers = getRequestRowDrivers(id)
@@ -139,7 +139,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         val anyData = Map(
@@ -224,7 +224,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   }
 
   // update required
-  def getFill(id: Long) = Action.async {
+  def getFill(id: Long) = LanguageAction.async {
     var row = getByIdObj(id)
     repo.fillById(id, row.productId, row.quantity).map { res =>
       Redirect(routes.ProductRequestController.show(res(0).requestId))
@@ -232,7 +232,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       if (productRequestId == 0) {
         Redirect(routes.RequestRowByInsumoController.index)
@@ -243,14 +243,14 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowByInsumo_update(new MyDeadboltHandler, updatedRow, errorForm, productRequestsMap, products, unidades)))
@@ -283,7 +283,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoRo
       "search" -> text)(SearchProductForm.apply)(SearchProductForm.unapply)
   }
 
-  def searchProductPost = Action.async { implicit request =>
+  def searchProductPost = LanguageAction.async { implicit request =>
     searchProductForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowByInsumo_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)))

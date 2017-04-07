@@ -6,35 +6,35 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionShow"))) {
-            <a id="goTransaction" href="/transaction_show/@row.transactionId" class="btn btn-info btn-sm">Asiento Diario</a> 
+            <a id="goTransaction" href="/transaction_show/@row.transactionId" class="btn btn-info btn-sm">@messages("journalEntry")</a> 
         }
         @restrict(roles = List(Array("transactionDetailEdit"))) {
-            <a href="/transactionDetail_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/transactionDetail_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("transactionDetailDelete"))) {
-           <a href="/transactionDetail_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/transactionDetail_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
 
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Transaction: </div>
+            <div style="display: inline-block;"> @messages("transaction"): </div>
             <div style="display: inline-block;" id="transactionId">@row.transactionId</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Code: </div>
+            <div style="display: inline-block;"> @messages("code"): </div>
             <div style="display: inline-block;" id="accountId">@row.accountCode</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Account: </div>
+            <div style="display: inline-block;"> @messages("account"): </div>
             <div style="display: inline-block;" id="accountId">@row.accountName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Debitr</div>
+            <div style="display: inline-block;"> @messages("debit"): </div>
             <div style="display: inline-block;" id="amount">@row.debit</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Credit</div>
+            <div style="display: inline-block;"> @messages("credit"): </div>
             <div style="display: inline-block;" id="amount">@row.credit</div>
         </div>
     </div>

@@ -49,7 +49,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   var productId: Long = 0
   var updatedRow: ProductInv = _
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.productInv_index(new MyDeadboltHandler, res))
     }
@@ -59,7 +59,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     Await.result(repoProduct.getById(id).map(res => res(0).measureId), 3000.millis)
   }
 
-  def addGet(productId: Long) = Action { implicit request =>
+  def addGet(productId: Long) = LanguageAction { implicit request =>
     this.productId = productId
     productMap = getProductMapById(productId)
     vendorMap = getVendorMap()
@@ -68,21 +68,21 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, vendorMap, measureMap))
   }
 
-  def getProductInvs = Action.async {
+  def getProductInvs = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.productInv_show(new MyDeadboltHandler, res(0)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -150,7 +150,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     val parentId = getParentId(id)
     val amountLeft = getAmountLeft(id)
     repo.delete(id).map { res =>
@@ -160,13 +160,13 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, errorForm, productMap, vendorMap, measureMap)))
@@ -184,7 +184,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm, productMap, vendorMap, measureMap)))

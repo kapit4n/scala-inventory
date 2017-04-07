@@ -6,10 +6,10 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("companyCreateDEV"))) {
-            <a href="/company_add" class="btn btn-primary btn-sm">New</a> 
+            <a href="/company_add" class="btn btn-primary btn-sm">@messages("new")</a> 
         }
         @restrict(roles = List(Array("companyListDEV"))) {
-            <a href="/company_list/1" class="btn btn-primary btn-sm">List</a> 
+            <a href="/company_list/1" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
 
@@ -18,8 +18,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Code</th>
-                    <th>Name</th>
+                    <th>@messages("code")</th>
+                    <th>@messages("name")</th>
                     <th>---</th>
                 </tr>
             </thead>
@@ -31,13 +31,13 @@
                     <td>@company.name</td>
                     <td>
                         @restrict(roles = List(Array("companyEdit"))) {
-                            <a href="/company_update/@company.id" class="btn btn-primary btn-sm">Edit</a> 
+                            <a href="/company_update/@company.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                         }
                         @restrict(roles = List(Array("companyDelete"))) {
-                            <a href="/company_remove/@company.id" class="btn btn-danger btn-sm">Remove</a>
+                            <a href="/company_remove/@company.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                         }
                         @restrict(roles = List(Array("companyShow"))) {
-                            <a href="/company_show/@company.id" class="btn btn-info btn-sm">view</a>
+                            <a href="/company_show/@company.id" class="btn btn-info btn-sm">@messages("view")</a>
                         }
                     </td>
 

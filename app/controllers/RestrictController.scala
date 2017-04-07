@@ -12,7 +12,7 @@ import views.html.accessOk
  * @author Steve Chaloner (steve@objectify.be)
  */
 class RestrictController @Inject() (deadbolt: DeadboltActions, actionBuilder: ActionBuilders) extends Controller {
-  def index = Action {
+  def index = LanguageAction {
     Ok(accessOk())
   }
 

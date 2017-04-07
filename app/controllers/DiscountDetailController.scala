@@ -40,11 +40,11 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   var discountsNames = getParentList(0)
   var customers = getCustomerMap()
 
-  def index = Action {
+  def index = LanguageAction {
     Ok(views.html.discountDetail_index())
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, errorForm, discountsNames, customers)))
@@ -62,7 +62,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       })
   }
 
-  def searchCustomerPost = Action.async { implicit request =>
+  def searchCustomerPost = LanguageAction.async { implicit request =>
     searchCustomerForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, customers)))
@@ -81,32 +81,32 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
 
   var discountId: Long = 0
 
-  def addGet(discountIdParam: Long) = Action { implicit request =>
+  def addGet(discountIdParam: Long) = LanguageAction { implicit request =>
     discountsNames = getParentList(discountIdParam)
     customers = getCustomerMap()
     discountId = discountIdParam
     Ok(views.html.discountDetail_add(new MyDeadboltHandler, discountId, newForm, discountsNames, customers))
   }
 
-  def getDiscountDetails = Action.async {
+  def getDiscountDetails = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getDiscountDetailsByReport(id: Long) = Action.async {
+  def getDiscountDetailsByReport(id: Long) = LanguageAction.async {
     repo.listByReport(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getDiscountDetailsByCustomer(id: Long) = Action.async {
+  def getDiscountDetailsByCustomer(id: Long) = LanguageAction.async {
     repo.listByCustomer(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getDiscountDetailsByInsumo(id: Long) = Action.async {
+  def getDiscountDetailsByInsumo(id: Long) = LanguageAction.async {
     repo.listByInsumo(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -123,7 +123,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.discountDetail_show(new MyDeadboltHandler, res(0)))
     }
@@ -132,7 +132,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   var udpatedRow: DiscountDetail = _
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "customerId" -> res.toList(0).customerId.toString(), "status" -> res.toList(0).status.toString(), "discount" -> res.toList(0).discount.toString())
       discountsNames = getParentList(res(0).discountReport)
@@ -185,7 +185,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     val parentId = getParentId(id)
     val discount = getDiscount(id)
     repo.delete(id).map { res =>
@@ -199,14 +199,14 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.discountDetail_update(new MyDeadboltHandler, udpatedRow, updateForm, discountsNames, customers)))

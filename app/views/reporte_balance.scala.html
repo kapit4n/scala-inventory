@@ -6,14 +6,14 @@
     @examples.templates.nav(handler)
     <div class="container">
         <h4 class="media-heading">
-            <strong>General Ledger</strong>
+            <strong>@messages("generalLedger"): </strong>
         </h4>
     </div>
     <div class="table table-bordered">
     <table class="table table-bordered">
         <tr>
             <td>
-                <div><b>Active</b></div>
+                <div><b>@messages("active")</b></div>
                 <table id="activos_table" style="width: 100%;">
                     <tbody>
                         @for(activo <- activos) {
@@ -26,7 +26,7 @@
                 </table>
             </td>
             <td>
-                <div><b>Passive</b></div>
+                <div><b>@messages("passive")</b></div>
                 <table id="pasivo_table" style="width: 100%;">
                     <tbody>
                         @for(pasivo <- pasivos) {
@@ -37,7 +37,7 @@
                         }
                     </tbody>
                 </table>
-                <div><b>Patrimony</b></div>
+                <div><b>@messages("patrimony")</b></div>
                 <table id="patrimonio_table" style="width: 100%;">
                     <tbody>
                         @for(patrimonio <- patrimonios) {
@@ -52,8 +52,8 @@
             </td>
         </tr>
         <tr>
-            <td><b>Total active:</b> @(activos(0).debit - activos(0).credit)</td>
-            <td><b>Total passive + patrimonio:</b> @(pasivos(0).credit -  pasivos(0).debit + patrimonios(0).credit - patrimonios(0).debit)</td>
+            <td><b>@messages("totalActive"):</b> @(activos(0).debit - activos(0).credit)</td>
+            <td><b>@messages("total") @messages("passive") + @messages("patrimony"):</b> @(pasivos(0).credit -  pasivos(0).debit + patrimonios(0).credit - patrimonios(0).debit)</td>
         </tr>
     </table>
     </div>

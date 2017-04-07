@@ -6,21 +6,21 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportShow"))) {
-            <a href="/discountReport_show/@row.discountReport" class="btn btn-primary btn-sm">Report</a> 
+            <a href="/discountReport_show/@row.discountReport" class="btn btn-primary btn-sm">@messages("report")</a> 
         }
         @restrict(roles = List(Array("discountDetailShow"))) {
-           <a href="/discountDetail_show/@row.id" class="btn btn-info btn-sm">view</a>
+           <a href="/discountDetail_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
         }
         @restrict(roles = List(Array("discountDetailDelete"))) {
-           <a href="/discountDetail_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/discountDetail_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.DiscountDetailController.updatePost()) {
         @select(field = rowForm("customerId"), options = options(customers))
         @inputText(rowForm("status"))
         @inputText(rowForm("discount"))
-        <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
-        <a href="/discountDetail_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" value=@messages("update") class="btn btn-primary btn-sm"/>
+        <a href="/discountDetail_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
         @select(field = rowForm("discountReport"), options = options(products), 'hidden -> "true", '_label -> "")
     }

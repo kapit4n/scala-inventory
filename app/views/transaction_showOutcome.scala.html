@@ -6,54 +6,54 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionList"))) {
-            <a href="/transaction_list" class="btn btn-info btn-sm">List</a> 
+            <a href="/transaction_list" class="btn btn-info btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("transactionEdit"))) {
-            <a href="/transaction_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/transaction_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("transactionDelete"))) {
-           <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;"> @messages("date"): </div>
             <div style="display: inline-block;" id="date">@row.date</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;"> @messages("type"): </div>
             <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;"> @messages("description"): </div>
             <div style="display: inline-block;" id="description">@row.description</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Elaborado Por: </div>
+            <div style="display: inline-block;"> @messages("builtBy"): </div>
             <div style="display: inline-block;" id="description">@row.createdByName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Autorizado Por: </div>
+            <div style="display: inline-block;"> @messages("authorizedBy"): </div>
             <div style="display: inline-block;" id="description">@row.autorizedByName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Recibido Por: </div>
+            <div style="display: inline-block;"> @messages("recivedBy"): </div>
             <div style="display: inline-block;" id="description">@row.receivedByName</div>
         </div>
     </div>
 
     <div class="container">
-        <a id="addDetail" href="/transactionDetail_addGet/@row.id" class="btn btn-primary btn-sm">Add Detail</a> 
+        <a id="addDetail" href="/transactionDetail_addGet/@row.id" class="btn btn-primary btn-sm">@messages("addDetail")</a> 
     </div>
 
-    <div class="container">Accounts y Detail</div>
+    <div class="container">@messages("details")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Account</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
+                    <th>@messages("account")</th>
+                    <th>@messages("debit")</th>
+                    <th>@messages("credit")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -71,13 +71,13 @@
                         <td>@child.credit</td>
                         <td>
                            @restrict(roles = List(Array("transactionDetailEdit"))) {
-                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                            }
                            @restrict(roles = List(Array("transactionDetailDelete"))) {
-                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                            }
                            @restrict(roles = List(Array("transactionDetailShow"))) {
-                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                        </td> 
                     </tr>
@@ -85,7 +85,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total</td>
+                    <td>@messages("total")</td>
                     <td></td>
                     <td><div style="display: inline-block;" id="totalDebit"></div></td>
                     <td><div style="display: inline-block;" id="totalCredit"></div></td>

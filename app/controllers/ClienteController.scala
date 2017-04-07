@@ -29,21 +29,21 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
   /**
    * The index action.
    */
-  def cliente_list = Action {
+  def cliente_list = LanguageAction {
     Ok(views.html.cliente_index(clienteForm))
   }
 
   /**
    * The index action.
    */
-  def cliente_doctor = Action {
+  def cliente_doctor = LanguageAction {
     Ok(views.html.cliente_doctor(clienteForm))
   }
 
   /**
    * A REST endpoint that gets all the clientes as JSON.
    */
-  def getClientes = Action.async {
+  def getClientes = LanguageAction.async {
     repo.list().map { clientes =>
       Ok(Json.toJson(clientes))
     }

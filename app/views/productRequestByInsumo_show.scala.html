@@ -6,29 +6,29 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestByInsumoList"))) {
-            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/productRequestByInsumo_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("productRequestByInsumoEdit"))) {
-            <a href="/productRequestByInsumo_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/productRequestByInsumo_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("productRequestByInsumoDelete"))) {
-           <a href="/productRequestByInsumo_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/productRequestByInsumo_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
         @restrict(roles = List(Array("productRequestByInsumoSend"))) {
             @if(row.status == "borrador") {
-                <a href="/productRequestByInsumo_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+                <a href="/productRequestByInsumo_send/@row.id" class="btn btn-primary btn-sm">@messages("send")</a>
             }
         }
         @restrict(roles = List(Array("productRequestByInsumoFinish"))) {
             @if(row.status == "enviado") {
-                <a href="/productRequestByInsumo_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+                <a href="/productRequestByInsumo_finish/@row.id" class="btn btn-primary btn-sm">@messages("finish")</a>
             }
         }
     </div>
 
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;"> @messages("date"): </div>
             <div style="display: inline-block;" id="date">@row.date</div>
         </div>
         <div>
@@ -36,13 +36,13 @@
             <div style="display: inline-block;" id="userName">@row.userName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;"> @messages("status"): </div>
             <div style="display: inline-block;" id="status">@row.status</div>
         </div>
     </div>
     <div>
         @restrict(roles = List(Array("requestRowByInsumoCreate"))) {
-            <div style="display: inline-block;"> <a id="addDetail" href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">Add Detail</a> </div>
+            <div style="display: inline-block;"> <a id="addDetail" href="/requestRowByInsumo_add/@row.id" class="btn btn-primary btn-sm">@messages("addDetail")</a> </div>
         }
     </div>
 
@@ -51,10 +51,10 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Status</th>
+                    <th>@messages("product")</th>
+                    <th>@messages("quantity")</th>
+                    <th>@messages("price")</th>
+                    <th>@messages("status")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -74,16 +74,16 @@
                         <td>@child.status</td>
                         <td>
                            @restrict(roles = List(Array("requestRowByInsumoShow"))) {
-                               <a href="/requestRowByInsumo_show/@child.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/requestRowByInsumo_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                            @restrict(roles = List(Array("requestRowByInsumoEdit"))) {
-                               <a href="/requestRowByInsumo_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                               <a href="/requestRowByInsumo_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                            }
                            @restrict(roles = List(Array("requestRowByInsumoDelete"))) {
-                               <a href="/requestRowByInsumo_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                               <a href="/requestRowByInsumo_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                            }
                            @if(child.status != "entregado") {
-                            <a href="/requestRowByInsumo_fill/@child.id" class="btn btn-primary btn-sm">Entregar</a>
+                            <a href="/requestRowByInsumo_fill/@child.id" class="btn btn-primary btn-sm">@messages("deliver")</a>
                            }
                        </td> 
                     </tr>

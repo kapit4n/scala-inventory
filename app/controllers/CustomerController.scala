@@ -98,7 +98,7 @@ class CustomerController @Inject() (
       })
   }
 
-  def index_pdf = Action {
+  def index_pdf = LanguageAction {
     val generator = new PdfGenerator
     Ok(generator.toBytes(views.html.reporte_customeres(), "http://localhost:9000/")).as("application/pdf")
   }

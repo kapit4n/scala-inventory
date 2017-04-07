@@ -7,20 +7,20 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("logEntryCreate"))) {
-           <a href="/logEntry_add" class="btn btn-primary btn-sm">New</a> 
+           <a href="/logEntry_add" class="btn btn-primary btn-sm">@messages("new")</a> 
        }
     </div>
     <div>
-        Lista de Modulos
+        @messages("eventsList")
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Accion</th>
-                    <th>Tabla</th>
-                    <th>Description</th>
-                    <th>Date</th>
+                    <th>@messages("action")</th>
+                    <th>@messages("table")</th>
+                    <th>@messages("description")</th>
+                    <th>@messages("date")</th>
                     <th>---</th>
                 </tr>
             </thead>
@@ -33,7 +33,7 @@
                         <td>@row.createdAt</td>
                         <td>
                            @restrict(roles = List(Array("logEntryShow"))) {
-                               <a href="/logEntry_show/@row.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/logEntry_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                         </td> 
                     </tr>

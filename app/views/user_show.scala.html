@@ -6,18 +6,18 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("userList"))) {
-            <a href="/user_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/user_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("userEdit"))) {
-            <a href="/user_update/@row.id" class="btn btn-info btn-sm">Edit</a> 
+            <a href="/user_update/@row.id" class="btn btn-info btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("userDelete"))) {
-           <a href="/user_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/user_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;"> @messages("cancel"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
@@ -25,27 +25,27 @@
             <div style="display: inline-block;" id="carnet">@row.carnet</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Phone: </div>
+            <div style="display: inline-block;"> @messages("phone"): </div>
             <div style="display: inline-block;" id="phone">@row.phone</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Address: </div>
+            <div style="display: inline-block;"> @messages("address"): </div>
             <div style="display: inline-block;" id="address">@row.address</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Salary: </div>
+            <div style="display: inline-block;"> @messages("salary"): </div>
             <div style="display: inline-block;" id="salary">@row.Salary</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;"> @messages("type"): </div>
             <div style="display: inline-block;" id="typeId">@row.type_1</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Login: </div>
+            <div style="display: inline-block;"> @messages("login"): </div>
             <div style="display: inline-block;" id="login">@row.login</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Password: </div>
+            <div style="display: inline-block;"> @messages("password"): </div>
             <div style="display: inline-block;" id="password">@row.password</div>
         </div>
     </div>
@@ -56,7 +56,7 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Action</th>
+                    <th>@messages("action")</th>
                     @restrict(roles = List(Array("productInv"))) {
                         <th>-----------</th>
                     }
@@ -70,7 +70,7 @@
                         @restrict(roles = List(Array("role"))) {
                             <td>
                                @restrict(roles = List(Array("roleDelete"))) {
-                                   <a href="/role_remove/@child.id" class="btn btn-danger btn-sm">Remove</a> 
+                                   <a href="/role_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a> 
                                }
                            </td> 
                        }
@@ -87,7 +87,7 @@
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Action</th>
+                    <th>@messages("action")</th>
                     @restrict(roles = List(Array("productInv"))) {
                         <th>-----------</th>
                     }
@@ -101,7 +101,7 @@
                         @restrict(roles = List(Array("role"))) {
                             <td>
                                @restrict(roles = List(Array("roleEdit"))) {
-                                   <a href="/role_assign/@row.id/@child.roleCode" class="btn btn-primary btn-sm">Add</a> 
+                                   <a href="/role_assign/@row.id/@child.roleCode" class="btn btn-primary btn-sm">@messages("add")</a> 
                                }
                            </td> 
                        }

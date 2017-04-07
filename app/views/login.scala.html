@@ -5,11 +5,11 @@
 @main("Add") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/account_index.js")'></script>
     <div>
-        <a href="/">Home</a>
+        <a href="/">@messages("home")</a>
     </div>
     @form(routes.LoginController.login()) {
-        @inputText(row("user"), 'id -> "login")
-        @inputPassword(row("password"), 'id -> "password")
-        <input id="submitLogin" type="submit" value="Login" class="btn btn-primary btn-sm"/>
+        @inputText(row("user"), 'id -> "Login")
+        @inputPassword(row("password"), 'id -> "Password"))
+        <input id="submitLogin" type="submit" value=@messages("login") class="btn btn-primary btn-sm"/>
     }
 }

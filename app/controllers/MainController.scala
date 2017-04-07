@@ -20,7 +20,7 @@ import security.MyDeadboltHandler
 
 class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesApi, deadbolt: DeadboltActions)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  def index = Action { implicit request =>
+  def index = LanguageAction { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
       if (res2.length > 0) {
         Ok(views.html.index(new MyDeadboltHandler))
@@ -38,14 +38,14 @@ class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   //         }
   // }
   //
-  //  //def index3 = Action { request =>
+  //  //def index3 = LanguageAction { request =>
   //  //  request.session.get("userSecurity").map { user =>
   //  //    Ok("Hello " + user)
   //  //  }.getOrElse {
   //  //    Unauthorized("Oops, you are not connected")
   //  //  }
   //}
-  //def index_pdf = Action {
+  //def index_pdf = LanguageAction {
   //	val generator = new PdfGenerator
   //  Ok(generator.toBytes(views.html.index(), "http://localhost:9000/")).as("application/pdf")
   //}

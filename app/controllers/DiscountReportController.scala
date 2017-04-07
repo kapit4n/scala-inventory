@@ -37,13 +37,13 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.discountReport_index(new MyDeadboltHandler, res))
     }
   }
 
-  def generarReport(id: Long) = Action {
+  def generarReport(id: Long) = LanguageAction {
     val productRequestRowsByProduct = getProductByTotalDebt()
     repoDiscDetail.generarReport(productRequestRowsByProduct, id)
     Redirect(routes.DiscountReportController.show(id))
@@ -51,12 +51,12 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   var customeresNames = getCustomeresNamesMap()
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     customeresNames = getCustomeresNamesMap()
     Ok(views.html.discountReport_add(new MyDeadboltHandler, newForm, customeresNames))
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.discountReport_add(new MyDeadboltHandler, newForm, customeresNames)))
@@ -68,7 +68,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
       })
   }
 
-  def getDiscountReports = Action.async {
+  def getDiscountReports = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -91,7 +91,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     val children = getChildren(id)
     repo.getById(id).map { res =>
       Ok(views.html.discountReport_show(new MyDeadboltHandler, res(0), children))
@@ -102,7 +102,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     Await.result(repoSetting.getFirst().map { res => res(0) }, 1000.millis)
   }
 
-  def show_pdf(id: Long) = Action {
+  def show_pdf(id: Long) = LanguageAction {
     val generator = new PdfGenerator
     val discountReport = getDiscountReportById(id)
     val values = getDiscountDetailList(id)
@@ -114,7 +114,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   var updatedRow: DiscountReport = _
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString(), "startDate" -> res.toList(0).startDate.toString(), "endDate" -> res.toList(0).endDate.toString(), "status" -> res.toList(0).status.toString(), "total" -> res.toList(0).total.toString())
       val customeresMap = getCustomeresNamesMap()
@@ -157,7 +157,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       Redirect(routes.DiscountReportController.index)
     }
@@ -166,7 +166,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   /* Update all report details to dinalized
   * Update all customers totalDebt with -discount
   */
-  def finalizeReport(id: Long) = Action.async {
+  def finalizeReport(id: Long) = LanguageAction.async {
     val discountDetails = getDiscountDetailList(id)
     discountDetails.foreach {
       case (discountDetail) =>
@@ -182,14 +182,14 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.discountReport_update(new MyDeadboltHandler, updatedRow, errorForm, Map[String, String]())))

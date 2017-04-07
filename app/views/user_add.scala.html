@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("userList"))) {
-            <a href="/user_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/user_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
 
@@ -21,8 +21,8 @@
             @inputText(row("address"), 'id -> "address")
             @inputText(row("Salary"), 'id -> "salary")
             @select(field = row("type_1"), options = options(types), 'id -> "typeId")
-            <input type="submit" id="addSubmit" value="Guardar" class="btn btn-primary btn-sm"/>
-            <a id="cancel" href="/user_list" class="btn btn-primary btn-sm">Cancelar</a>
+            <input type="submit" id="addSubmit" value=@messages("save") class="btn btn-primary btn-sm"/>
+            <a id="cancel" href="/user_list" class="btn btn-primary btn-sm">@messages("cancel")</a>
         </div>
         </div>
     }

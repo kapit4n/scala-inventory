@@ -58,13 +58,13 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     measures = getMeasureMap()
     Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types))
   }
 
   // to copy
-  def assignVendor(productId: Long, vendorId: Long) = Action.async { implicit request =>
+  def assignVendor(productId: Long, vendorId: Long) = LanguageAction.async { implicit request =>
     //var vendor = getVendorById(vendorId)
     repoProductVendor.createProductVendor(productId, /*vendor.name, */vendorId).map(res =>
       Redirect(routes.ProductController.show(res.productId)))
@@ -72,32 +72,32 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
 
 
   // to copy
-  def removeVendor(id: Long) = Action.async { implicit request =>
+  def removeVendor(id: Long) = LanguageAction.async { implicit request =>
     repoProductVendor.deleteProductVendor(id).map(res =>
       Redirect(routes.ProductController.show(productId)))
   }
 
   var products: Seq[Product] = _
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       products = res
       Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
     }
   }
 
-  def reorder_index = Action.async { implicit request =>
+  def reorder_index = LanguageAction.async { implicit request =>
     repo.reorder_list().map { res =>
       products = res
       Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
     }
   }
 
-  def list = Action {
+  def list = LanguageAction {
     Ok(views.html.product_list())
   }
 
-  def addProduct = Action.async { implicit request =>
+  def addProduct = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, types)))
@@ -129,7 +129,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
-  def searchProductPost = Action.async { implicit request =>
+  def searchProductPost = LanguageAction.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
@@ -142,7 +142,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
       })
   }
 
-  def getProducts = Action.async {
+  def getProducts = LanguageAction.async {
     repo.list().map { insumos =>
       Ok(Json.toJson(insumos))
     }
@@ -182,7 +182,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     productId = id
     val children = getChildren(id)
     vendors = getVendors()
@@ -195,7 +195,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   var updatedRow: Product = _
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
@@ -215,21 +215,21 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       Redirect(routes.ProductController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, types)))
@@ -246,7 +246,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
       })
   }
 
-  def upload(id: Long) = Action(parse.multipartFormData) { request =>
+  def upload(id: Long) = LanguageAction(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       import java.io.File
       val filename = picture.filename;

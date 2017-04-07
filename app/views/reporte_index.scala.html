@@ -4,35 +4,35 @@
 
 @main("Reports") {
     @examples.templates.nav(handler)
-    <div>Reports</div>
+    <div>@messages("reports")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="reportes">
             <thead>
                 <tr>
-                    <th>Report</th>
+                    <th>@messages("report")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
         <tbody>
             <tr>
-                <td>General Ledger</td>
-                <td><a href="/reportes_balance" class="btn btn-info btn-sm">view</a></td>
+                <td>@messages("generalLedger")</td>
+                <td><a href="/reportes_balance" class="btn btn-info btn-sm">@messages("view")</a></td>
             </tr>
             <tr>
-                <td>Financial Statement</td>
-                <td><a href="/result_finance" class="btn btn-info btn-sm">view</a></td>
+                <td>@messages("financialStatement")</td>
+                <td><a href="/result_finance" class="btn btn-info btn-sm">@messages("view")</a></td>
             </tr>
             <tr>
-                <td>Journal entry</td>
-                <td><a href="/reportes_diary" class="btn btn-info btn-sm">view</a></td>
+                <td>@messages("journalEntry")</td>
+                <td><a href="/reportes_diary" class="btn btn-info btn-sm">@messages("view")</a></td>
             </tr>
             <tr>
-                <td>Books of the mayor</td>
-                <td><a href="/reportes_mayor" class="btn btn-info btn-sm">view</a></td>
+                <td>@messages("mayorBooks")</td>
+                <td><a href="/reportes_mayor" class="btn btn-info btn-sm">@messages("view")</a></td>
             </tr>
             <tr>
-                <td>Trial Balance</td>
-                <td><a href="/reportes_sumasYSaldos" class="btn btn-info btn-sm">view</a></td>
+                <td>@messages("trialBalance")</td>
+                <td><a href="/reportes_sumasYSaldos" class="btn btn-info btn-sm">@messages("view")</a></td>
             </tr>
         </tbody>
         </table>

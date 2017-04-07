@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
 	<div class="container">
       @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Product</a> 
+            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">@messages("product")</a> 
         }
         @restrict(roles = List(Array("productInvEdit"))) {
-           <a href="/productInv_show/@row.id" class="btn btn-info btn-sm">view</a>
+           <a href="/productInv_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
         }
         @restrict(roles = List(Array("productInvDelete"))) {
-           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.ProductInvController.updatePost()) {
@@ -21,8 +21,8 @@
         @select(field = rowForm("measureId"), options = options(measures))
         @inputText(rowForm("amount"))
         @inputText(rowForm("amountLeft"))
-        <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
-        <a href="/productInv_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" value=@messages("update") class="btn btn-primary btn-sm"/>
+        <a href="/productInv_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

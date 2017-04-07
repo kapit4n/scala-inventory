@@ -35,11 +35,11 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       "credit" -> of[Double])(CreateTransactionDetailForm.apply)(CreateTransactionDetailForm.unapply)
   }
 
-  def index = Action {
+  def index = LanguageAction {
     Ok(views.html.transactionDetail_index())
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, errorForm, transactionMap, accountMap)))
@@ -67,7 +67,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     Await.result(repoTransaction.getById(id).map { res => res(0).type_1 }, 500.millis)
   }
 
-  def addGet(transactionId: Long) = Action { implicit request =>
+  def addGet(transactionId: Long) = LanguageAction { implicit request =>
     parentId = transactionId
     var parenType = getTransactionType(transactionId)
     transactionMap = getTransactionMap(transactionId)
@@ -75,19 +75,19 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, newForm, transactionMap, accountMap))
   }
 
-  def getTransactionDetails = Action.async {
+  def getTransactionDetails = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getTransactionDetailsByTransaction(id: Long) = Action.async {
+  def getTransactionDetailsByTransaction(id: Long) = LanguageAction.async {
     repo.listByTransaction(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getTransactionDetailsByAccount(id: Long) = Action.async {
+  def getTransactionDetailsByAccount(id: Long) = LanguageAction.async {
     repo.listByAccount(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -104,14 +104,14 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.transactionDetail_show(new MyDeadboltHandler, res(0)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -171,7 +171,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     parentId = getParentId(id)
     var deletedRecord = getByIdNow(id)
     repoAccounts.updateParentDebitCredit(deletedRecord.accountId, -deletedRecord.debit, -deletedRecord.credit);
@@ -181,14 +181,14 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, errorForm, accountMap)))

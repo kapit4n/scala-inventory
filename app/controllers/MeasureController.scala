@@ -44,18 +44,18 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
     }, 3000.millis)
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     measures = getMeasureMap()
     Ok(views.html.measure_add(new MyDeadboltHandler, newForm, measures))
   }
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.measure_index(new MyDeadboltHandler, res))
     }
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm, measures)))
@@ -71,13 +71,13 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
       })
   }
 
-  def getMeasures = Action.async {
+  def getMeasures = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getMeasuresReport = Action.async {
+  def getMeasuresReport = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -94,7 +94,7 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.measure_show(new MyDeadboltHandler, res(0)))
     }
@@ -103,7 +103,7 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   var updatedRow: Measure = _
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     measures = getMeasureMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
@@ -118,21 +118,21 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   }
 
   // delete required
-  def delete(id: Long) = Action.async { implicit request =>
+  def delete(id: Long) = LanguageAction.async { implicit request =>
     repo.delete(id).map { res =>
       Redirect(routes.MeasureController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm, measures)))

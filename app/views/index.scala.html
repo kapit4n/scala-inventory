@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -9,7 +9,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Accion</th>
+                    <th>@messages("action")</th>
                 </tr>
             </thead>
         </table>

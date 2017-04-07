@@ -36,13 +36,13 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   var employeesNames = getEmployeeListNamesMap()
   var storeNames = getStorekeepersNamesMap()
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.productRequest_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     if (request.session.get("role").getOrElse("0").toLowerCase == "employee") {
       employeesNames = getEmployeeNamesMap(request.session.get("userId").getOrElse("0").toLong)
     } else {
@@ -52,7 +52,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
     Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, employeesNames, storeNames))
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, employeesNames, storeNames)))
@@ -69,25 +69,25 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       })
   }
 
-  def getProductRequestsByEmployee(id: Long) = Action.async {
+  def getProductRequestsByEmployee(id: Long) = LanguageAction.async {
     repo.listByEmployee(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestsByStorekeeper(id: Long) = Action.async {
+  def getProductRequestsByStorekeeper(id: Long) = LanguageAction.async {
     repo.listByStorekeeper(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestsByInsumoUser(id: Long) = Action.async {
+  def getProductRequestsByInsumoUser(id: Long) = LanguageAction.async {
     repo.listByInsumoUser(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequests = Action.async {
+  def getProductRequests = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -111,7 +111,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     val requestRows = getChildren(id)
     repo.getById(id).map { res =>
       Ok(views.html.productRequest_show(new MyDeadboltHandler, res(0), requestRows))
@@ -120,7 +120,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
   var updatedId: Long = 0
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     updatedId = id;
     repo.getById(id).map {
       case (res) =>
@@ -136,7 +136,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // update required
-  def getSend(id: Long) = Action.async { implicit request =>
+  def getSend(id: Long) = LanguageAction.async { implicit request =>
     repo.sendById(id).map {
       case (res) =>
         Redirect(routes.ProductRequestController.index())
@@ -144,7 +144,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // update required
-  def getFinish(id: Long) = Action.async { implicit request =>
+  def getFinish(id: Long) = LanguageAction.async { implicit request =>
     repo.finishById(id).map {
       case (res) =>
         Redirect(routes.ProductRequestController.index())
@@ -200,7 +200,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     val requestRows = getChildren(id)
     requestRows.foreach { req =>
       repoRow.delete(req.id)
@@ -211,14 +211,14 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))

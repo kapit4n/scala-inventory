@@ -6,10 +6,9 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("accountList"))) {
-          <a href="/account_list" class="btn btn-info btn-sm">Lista</a> 
+          <a href="/account_list" class="btn btn-info btn-sm">@messages("list")</a> 
         }
     </div>
-
 
     <div style="container">
         @form(routes.AccountController.searchParentAccountPost()) {
@@ -18,7 +17,6 @@
         }        
     </div>
 
-
     @form(routes.AccountController.add()) {
         @inputText(rowForm("code"), 'id -> "code")
         @inputText(rowForm("name"), 'id -> "name")
@@ -26,7 +24,7 @@
         @select(field = rowForm("negativo"), options = options(yes_no), 'id -> "negative")
         @select(field = rowForm("parent"), options = options(accounts), 'id -> "parent")
         @inputText(rowForm("description"), 'id -> "description")
-        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
-        <a href="/account_list" class="btn btn-info btn-sm">Cancelar</a>
+        <input id="addSubmit" type="submit" value=@messages("save") class="btn btn-primary btn-sm"/>
+        <a href="/account_list" class="btn btn-info btn-sm">@messages("cancel")</a>
     }
 }

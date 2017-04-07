@@ -46,17 +46,17 @@
         </div>
     </div>
     <div class="container">
-        <div>Products</div>
+        <div>@messages("products")</div>
         <div class="table table-bordered">
             <table class="table table-bordered" id="requestRowCustomers">
                 <thead>
                     <tr>
-                        <th>Order</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total Price</th>
-                        <th>Status</th>
+                        <th>@messages("order")</th>
+                        <th>@messages("product")</th>
+                        <th>@messages("quantity")</th>
+                        <th>@messages("price")</th>
+                        <th>@messages("totalPrice")</th>
+                        <th>@messages("status")</th>
                         <th>-----------</th>
                     </tr>
                 </thead>
@@ -85,13 +85,13 @@
                             <td>@req.status</td>
                             <td>
                                @restrict(roles = List(Array("requestRowCustomerEdit"))) {
-                                   <a href="/requestRowCustomer_update/@req.id" class="btn btn-primary btn-sm">Edit</a> 
+                                   <a href="/requestRowCustomer_update/@req.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                                }
                                @restrict(roles = List(Array("requestRowCustomerDelete"))) {
-                                   <a href="/requestRowCustomer_remove/@req.id" class="btn btn-danger btn-sm">Remove</a>
+                                   <a href="/requestRowCustomer_remove/@req.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                                }
                                @restrict(roles = List(Array("requestRowCustomerShow"))) {
-                                   <a href="/requestRowCustomer_show/@req.id" class="btn btn-info btn-sm">view</a>
+                                   <a href="/requestRowCustomer_show/@req.id" class="btn btn-info btn-sm">@messages("view")</a>
                                }
                            </td> 
                         </tr>
@@ -107,9 +107,9 @@
             <table class="table table-bordered" id="descuentos_rows">
                 <thead>
                     <tr>
-                        <th>Report</th>
-                        <th>Status</th>
-                        <th>Discount</th>
+                        <th>@messages("report")</th>
+                        <th>@messages("status")</th>
+                        <th>@messages("discount")</th>
                         <th>-----------</th>
                     </tr>
                 </thead>
@@ -128,13 +128,13 @@
                             <td>@discount.discount</td>
                             <td>
                                @restrict(roles = List(Array("discountDetailEdit"))) {
-                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary btn-sm">Edit</a> 
+                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                                }
                                @restrict(roles = List(Array("discountDetailDelete"))) {
-                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger btn-sm">Remove</a>
+                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                                }
                                @restrict(roles = List(Array("discountDetailShow"))) {
-                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info btn-sm">view</a>
+                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info btn-sm">@messages("view")</a>
                                }
                            </td> 
                         </tr>

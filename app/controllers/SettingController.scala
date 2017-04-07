@@ -32,7 +32,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
 
   var updatedRow: Setting = _
   // to copy
-  def show() = Action.async { implicit request =>
+  def show() = LanguageAction.async { implicit request =>
     repo.getFirst().map { res =>
       if (res.size > 0) {
         updatedRow = res(0)
@@ -44,7 +44,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
   }
 
   // update required
-  def getUpdate = Action.async { implicit request =>
+  def getUpdate = LanguageAction.async { implicit request =>
     repo.getFirst().map { res =>
       var anyData: Map[String, String] = Map[String, String]()
       if (res.size == 0) {
@@ -66,7 +66,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.setting_update(new MyDeadboltHandler, updatedRow, errorForm)))

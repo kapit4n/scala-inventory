@@ -6,18 +6,18 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("vendorCreate"))) {
-           <a href="/vendor_add" class="btn btn-primary btn-sm">New</a> 
+           <a href="/vendor_add" class="btn btn-primary btn-sm">@messages("new")</a> 
        }
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Contact</th>
-                    <th>Account</th>
+                    <th>@messages("name")</th>
+                    <th>@messages("phone")</th>
+                    <th>@messages("address")</th>
+                    <th>@messages("contact")</th>
+                    <th>@messages("account")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -31,13 +31,13 @@
                         <td>@row.account</td>
                        <td>
                            @restrict(roles = List(Array("vendorEdit"))) {
-                               <a href="/vendor_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                               <a href="/vendor_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                            }
                            @restrict(roles = List(Array("vendorDelete"))) {
-                               <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                               <a href="/vendor_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                            }
                            @restrict(roles = List(Array("vendorShow"))) {
-                               <a href="/vendor_show/@row.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/vendor_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                        </td> 
                     </tr>

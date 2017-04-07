@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
     @form(routes.ProductController.addProduct()) {
@@ -22,8 +22,8 @@
                 <br/>
                 <br/>
                 <br/>
-               <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value="Add Product"/>
-               <a id="cancel" href="/product_list" class="btn btn-info btn-sm">Cancelar</a>
+               <input id="addSubmit" type="submit" class="btn btn-primary btn-sm" value=@messages("save")/>
+               <a id="cancel" href="/product_list" class="btn btn-info btn-sm">@messages("cancel")</a>
             </div>
         </div>
     }

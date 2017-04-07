@@ -51,14 +51,14 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
     }, 3000.millis)
   }
 
-  def index() = Action.async { implicit request =>
+  def index() = LanguageAction.async { implicit request =>
     productRequestId = 0
     repo.list().map { res =>
       Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet(requestId: Long) = Action { implicit request =>
+  def addGet(requestId: Long) = LanguageAction { implicit request =>
     unidades = getMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
     products = getProductsMap()
@@ -66,7 +66,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
     Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)))
@@ -88,13 +88,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
       })
   }
 
-  def getRequestRows = Action.async {
+  def getRequestRows = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getRequestRowsByParent(id: Long) = Action.async {
+  def getRequestRowsByParent(id: Long) = LanguageAction.async {
     repo.listByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -119,7 +119,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     // get the productRequestRow
     // products = getProductRequestRows(id)
     val requestRowCustomers = getRequestRowProducts(id)
@@ -130,7 +130,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         val anyData = Map(
@@ -216,7 +216,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // update required
-  def getFill(id: Long) = Action.async {
+  def getFill(id: Long) = LanguageAction.async {
     var row = getByIdObj(id)
     repo.fillById(id, row.productId, row.quantity).map { res =>
       Redirect(routes.ProductRequestController.show(res(0).requestId))
@@ -224,7 +224,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       if (productRequestId == 0) {
         Redirect(routes.RequestRowController.index)
@@ -235,14 +235,14 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         println("Some error is by there")
@@ -274,7 +274,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
       "search" -> text)(SearchProductForm.apply)(SearchProductForm.unapply)
   }
 
-  def searchProductPost = Action.async { implicit request =>
+  def searchProductPost = LanguageAction.async { implicit request =>
     searchProductForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)))

@@ -6,21 +6,21 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("transactionList"))) {
-            <a href="/transaction_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/transaction_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("transactionShow"))) {
-            <a href="/transaction_show/@row.id" class="btn btn-info btn-sm">view</a> 
+            <a href="/transaction_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a> 
         }
         @restrict(roles = List(Array("transactionDelete"))) {
-           <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/transaction_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.TransactionController.updatePostIncome()) {
         @inputDate(rowForm("date"))
         @select(field = rowForm("type_1"), options = options(Map("Income" -> "Income")))
         @inputText(rowForm("description"))
-        <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
-        <a href="/transaction_show/@row.id" class="btn btn-primary btn-sm">Cancel</a>
+        <input type="submit" value=@messages("update") class="btn btn-primary btn-sm"/>
+        <a href="/transaction_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

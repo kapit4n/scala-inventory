@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@productId" class="btn btn-primary btn-sm">Product</a> 
+            <a href="/product_show/@productId" class="btn btn-primary btn-sm">@messages("product")</a> 
         }
     </div>
 
@@ -15,7 +15,7 @@
         @select(field = row("vendorId"), options = options(vendors))
         @select(field = row("measureId"), options = options(measures))
         @inputText(row("amount"))
-        <input type="submit" class="btn btn-primary btn-sm" value="Guardar"/>
-        <a href="/product_show/@productId" class="btn btn-primary btn-sm">Cancel</a>
+        <input type="submit" class="btn btn-primary btn-sm" value=@messages("save")/>
+        <a href="/product_show/@productId" class="btn btn-primary btn-sm">@messages("cancel")</a>
     }
 }

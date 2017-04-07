@@ -5,16 +5,16 @@
 @main("Add") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInv_request.js")'></script>
     <div>
-        <a href="/employee_profile/1"><span class="glyphicon glyphicon-plus">Employee</span></a>
+        <a href="/employee_profile/1"><span class="glyphicon glyphicon-plus">@messages("employee")</span></a>
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows_1">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Vendor</th>
-                    <th>Amount</th>
-                    <th>Amoun Left</th>
+                    <th>@messages("product")</th>
+                    <th>@messages("vendor")</th>
+                    <th>@messages("amount")</th>
+                    <th>@messages("amountLeft")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -25,10 +25,10 @@
         <table class="table table-bordered" id="rows_2">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Vendor</th>
-                    <th>Amount</th>
-                    <th>Amoun Left</th>
+                    <th>@messages("product")</th>
+                    <th>@messages("vendor")</th>
+                    <th>@messages("amount")</th>
+                    <th>@messages("amountLeft")</th>
                     <th>-----------</th>
                 </tr>
             </thead>

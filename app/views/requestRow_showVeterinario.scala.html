@@ -1,45 +1,46 @@
+@()(implicit messages: Messages)
 @import helper._
 
 @main("view") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_show.js")'></script>
     <div>
-        <a href="/productRequest_show/1"><span class="glyphicon glyphicon-plus">Lista</span></a>
+        <a href="/productRequest_show/1"><span class="glyphicon glyphicon-plus">@messages("list")</span></a>
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Request: </div>
+            <div style="display: inline-block;"> @messages("request"): </div>
             <div style="display: inline-block;" id="requestId">  </div>
         </div>
         <div>
-            <div style="display: inline-block;"> Product: </div>
+            <div style="display: inline-block;"> @messages("product"): </div>
             <div style="display: inline-block;" id="productId">  </div>
         </div>
         <div>
-            <div style="display: inline-block;"> Quantity: </div>
+            <div style="display: inline-block;"> @messages("quantity"): </div>
             <div style="display: inline-block;" id="quantity">  </div>
         </div>
         <div>
-            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;"> @messages("status"): </div>
             <div style="display: inline-block;" id="status">  </div>
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/requestRowCustomer_addGet"  class="btn btn-primary btn-sm">Entrega de producto</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRowCustomer_addGet"  class="btn btn-primary btn-sm">@messages("deliverProduct")</a> </div>
     </div>
 
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowCustomer_index.js")'></script>
-    <div>Product List Entregados</div>
+    <div>@messages("deliveredProducts")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Product</th>
-                    <th>Customer</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Pagado</th>
-                    <th>Status</th>
+                    <th>@messages("id")</th>
+                    <th>@messages("product")</th>
+                    <th>@messages("customer")</th>
+                    <th>@messages("quantity")</th>
+                    <th>@messages("price")</th>
+                    <th>@messages("paid")</th>
+                    <th>@messages("status")</th>
                     <th>-----------</th>
                 </tr>
             </thead>

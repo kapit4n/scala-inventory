@@ -5,49 +5,49 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportList"))) {
-            <a href="/discountReport_list" class="btn btn-info btn-sm">List</a> 
+            <a href="/discountReport_list" class="btn btn-info btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("discountReportEdit"))) {
-            <a href="/discountReport_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/discountReport_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("discountReportDelete"))) {
-           <a href="/discountReport_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/discountReport_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Start date: </div>
+            <div style="display: inline-block;">@messages("startDate"):</div>
             <div style="display: inline-block;" id="startDate">@row.startDate</div>
         </div>
         <div>
-            <div style="display: inline-block;"> End Date: </div>
+            <div style="display: inline-block;">@messages("endDate"):</div>
             <div style="display: inline-block;" id="endDate">@row.endDate</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;"> @messages("status"): </div>
             <div style="display: inline-block;" id="status">@row.status</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Total: </div>
+            <div style="display: inline-block;">@messages("total"): </div>
             <div style="display: inline-block;" id="total">@row.total</div>
         </div>
     </div>
     <div class="container">
-        <a id="addCustomer" href="/discountDetail_add/@row.id" class="btn btn-primary btn-sm">Add Customeres</a>
-        <a href="/discountReport_generarReport/@row.id" class="btn btn-primary btn-sm">Generar reporte</a>
+        <a id="addCustomer" href="/discountDetail_add/@row.id" class="btn btn-primary btn-sm">@messages("addCustomer")</a>
+        <a href="/discountReport_generarReport/@row.id" class="btn btn-primary btn-sm">@messages("generateReport")</a>
         <a href="/discountReport_show_pdf/@row.id" class="btn btn-info btn-sm">PDF</a>
     </div>
 
     <div style="font-size: larger; font-weight: 800;">
-        Lista de Customeres
+        @messages("customerList")
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="descuentos_rows">
             <thead>
                 <tr>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Discount</th>
+                    <th>@messages("customer")</th>
+                    <th>@messages("status")</th>
+                    <th>@messages("discount")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -66,13 +66,13 @@
                         <td>@child.discount</td>
                         <td>
                            @restrict(roles = List(Array("discountDetailEdit"))) {
-                               <a href="/discountDetail_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                               <a href="/discountDetail_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                            }
                            @restrict(roles = List(Array("discountDetailDelete"))) {
-                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                               <a href="/discountDetail_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                            }
                            @restrict(roles = List(Array("discountDetailShow"))) {
-                               <a href="/discountDetail_show/@child.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/discountDetail_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                        </td> 
                     </tr>

@@ -6,19 +6,19 @@
     @examples.templates.nav(handler)
     <div class="container">
         <h4 class="media-heading">
-            <strong>Trial Balance</strong>
+            <strong>@messages("trialBalance")</strong>
         </h4>
     </div>
     <div class="table table-bordered">
         <table id="details" style="width: 100%;" class="table table-bordered">
         <thead>
                 <tr>
-                    <th>Nro</th>
-                    <th>Accounts</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                    <th>Debit Result</th>
-                    <th>Credit Result</th>
+                    <th>@messages("nro")</th>
+                    <th>@messages("accounts")</th>
+                    <th>@messages("debit")</th>
+                    <th>@messages("credit")</th>
+                    <th>@messages("debitResult")</th>
+                    <th>@messages("creditResult")</th>
                 </tr>
             </thead>
             <tbody>

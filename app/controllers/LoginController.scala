@@ -25,15 +25,15 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
       "password" -> nonEmptyText)(LoginForm.apply)(LoginForm.unapply)
   }
 
-  def index = Action {
+  def index = LanguageAction {
     Ok(views.html.login(newForm))
   }
 
-  def logout = Action {
+  def logout = LanguageAction {
     Redirect("/login").withNewSession
   }
 
-  def login = Action { implicit request =>
+  def login = LanguageAction { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Ok(views.html.login(errorForm))

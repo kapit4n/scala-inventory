@@ -66,7 +66,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   val customerType = "customer"
   val driverType = "driver"
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.requestRowCustomer_index(new MyDeadboltHandler, res))
     }
@@ -90,7 +90,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     }, 3000.millis)
   }
 
-  def addGet(requestRowId: Long) = Action { implicit request =>
+  def addGet(requestRowId: Long) = LanguageAction { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
@@ -105,7 +105,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       products, currentProduct, customers, measures))
   }
 
-  def addDriverGet(requestRowId: Long) = Action { implicit request =>
+  def addDriverGet(requestRowId: Long) = LanguageAction { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
@@ -116,7 +116,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       products, drivers, measures))
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
@@ -136,7 +136,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def addDriver = Action.async { implicit request =>
+  def addDriver = LanguageAction.async { implicit request =>
     newDriverForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
@@ -157,7 +157,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def getRequestRowCustomers = Action.async {
+  def getRequestRowCustomers = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -196,14 +196,14 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.requestRowCustomer_show(new MyDeadboltHandler, res(0)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -225,7 +225,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getDriverUpdate(id: Long) = Action.async { implicit request =>
+  def getDriverUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -331,7 +331,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getAccept(id: Long) = Action.async {
+  def getAccept(id: Long) = LanguageAction.async {
     repo.acceptById(id).map {
       case (res) =>
         repoProduct.updateAmount(res(0).productId, -res(0).quantity);
@@ -340,7 +340,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getSend(id: Long) = Action.async {
+  def getSend(id: Long) = LanguageAction.async {
     repo.sendById(id).map {
       case (res) =>
         Redirect(routes.RequestRowController.show(res(0).requestRowId))
@@ -348,7 +348,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getFinish(id: Long) = Action.async {
+  def getFinish(id: Long) = LanguageAction.async {
     repo.finishById(id).map {
       case (res) =>
         Redirect(routes.RequestRowController.show(res(0).requestRowId))
@@ -362,7 +362,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     var requestRowId = getParentId(id)
     repo.delete(id).map { res =>
       Redirect(routes.RequestRowController.show(requestRowId)) // review this to go to the requestRow view
@@ -370,26 +370,26 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def requestRowCustomersByCustomer(id: Long) = Action.async {
+  def requestRowCustomersByCustomer(id: Long) = LanguageAction.async {
     repo.requestRowCustomersByCustomer(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getByRequestRow(id: Long) = Action.async {
+  def getByRequestRow(id: Long) = LanguageAction.async {
     repo.requestRowCustomersByRequestRow(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowCustomer_update(new MyDeadboltHandler, updatedRow,
@@ -406,7 +406,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def updateDriverPost = Action.async { implicit request =>
+  def updateDriverPost = LanguageAction.async { implicit request =>
     updateDriverForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowDriver_update(new MyDeadboltHandler, updatedRow,
@@ -429,7 +429,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
 
-  def searchCustomerPost = Action.async { implicit request =>
+  def searchCustomerPost = LanguageAction.async { implicit request =>
     searchCustomerForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm,

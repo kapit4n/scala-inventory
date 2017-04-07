@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestByInsumoShow"))) {
-            <a id="goRequest" href="/productRequestByInsumo_show/@parentId" class="btn btn-info btn-sm">Order</a> 
+            <a id="goRequest" href="/productRequestByInsumo_show/@parentId" class="btn btn-info btn-sm">@messages("order")</a> 
         }
     </div>
 
@@ -22,7 +22,7 @@
         @select(field = rowForm("productId"), options = options(products), 'id -> "productId")
         @inputText(rowForm("quantity"), 'id -> "quantity")
         @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
-        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
-        <a href="/productRequestByInsumo_show/@parentId" class="btn btn-primary btn-sm"> Cancelar</a>
+        <input id="addSubmit" type="submit" value=@messages("save") class="btn btn-primary btn-sm"/>
+        <a href="/productRequestByInsumo_show/@parentId" class="btn btn-primary btn-sm">@messages("cancel")</a>
     }
 }

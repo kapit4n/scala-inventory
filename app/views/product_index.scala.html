@@ -7,10 +7,10 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productCreate"))) {
-                                <a href="/product_add" class="btn btn-primary btn-sm">New</a> 
+                                <a href="/product_add" class="btn btn-primary btn-sm">@messages("new")</a> 
         }
         @restrict(roles = List(Array("productList"))) {
-            <a href="/product_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/product_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("productCreate"))) {
                                 <a href="/product_reorder_list" class="btn btn-primary btn-sm">Reorder List</a> 
@@ -25,20 +25,20 @@
     </div>
 
     <div class="container">
-        Product List
+        @messages("productList")
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered conted" id="rows">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Cost</th>
-                    <th>Percent</th>
-                    <th>Price</th>
-                    <th>Measure</th>
-                    <th>Stock limit</th>
-                    <th>In Stock</th>
+                    <th>@messages("name")</th>
+                    <th>@messages("cost")</th>
+                    <th>@messages("percent")</th>
+                    <th>@messages("price")</th>
+                    <th>@messages("measure"): </th>
+                    <th>@messages("stockLimit")</th>
+                    <th>@messages("inStock")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -55,13 +55,13 @@
                         <td>@row.currentAmount</td>
                         <td>
                             @restrict(roles = List(Array("productEdit"))) {
-                                <a href="/product_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                                <a href="/product_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                             }
                             @restrict(roles = List(Array("productDelete"))) {
-                                <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                                <a href="/product_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                             }
                             @restrict(roles = List(Array("productShow"))) {
-                                <a href="/product_show/@row.id" class="btn btn-info btn-sm">view</a>
+                                <a href="/product_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
                             }
                         </td>
                     </tr>

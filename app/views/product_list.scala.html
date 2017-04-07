@@ -1,28 +1,29 @@
+@()(implicit messages: Messages)
 @import helper._
 
 @main("Add") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_index.js")'></script>
     <div>
-        <a href="/" >Home</a>
+        <a href="/" >@messages("home")</a>
     </div>
         <div>
-        <a href="/product_list" class="btn btn-info btn-sm">Add</a>
+        <a href="/product_list" class="btn btn-info btn-sm">@messages("add")</a>
     </div>
     <div>
-        Product List
+        @messages("productList")
     </div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                     <th>Name</th>
-                    <th>Cost</th>
-                    <th>Percent</th>
-                    <th>Price</th>
-                    <th>Description</th>
-                    <th>Unit of Measure</th>
-                    <th>Stock Limit</th>
-                    <th>In Stock</th>
+                     <th>@messages("name")</th>
+                    <th>@messages("cost")</th>
+                    <th>@messages("percent")</th>
+                    <th>@messages("price")</th>
+                    <th>@messages("description")</th>
+                    <th>@messages("unitOfMeasure")</th>
+                    <th>@messages("stockLimit")</th>
+                    <th>@messages("inStock")</th>
                     <th>-----------</th>
                 </tr>
             </thead>

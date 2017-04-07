@@ -20,20 +20,20 @@ import security.MyDeadboltHandler
 
 class LogEntryController @Inject() (repo: LogEntryRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.logEntry_index(new MyDeadboltHandler, res))
     }
   }
 
-  def getLogEntrysReport = Action.async {
+  def getLogEntrysReport = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       Ok(views.html.logEntry_show(new MyDeadboltHandler, res(0)))
     }

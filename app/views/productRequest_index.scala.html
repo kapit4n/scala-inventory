@@ -6,19 +6,19 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestCreate"))) {
-            <a href="/productRequest_add" class="btn btn-primary btn-sm">New</a> 
+            <a href="/productRequest_add" class="btn btn-primary btn-sm">@messages("new")</a> 
         }
     </div>
-    <div class="container">List of Orders</div>
+    <div class="container">@messages("ordersList")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Employee</th>
-                    <th>Store</th>
-                    <th>Status</th>
-                    <th>Detail</th>
+                    <th>@messages("date")</th>
+                    <th>@messages("employee")</th>
+                    <th>@messages("store")</th>
+                    <th>@messages("status")</th>
+                    <th>@messages("detail")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -47,22 +47,22 @@
                         <td>@row.detail</td>
                         <td>
                             @restrict(roles = List(Array("productRequestEdit"))) {
-                                <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                                <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                             }
                             @restrict(roles = List(Array("productRequestDelete"))) {
-                                <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+                                <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                             }
                             @restrict(roles = List(Array("productRequestShow"))) {
-                                <a href="/productRequest_show/@row.id" class="btn btn-info btn-sm">view</a>
+                                <a href="/productRequest_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a>
                             }
                             @restrict(roles = List(Array("productRequestSend"))) {
                                 @if(row.status == "borrador") {
-                                    <a href="/productRequest_send/@row.id" class="btn btn-primary btn-sm">Enviar</a>
+                                    <a href="/productRequest_send/@row.id" class="btn btn-primary btn-sm">@messages("send")</a>
                                 }
                             }
                             @restrict(roles = List(Array("productRequestFinish"))) {
                                 @if(row.status == "enviado") {
-                                    <a href="/productRequest_finish/@row.id" class="btn btn-primary btn-sm">Finalizar</a>
+                                    <a href="/productRequest_finish/@row.id" class="btn btn-primary btn-sm">@messages("finish")</a>
                                 }
                             }
                         </td> 

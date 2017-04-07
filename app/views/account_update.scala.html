@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("accountList"))) {
-            <a href="/account_list/1" class="btn btn-primary btn-sm">List</a> 
+            <a href="/account_list/1" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("accountShow"))) {
-            <a href="/account_show/@row.id" class="btn btn-info btn-sm">view</a> 
+            <a href="/account_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a> 
         }
         @restrict(roles = List(Array("accountDelete"))) {
-           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.AccountController.updatePost()) {
@@ -22,8 +22,8 @@
         @select(field = rowForm("negativo"), options = options(yes_no))
         @select(field = rowForm("parent"), options = options(accounts))
         @inputText(rowForm("description"))
-        <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
-        <a href="/account_show/@row.id" class="btn btn-primary btn-sm">Cancel</a>
+        <input type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
+        <a href="/account_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

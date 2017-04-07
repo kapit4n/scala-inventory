@@ -6,14 +6,14 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("discountReportList"))) {
-            <a href="/discountReport_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/discountReport_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
     @form(routes.DiscountReportController.add()) {
         @inputDate(row("startDate"))
         @inputDate(row("endDate"))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
-        <a href="/discountReport_list" class="btn btn-primary btn-sm"> Cancelar</a>
+        <input id="addSubmit" type="submit" value=@messages("save") class="btn btn-primary btn-sm"/>
+        <a href="/discountReport_list" class="btn btn-primary btn-sm">@messages("cancel")</a>
     }
 }

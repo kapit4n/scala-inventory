@@ -6,15 +6,15 @@
 	@examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("settingShow"))) {
-           <a href="/setting_show" class="btn btn-info btn-sm">view</a>
+           <a href="/setting_show" class="btn btn-info btn-sm">@messages("view")</a>
         }
     </div>
     @form(routes.SettingController.updatePost()) {
         @inputText(rowForm("name"), 'id -> "settingName")
         @inputText(rowForm("president"), 'id -> "president")
         @inputText(rowForm("description"), 'id -> "description")
-        <input id="updateSubmit" type="submit" value="Update"  class="btn btn-primary btn-sm"/>
-        <a href="/setting_show" class="btn btn-primary btn-sm">Cancelar</a>
+        <input id="updateSubmit" type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
+        <a href="/setting_show" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     }
 }

@@ -5,13 +5,13 @@
 @main("Add") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInv_index.js")'></script>
     <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Home</span></a>
+        <a href="/"><span class="glyphicon glyphicon-plus">@messages("home")</span></a>
     </div>
     @form(routes.ProductInvController.add()) {
         @select(field = row("productId"), options = options(products))
         @select(field = row("vendorId"), options = options(vendors))
         @inputText(row("amount"))
         @inputText(row("amountLeft"))
-        <input type="submit" class="btn btn-primary btn-sm" value="Registrar Product"/>
+        <input type="submit" class="btn btn-primary btn-sm" value=@messages("save")/>
     }
 }

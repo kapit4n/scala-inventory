@@ -6,34 +6,34 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productShow"))) {
-            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">Product</a> 
+            <a href="/product_show/@row.productId" class="btn btn-primary btn-sm">@messages("product")</a> 
         }
         @restrict(roles = List(Array("productInvEdit"))) {
-           <a href="/productInv_update/@row.id" class="btn btn-primary btn-sm">Edit</a>
+           <a href="/productInv_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a>
         }
         @restrict(roles = List(Array("productInvDelete"))) {
-           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/productInv_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Product: </div>
+            <div style="display: inline-block;"> @messages("product"): </div>
             <div style="display: inline-block;" id="productId">@row.productName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Vendor: </div>
+            <div style="display: inline-block;"> @messages("vendor"): </div>
             <div style="display: inline-block;" id="vendorId">@row.vendorName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Measure: </div>
+            <div style="display: inline-block;"> @messages("measure"): </div>
             <div style="display: inline-block;" id="vendorId">@row.measureName</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Amount: </div>
+            <div style="display: inline-block;"> @messages("amount"): </div>
             <div style="display: inline-block;" id="amount">@row.amount</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Amount Left: </div>
+            <div style="display: inline-block;"> @messages("amountLeft"): </div>
             <div style="display: inline-block;" id="amountLeft">@row.amountLeft</div>
         </div>
     </div>

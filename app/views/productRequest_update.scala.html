@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productRequestList"))) {
-            <a href="/productRequest_list" class="btn btn-primary btn-sm">List</a> 
+            <a href="/productRequest_list" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("productRequestShow"))) {
-           <a href="/productRequest_show/@rowId" class="btn btn-info btn-sm">view</a>
+           <a href="/productRequest_show/@rowId" class="btn btn-info btn-sm">@messages("view")</a>
         }
         @restrict(roles = List(Array("productRequestDelete"))) {
-           <a href="/productRequest_remove/@rowId" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/productRequest_remove/@rowId" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     @form(routes.ProductRequestController.updatePost()) {
@@ -21,8 +21,8 @@
         @select(field = row("storekeeper"), options = options(storekeepers))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
-        <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
-        <a href="/productRequest_show/@rowId"  class="btn btn-primary btn-sm">Cancel</a>
+        <input type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
+        <a href="/productRequest_show/@rowId"  class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
     }
 }

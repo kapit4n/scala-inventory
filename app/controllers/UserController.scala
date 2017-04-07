@@ -44,17 +44,17 @@ class UserController @Inject() (
 
   val types = scala.collection.immutable.Map[String, String]("Employee" -> "Employee", "Insumo" -> "Insumo", "Admin" -> "Admin", "Store" -> "Store", "Contabilidad" -> "Contabilidad")
 
-  def index = Action.async { implicit request =>
+  def index = LanguageAction.async { implicit request =>
     repo.list().map { res =>
       Ok(views.html.user_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     Ok(views.html.user_add(new MyDeadboltHandler, newForm, types))
   }
 
-  def profile() = Action { implicit request =>
+  def profile() = LanguageAction { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
       if (res2.length > 0) {
         Redirect("/")
@@ -64,13 +64,13 @@ class UserController @Inject() (
     }, 2000.millis)
   }
 
-  def profileById(userId: Long) = Action { implicit request =>
+  def profileById(userId: Long) = LanguageAction { implicit request =>
     Await.result(repo.getById(userId).map { res2 =>
       Redirect("/")
     }, 2000.millis)
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)))
@@ -86,7 +86,7 @@ class UserController @Inject() (
       })
   }
 
-  def getUsers = Action.async {
+  def getUsers = LanguageAction.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -116,7 +116,7 @@ class UserController @Inject() (
 
   var userId: Long = _
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     userId = id
     var assignedRoles = getAssignedRoles(id)
     var roles = getRoles()
@@ -130,20 +130,20 @@ class UserController @Inject() (
   }
 
   // to copy
-  def assignRole(userId: Long, roleCode: String) = Action.async { implicit request =>
+  def assignRole(userId: Long, roleCode: String) = LanguageAction.async { implicit request =>
     var rol = getRoleByCode(roleCode)
     repoRoles.createUserRole(userId, rol.roleName, roleCode).map(res =>
       Redirect(routes.UserController.show(res.userId)))
   }
 
   // to copy
-  def removeRole(id: Long) = Action.async { implicit request =>
+  def removeRole(id: Long) = LanguageAction.async { implicit request =>
     repoRoles.deleteUserRole(id).map(res =>
       Redirect(routes.UserController.show(userId)))
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       updateRow = res(0)
       val anyData = Map(
@@ -157,21 +157,21 @@ class UserController @Inject() (
   }
 
   // delete required
-  def delete(id: Long) = Action.async {
+  def delete(id: Long) = LanguageAction.async {
     repo.delete(id).map { res =>
       Redirect(routes.UserController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)))

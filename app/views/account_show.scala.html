@@ -6,34 +6,34 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("accountList"))) {
-            <a href="/account_list" class="btn btn-info btn-sm">List</a> 
+            <a href="/account_list" class="btn btn-info btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("accountEdit"))) {
-            <a href="/account_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+            <a href="/account_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
         }
         @restrict(roles = List(Array("accountDelete"))) {
-           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/account_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
     <div class="container">
         <div>
-            <div style="display: inline-block;"> Code: </div>
+            <div style="display: inline-block;"> @messages("code"): </div>
             <div style="display: inline-block;" id="code">@row.code</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;"> @messages("cancel"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Type: </div>
+            <div style="display: inline-block;"> @messages("type"): </div>
             <div style="display: inline-block;" id="type_1">@row.type_1</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;"> @messages("description"): </div>
             <div style="display: inline-block;" id="description">@row.description</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Child: </div>
+            <div style="display: inline-block;"> @messages("child"): </div>
             <div style="display: inline-block;" id="child">@row.child</div>
         </div>
     </div>
@@ -43,9 +43,9 @@
         <table class="table table-bordered" id="children">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Code</th>
-                    <th>Name</th>
+                    <th>@messages("id")</th>
+                    <th>@messages("code")</th>
+                    <th>@messages("name")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -63,13 +63,13 @@
                         </td>
                         <td>
                             @restrict(roles = List(Array("accountEdit"))) {
-                                <a href="/account_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                                <a href="/account_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                             }
                             @restrict(roles = List(Array("accountDelete"))) {
-                                <a href="/account_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                                <a href="/account_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                             }
                             @restrict(roles = List(Array("accountShow"))) {
-                                <a href="/account_show/@child.id" class="btn btn-info btn-sm">view</a>
+                                <a href="/account_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
                             }
                         </td> 
                     </tr>
@@ -78,15 +78,15 @@
         </table>
     </div>
 
-    <div>Detail</div>
+    <div>@messages("detail")</div>
     <div class="table table-bordered">
         <table class="table table-bordered" id="rows">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Folio</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
+                    <th>@messages("date")</th>
+                    <th>@messages("folio")</th>
+                    <th>@messages("debit")</th>
+                    <th>@messages("credit")</th>
                     <th>-----------</th>
                 </tr>
             </thead>
@@ -107,13 +107,13 @@
                         </td>
                         <td>
                            @restrict(roles = List(Array("transactionDetailEdit"))) {
-                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">Edit</a> 
+                               <a href="/transactionDetail_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                            }
                            @restrict(roles = List(Array("transactionDetailDelete"))) {
-                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">Remove</a>
+                               <a href="/transactionDetail_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                            }
                            @restrict(roles = List(Array("transactionDetailShow"))) {
-                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">view</a>
+                               <a href="/transactionDetail_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
                            }
                        </td> 
                     </tr>
@@ -121,7 +121,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total</td>
+                    <td>@messages("total")</td>
                     <td></td>
                     <td><div style="display: inline-block;" id="totalDebit"></div></td>
                     <td><div style="display: inline-block;" id="totalCredit"></div></td>
