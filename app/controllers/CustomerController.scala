@@ -18,6 +18,8 @@ import it.innove.play.pdf.PdfGenerator
 import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
+import play.i18n.Lang
+
 
 class CustomerController @Inject() (
   repo: CustomerRepository, repoRequests: RequestRowCustomerRepository,
@@ -49,7 +51,7 @@ class CustomerController @Inject() (
       "account" -> text)(CreateCustomerForm.apply)(CreateCustomerForm.unapply)
   }
 
-  def addGet() = Action.async { implicit request =>
+  def addGet() = LanguageAction.async { implicit request =>
     repo.list(0 * interval, interval).map { res =>
       Ok(views.html.customer_add(new MyDeadboltHandler, newForm))
     }

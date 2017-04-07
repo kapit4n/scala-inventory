@@ -41,7 +41,7 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
     }
   }
 
-  def addGet = Action { implicit request =>
+  def addGet = LanguageAction { implicit request =>
     parentAccounts = getAccountNamesMap()
     Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts))
   }
