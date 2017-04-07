@@ -6,13 +6,13 @@
     @examples.templates.nav(handler)
     <div>
         @restrict(roles = List(Array("customerList"))) {
-            <a href="/customer_list/1" class="btn btn-primary btn-sm">List</a> 
+            <a href="/customer_list/1" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
         @restrict(roles = List(Array("customerShow"))) {
-            <a href="/customer_show/@row.id" class="btn btn-info btn-sm">view</a> 
+            <a href="/customer_show/@row.id" class="btn btn-info btn-sm">@messages("view")</a> 
         }
         @restrict(roles = List(Array("customerDelete"))) {
-           <a href="/customer_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+           <a href="/customer_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
         }
     </div>
 
@@ -25,8 +25,8 @@
             @inputText(rowForm("account"))
             @inputText(rowForm("totalDebt"), 'readonly -> "readonly")
             @inputText(rowForm("position"), 'readonly -> "readonly")
-        <input type="submit" value="Update"  class="btn btn-primary btn-sm"/>
-        <a href="/customer_show/@row.id" class="btn btn-primary btn-sm">Cancelar</a>
+        <input type="submit" value=@messages("update")  class="btn btn-primary btn-sm"/>
+        <a href="/customer_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")
     </div>
     }

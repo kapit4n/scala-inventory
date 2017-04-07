@@ -6,16 +6,16 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("customerCreate"))) {
-            <a href="/customer_add" class="btn btn-primary btn-sm">New</a> 
+            <a href="/customer_add" class="btn btn-primary btn-sm">@messages("new")</a> 
         }
         @restrict(roles = List(Array("customerList"))) {
-            <a href="/customer_list/1" class="btn btn-primary btn-sm">List</a> 
+            <a href="/customer_list/1" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
     <div class="container">
         @form(routes.CustomerController.searchCustomerPost()) {
             @inputText(rowSearch("search"))
-            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+            <input type="submit" value=@messages("search") class="btn btn-primary btn-sm"/>
         }   
     </div>
 
@@ -24,12 +24,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>CI</th>
-                    <th>Phone</th>
-                    <th>Account</th>
-                    <th>Modulo</th>
-                    <th>Company</th>
+                    <th>@messages("name")</th>
+                    <th>@messages("ci")</th>
+                    <th>@messages("phone")</th>
+                    <th>@messages("account")</th>
+                    <th>@messages("company")</th>
                     <th>---</th>
                 </tr>
                 <tr>
@@ -70,13 +69,13 @@
                     <td>@customer.companyName</td>
                     <td>
                         @restrict(roles = List(Array("productEdit"))) {
-                            <a href="/customer_update/@customer.id" class="btn btn-primary btn-sm">Edit</a> 
+                            <a href="/customer_update/@customer.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
                         }
                         @restrict(roles = List(Array("productDelete"))) {
-                            <a href="/customer_remove/@customer.id" class="btn btn-danger btn-sm">Remove</a>
+                            <a href="/customer_remove/@customer.id" class="btn btn-danger btn-sm">@messages("remove")</a>
                         }
                         @restrict(roles = List(Array("productShow"))) {
-                            <a href="/customer_show/@customer.id" class="btn btn-info btn-sm">view</a>
+                            <a href="/customer_show/@customer.id" class="btn btn-info btn-sm">@messages("view")</a>
                         }
                     </td>
                 </tr>

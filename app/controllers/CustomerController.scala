@@ -61,7 +61,7 @@ class CustomerController @Inject() (
   var currentPage: Int = _
   var customers: Seq[Customer] = Seq[Customer]()
 
-  def index(start: Int) = Action.async { implicit request =>
+  def index(start: Int) = LanguageAction.async { implicit request =>
     if (start == 0) {
       Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)))
     } else {
@@ -76,14 +76,14 @@ class CustomerController @Inject() (
 
   var companys: Seq[Company] = _
 
-  def index_company() = Action.async { implicit request =>
+  def index_company() = LanguageAction.async { implicit request =>
     repo.listCompany().map { res =>
       companys = res
       Ok(views.html.company_index(new MyDeadboltHandler, companys))
     }
   }
 
-  def searchCustomerPost = Action.async { implicit request =>
+  def searchCustomerPost = LanguageAction.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
@@ -103,7 +103,7 @@ class CustomerController @Inject() (
     Ok(generator.toBytes(views.html.reporte_customeres(), "http://localhost:9000/")).as("application/pdf")
   }
 
-  def add = Action.async { implicit request =>
+  def add = LanguageAction.async { implicit request =>
     var total = getTotal()
     var currentPage = 1
     newForm.bindFromRequest.fold(
@@ -120,13 +120,13 @@ class CustomerController @Inject() (
       })
   }
 
-  def getCustomeres(page: Int) = Action.async {
+  def getCustomeres(page: Int) = LanguageAction.async {
     repo.list((page - 1) * interval, interval).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getCustomeresReport = Action.async {
+  def getCustomeresReport = LanguageAction.async {
     repo.list(0, interval).map { res =>
       Ok(Json.toJson(res))
     }
@@ -168,7 +168,7 @@ class CustomerController @Inject() (
   }
 
   // to copy
-  def show(id: Long) = Action.async { implicit request =>
+  def show(id: Long) = LanguageAction.async { implicit request =>
     val requests = getRequests(id)
     val discounts = getDiscounts(id)
     repo.getById(id).map { res =>
@@ -176,7 +176,7 @@ class CustomerController @Inject() (
     }
   }
 
-  def showCompany(id: Long) = Action.async { implicit request =>
+  def showCompany(id: Long) = LanguageAction.async { implicit request =>
     val customeresByAsso = getCustomersByAsso(id)
     repo.getCompanyById(id).map { res =>
       Ok(views.html.company_show(new MyDeadboltHandler, res(0), customeresByAsso))
@@ -184,7 +184,7 @@ class CustomerController @Inject() (
   }
 
   // update required
-  def getUpdate(id: Long) = Action.async { implicit request =>
+  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
@@ -200,7 +200,7 @@ class CustomerController @Inject() (
   }
 
   // delete required
-  def delete(id: Long) = Action.async { implicit request =>
+  def delete(id: Long) = LanguageAction.async { implicit request =>
     //var total = getTotal()
     //var currentPage = 1
     repo.delete(id).map { res =>
@@ -209,20 +209,20 @@ class CustomerController @Inject() (
   }
 
   // to copy
-  def getById(id: Long) = Action.async {
+  def getById(id: Long) = LanguageAction.async {
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getCompanyById(id: Long) = Action.async {
+  def getCompanyById(id: Long) = LanguageAction.async {
     repo.getCompanyById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, errorForm)))

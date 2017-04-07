@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateCustomerForm])(implicit messages: Messages, lang: Lang, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateCustomerForm])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -6,7 +6,7 @@
     @examples.templates.nav(handler)
     <div class="container">
         @restrict(roles = List(Array("productList"))) {
-            <a href="/customer_list/1" class="btn btn-primary btn-sm">List</a> 
+            <a href="/customer_list/1" class="btn btn-primary btn-sm">@messages("list")</a> 
         }
     </div>
     @form(routes.CustomerController.add()) {
@@ -15,7 +15,7 @@
         @inputText(row("phone"), 'id -> "phone")
         @inputText(row("address"), 'id -> "address")
         @inputText(row("account"), 'id -> "accountId")
-        <input id="addSubmit" type="submit" value="Guardar" class="btn btn-primary btn-sm"/>
-        <a href="customer_list/1" class="btn btn-primary btn-sm">Cancelar</a>
+        <input id="addSubmit" type="submit" value=@messages("save") class="btn btn-primary btn-sm"/>
+        <a href="customer_list/1" class="btn btn-primary btn-sm">@messages("cancel")</a>
     }
 }

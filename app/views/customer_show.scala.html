@@ -7,41 +7,41 @@
     <div class="container">
         <div>
             @restrict(roles = List(Array("customerList"))) {
-                <a href="/customer_list/1" class="btn btn-info btn-sm">List</a> 
+                <a href="/customer_list/1" class="btn btn-info btn-sm">@messages("list")</a> 
             }
             @restrict(roles = List(Array("customerEdit"))) {
-                <a href="/customer_update/@row.id" class="btn btn-primary btn-sm">Edit</a> 
+                <a href="/customer_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
             }
             @restrict(roles = List(Array("customerDelete"))) {
-               <a href="/customer_remove/@row.id" class="btn btn-danger btn-sm">Remove</a>
+               <a href="/customer_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
             }
         </div>
         <div>
-            <div style="display: inline-block;"> Name: </div>
+            <div style="display: inline-block;"> @messages("name"): </div>
             <div style="display: inline-block;" id="name">@row.name</div>
         </div>
         <div>
-            <div style="display: inline-block;"> CI: </div>
+            <div style="display: inline-block;"> @messages("ci"): </div>
             <div style="display: inline-block;" id="carnet">@row.carnet</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Phone: </div>
+            <div style="display: inline-block;"> @messages("phone"): </div>
             <div style="display: inline-block;" id="phone">@row.phone</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Address: </div>
+            <div style="display: inline-block;"> @messages("address"): </div>
             <div style="display: inline-block;" id="address">@row.address</div>
         </div>
          <div>
-            <div style="display: inline-block;"> Account: </div>
+            <div style="display: inline-block;"> @messages("account"): </div>
             <div style="display: inline-block;" id="account">@row.account</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Total Debt: </div>
+            <div style="display: inline-block;"> @messages("totalDebt"): </div>
             <div style="display: inline-block;" id="totalDebt">@row.totalDebt</div>
         </div>
         <div>
-            <div style="display: inline-block;"> Position: </div>
+            <div style="display: inline-block;"> @messages("position"): </div>
             <div style="display: inline-block;" id="position">@row.position</div>
         </div>
     </div>
