@@ -16,7 +16,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class VendorController @Inject() (repo: VendorRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class VendorController @Inject() (deadbolt: DeadboltActions, repo:VendorRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateVendorForm] = Form {
     mapping(
@@ -27,20 +27,20 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       "account" -> longNumber)(CreateVendorForm.apply)(CreateVendorForm.unapply)
   }
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
       Ok(views.html.vendor_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = LanguageAction { implicit request =>
-    Ok(views.html.vendor_add(new MyDeadboltHandler, newForm))
+  def addGet = deadbolt.WithAuthRequest()()  { implicit request =>
+    Future { Ok(views.html.vendor_add(new MyDeadboltHandler, newForm)(request, messagesApi.preferred(request))) }
   }
 
-  def addVendor = LanguageAction.async { implicit request =>
+  def addVendor = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.vendor_add(new MyDeadboltHandler, errorForm)))
+        Future.successful(Ok(views.html.vendor_add(new MyDeadboltHandler, errorForm)(request, messagesApi.preferred(request))))
       },
       vendor => {
         repo.create(
@@ -53,7 +53,7 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
       })
   }
 
-  def getVendores = LanguageAction.async {
+  def getVendores = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { vendores =>
       Ok(Json.toJson(vendores))
     }
@@ -71,47 +71,47 @@ class VendorController @Inject() (repo: VendorRepository, val messagesApi: Messa
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.vendor_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.vendor_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 
   // to copy
-  def profile(id: Long) = LanguageAction {
-    Redirect(routes.VendorController.show(id))
+  def profile(id: Long) = deadbolt.WithAuthRequest()()  { request =>
+    Future { Redirect(routes.VendorController.show(id)) }
   }
 
   var updatedRow: Vendor = _
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name, "phone" -> res.toList(0).phone.toString(), "address" -> res.toList(0).address, "contact" -> res.toList(0).contact, "account" -> res.toList(0).account.toString())
-      Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
+      Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData))(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async { implicit request =>
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.delete(id).map { res =>
       Redirect(routes.VendorController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, errorForm)))
+        Future.successful(Ok(views.html.vendor_update(new MyDeadboltHandler, updatedRow, errorForm)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(

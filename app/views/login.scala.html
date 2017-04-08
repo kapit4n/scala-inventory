@@ -1,4 +1,5 @@
-@(row: Form[LoginForm])(implicit messages: Messages)
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(row: Form[LoginForm])(implicit request: AuthenticatedRequest[Any], messages: Messages)
 
 @import helper._
 

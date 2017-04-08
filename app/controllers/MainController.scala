@@ -18,14 +18,14 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesApi, deadbolt: DeadboltActions)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class MainController @Inject() (deadbolt: DeadboltActions, repo:UserRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  def index = LanguageAction { implicit request =>
+  def index = deadbolt.WithAuthRequest()()  { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
       if (res2.length > 0) {
-        Ok(views.html.index(new MyDeadboltHandler))
+        Future { Ok(views.html.index(new MyDeadboltHandler)(request, messagesApi.preferred(request))) }
       } else {
-        Redirect("/login")
+        Future { Redirect("/login") }
         //Ok(views.html.index(new MyDeadboltHandler))
       }
     }, 2000.millis)
@@ -38,14 +38,14 @@ class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   //         }
   // }
   //
-  //  //def index3 = LanguageAction { request =>
+  //  //def index3 = deadbolt.WithAuthRequest()()  { request =>
   //  //  request.session.get("userSecurity").map { user =>
   //  //    Ok("Hello " + user)
   //  //  }.getOrElse {
   //  //    Unauthorized("Oops, you are not connected")
   //  //  }
   //}
-  //def index_pdf = LanguageAction {
+  //def index_pdf = deadbolt.WithAuthRequest()()  {
   //	val generator = new PdfGenerator
   //  Ok(generator.toBytes(views.html.index(), "http://localhost:9000/")).as("application/pdf")
   //}

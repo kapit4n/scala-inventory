@@ -1,4 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRowCustomer, row: Form[UpdateRequestRowCustomerForm], requests: Map[String, String], productos: Map[String, String], customers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRow: RequestRowCustomer, row: Form[UpdateRequestRowCustomerForm], requests: Map[String, String], productos: Map[String, String], customers: Map[String, String], measures: Map[String, String])(implicit request: AuthenticatedRequest[Any], messages: Messages)
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 

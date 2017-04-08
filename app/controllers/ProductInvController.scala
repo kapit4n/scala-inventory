@@ -20,7 +20,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: ProductRepository, repoProductVendor: ProductVendorRepository,
+class ProductInvController @Inject() (deadbolt: DeadboltActions, repo:ProductInvRepository, repoProduct: ProductRepository, repoProductVendor: ProductVendorRepository,
   repoMeasure: MeasureRepository,
   repoProvee: VendorRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -49,9 +49,9 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   var productId: Long = 0
   var updatedRow: ProductInv = _
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.productInv_index(new MyDeadboltHandler, res))
+      Ok(views.html.productInv_index(new MyDeadboltHandler, res)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -59,30 +59,30 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
     Await.result(repoProduct.getById(id).map(res => res(0).measureId), 3000.millis)
   }
 
-  def addGet(productId: Long) = LanguageAction { implicit request =>
+  def addGet(productId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     this.productId = productId
     productMap = getProductMapById(productId)
     vendorMap = getVendorMap()
     var productMeasureId = getProductMeasureId(productId)
     measureMap = getMeasureMap(productMeasureId)
-    Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, vendorMap, measureMap))
+    Future { Ok(views.html.productInv_add(new MyDeadboltHandler, productId, newForm, productMap, vendorMap, measureMap)(request, messagesApi.preferred(request))) }
   }
 
-  def getProductInvs = LanguageAction.async {
+  def getProductInvs = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.productInv_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.productInv_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -97,7 +97,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
         vendorMap = getVendorMap()
         var productMeasureId = getProductMeasureId(updatedRow.productId)
         measureMap = getMeasureMap(productMeasureId)
-        Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), productMap, vendorMap, measureMap))
+        Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), productMap, vendorMap, measureMap)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -157,7 +157,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     val parentId = getParentId(id)
     val amountLeft = getAmountLeft(id)
     repo.delete(id).map { res =>
@@ -167,16 +167,16 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, errorForm, productMap, vendorMap, measureMap)))
+        Future.successful(Ok(views.html.productInv_add(new MyDeadboltHandler, productId, errorForm, productMap, vendorMap, measureMap)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -191,10 +191,10 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm, productMap, vendorMap, measureMap)))
+        Future.successful(Ok(views.html.productInv_update(new MyDeadboltHandler, updatedRow, updateForm, productMap, vendorMap, measureMap)(request, messagesApi.preferred(request))))
       },
       res => {
         val oldAmountLeft = getAmountLeft(res.id)

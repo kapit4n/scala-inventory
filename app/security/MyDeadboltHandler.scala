@@ -1,21 +1,17 @@
 package security
 
-import be.objectify.deadbolt.scala.{ DynamicResourceHandler, DeadboltHandler }
-import play.api.mvc.{ Request, Result, Results }
-import be.objectify.deadbolt.core.models.Subject
-import scala.concurrent.{ Future, Await }
-import models.UserSecurity
+import be.objectify.deadbolt.scala.models.Subject
+import be.objectify.deadbolt.scala.{AuthenticatedRequest, DynamicResourceHandler, DeadboltHandler}
+import play.api.mvc.{Request, Result, Results}
+import models.User
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-import dal._
-import javax.inject._
-import models._
 
 /**
  *
  * @author Steve Chaloner (steve@objectify.be)
  */
-class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] = None, var rolesListParam: List[SecurityRole] = List()) extends DeadboltHandler {
+class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] = None) extends DeadboltHandler {
 
   def beforeAuthCheck[A](request: Request[A]) = Future(None)
 
@@ -23,14 +19,12 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
     Future(dynamicResourceHandler.orElse(Some(new MyDynamicResourceHandler())))
   }
 
-  override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
-    var rol: String = request.session.get("role").get
-    var user1 = new UserSecurity("steve", rol, rolesListParam)
-
-    Future(Some(user1))
+  override def getSubject[A](request: AuthenticatedRequest[A]): Future[Option[Subject]] = {
+    // e.g. request.session.get("user")
+    Future(Some(new User(1, "admin", 789789, 67897897, "Address", 1000, "type", "admin", "admin")))
   }
 
-  def onAuthFailure[A](request: Request[A]): Future[Result] = {
-    Future { Results.Forbidden(views.html.accessFailed()) }
+  def onAuthFailure[A](request: AuthenticatedRequest[A]): Future[Result] = {
+    Future {Results.Forbidden(views.html.accessFailed())}
   }
 }

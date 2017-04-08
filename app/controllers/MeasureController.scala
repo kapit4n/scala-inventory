@@ -19,7 +19,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 import play.api.data.format.Formats._
 
-class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class MeasureController @Inject() (deadbolt: DeadboltActions, repo:MeasureRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateMeasureForm] = Form {
     mapping(
@@ -44,21 +44,21 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
     }, 3000.millis)
   }
 
-  def addGet = LanguageAction { implicit request =>
+  def addGet = deadbolt.WithAuthRequest()()  { implicit request =>
     measures = getMeasureMap()
-    Ok(views.html.measure_add(new MyDeadboltHandler, newForm, measures))
+    Future { Ok(views.html.measure_add(new MyDeadboltHandler, newForm, measures)(request, messagesApi.preferred(request))) }
   }
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.measure_index(new MyDeadboltHandler, res))
+      Ok(views.html.measure_index(new MyDeadboltHandler, res)(request, messagesApi.preferred(request)))
     }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm, measures)))
+        Future.successful(Ok(views.html.measure_add(new MyDeadboltHandler, errorForm, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -71,13 +71,13 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
       })
   }
 
-  def getMeasures = LanguageAction.async {
+  def getMeasures = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getMeasuresReport = LanguageAction.async {
+  def getMeasuresReport = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -94,16 +94,16 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.measure_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.measure_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 
   var updatedRow: Measure = _
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     measures = getMeasureMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
@@ -113,29 +113,29 @@ class MeasureController @Inject() (repo: MeasureRepository, val messagesApi: Mes
         "quantity" -> updatedRow.quantity.toString(),
         "description" -> updatedRow.description.toString(),
         "measureId" -> updatedRow.measureId.toString())
-      Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures))
+      Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures)(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async { implicit request =>
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.delete(id).map { res =>
       Redirect(routes.MeasureController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm, measures)))
+        Future.successful(Ok(views.html.measure_update(new MyDeadboltHandler, updatedRow, errorForm, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(

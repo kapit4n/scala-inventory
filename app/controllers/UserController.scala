@@ -17,9 +17,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class UserController @Inject() (
-  repo: UserRepository,
-  repoRoles: UserRoleRepository,
+class UserController @Inject() (deadbolt: DeadboltActions, repo: UserRepository, repoRoles: UserRoleRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateUserForm] = Form {
@@ -44,36 +42,36 @@ class UserController @Inject() (
 
   val types = scala.collection.immutable.Map[String, String]("Employee" -> "Employee", "Insumo" -> "Insumo", "Admin" -> "Admin", "Store" -> "Store", "Contabilidad" -> "Contabilidad")
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
       Ok(views.html.user_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = LanguageAction { implicit request =>
-    Ok(views.html.user_add(new MyDeadboltHandler, newForm, types))
+  def addGet = deadbolt.WithAuthRequest()()  { implicit request =>
+    Future { Ok(views.html.user_add(new MyDeadboltHandler, newForm, types)) }
   }
 
-  def profile() = LanguageAction { implicit request =>
+  def profile() = deadbolt.WithAuthRequest()()  { implicit request =>
     Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
       if (res2.length > 0) {
-        Redirect("/")
+        Future { Redirect("/") }
       } else {
-        Redirect("/login")
+        Future { Redirect("/login") }
       }
     }, 2000.millis)
   }
 
-  def profileById(userId: Long) = LanguageAction { implicit request =>
+  def profileById(userId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     Await.result(repo.getById(userId).map { res2 =>
-      Redirect("/")
+      Future { Redirect("/") }
     }, 2000.millis)
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)))
+        Future.successful(Ok(views.html.user_add(new MyDeadboltHandler, errorForm, types)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -86,7 +84,7 @@ class UserController @Inject() (
       })
   }
 
-  def getUsers = LanguageAction.async {
+  def getUsers = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -116,12 +114,12 @@ class UserController @Inject() (
 
   var userId: Long = _
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     userId = id
     var assignedRoles = getAssignedRoles(id)
     var roles = getRoles()
     repo.getById(id).map { res =>
-      Ok(views.html.user_show(new MyDeadboltHandler, res(0), roles, assignedRoles))
+      Ok(views.html.user_show(new MyDeadboltHandler, res(0), roles, assignedRoles)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -130,20 +128,20 @@ class UserController @Inject() (
   }
 
   // to copy
-  def assignRole(userId: Long, roleCode: String) = LanguageAction.async { implicit request =>
+  def assignRole(userId: Long, roleCode: String) = deadbolt.WithAuthRequest()() { implicit request =>
     var rol = getRoleByCode(roleCode)
     repoRoles.createUserRole(userId, rol.roleName, roleCode).map(res =>
       Redirect(routes.UserController.show(res.userId)))
   }
 
   // to copy
-  def removeRole(id: Long) = LanguageAction.async { implicit request =>
+  def removeRole(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repoRoles.deleteUserRole(id).map(res =>
       Redirect(routes.UserController.show(userId)))
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
       updateRow = res(0)
       val anyData = Map(
@@ -152,29 +150,29 @@ class UserController @Inject() (
         "address" -> updateRow.address, "Salary" -> updateRow.Salary.toString(),
         "type_1" -> updateRow.type_1.toString(), "login" -> updateRow.login.toString(),
         "password" -> updateRow.password.toString())
-      Ok(views.html.user_update(new MyDeadboltHandler, updateRow, updateForm.bind(anyData), types))
+      Ok(views.html.user_update(new MyDeadboltHandler, updateRow, updateForm.bind(anyData), types)(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.delete(id).map { res =>
       Redirect(routes.UserController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)))
+        Future.successful(Ok(views.html.user_update(new MyDeadboltHandler, updateRow, errorForm, types)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(

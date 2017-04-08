@@ -18,24 +18,24 @@ import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class LogEntryController @Inject() (repo: LogEntryRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class LogEntryController @Inject() (deadbolt: DeadboltActions, repo: LogEntryRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.logEntry_index(new MyDeadboltHandler, res))
+      Ok(views.html.logEntry_index(new MyDeadboltHandler, res)(request, messagesApi.preferred(request)))
     }
   }
 
-  def getLogEntrysReport = LanguageAction.async {
+  def getLogEntrysReport = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.logEntry_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.logEntry_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 

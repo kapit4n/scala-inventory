@@ -20,7 +20,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRow: RequestRowRepository, repoVete: UserRepository,
+class ProductRequestController @Inject() (deadbolt: DeadboltActions, repo:ProductRequestRepository, repoRow: RequestRowRepository, repoVete: UserRepository,
   repoSto: UserRepository, repoInsUser: UserRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -36,23 +36,23 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   var employeesNames = getEmployeeListNamesMap()
   var storeNames = getStorekeepersNamesMap()
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
       Ok(views.html.productRequest_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet = LanguageAction { implicit request =>
+  def addGet = deadbolt.WithAuthRequest()()  { implicit request =>
     if (request.session.get("role").getOrElse("0").toLowerCase == "employee") {
       employeesNames = getEmployeeNamesMap(request.session.get("userId").getOrElse("0").toLong)
     } else {
       employeesNames = getEmployeeListNamesMap()
     }
     storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, employeesNames, storeNames))
+    Future { Ok(views.html.productRequest_add(new MyDeadboltHandler, newForm, employeesNames, storeNames)) }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_add(new MyDeadboltHandler, errorForm, employeesNames, storeNames)))
@@ -69,25 +69,25 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
       })
   }
 
-  def getProductRequestsByEmployee(id: Long) = LanguageAction.async {
+  def getProductRequestsByEmployee(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByEmployee(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestsByStorekeeper(id: Long) = LanguageAction.async {
+  def getProductRequestsByStorekeeper(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByStorekeeper(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequestsByInsumoUser(id: Long) = LanguageAction.async {
+  def getProductRequestsByInsumoUser(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByInsumoUser(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getProductRequests = LanguageAction.async {
+  def getProductRequests = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -111,7 +111,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     val requestRows = getChildren(id)
     repo.getById(id).map { res =>
       Ok(views.html.productRequest_show(new MyDeadboltHandler, res(0), requestRows))
@@ -120,7 +120,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
 
   var updatedId: Long = 0
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     updatedId = id;
     repo.getById(id).map {
       case (res) =>
@@ -136,7 +136,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // update required
-  def getSend(id: Long) = LanguageAction.async { implicit request =>
+  def getSend(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.sendById(id).map {
       case (res) =>
         Redirect(routes.ProductRequestController.index())
@@ -144,7 +144,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // update required
-  def getFinish(id: Long) = LanguageAction.async { implicit request =>
+  def getFinish(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.finishById(id).map {
       case (res) =>
         Redirect(routes.ProductRequestController.index())
@@ -200,7 +200,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     val requestRows = getChildren(id)
     requestRows.foreach { req =>
       repoRow.delete(req.id)
@@ -211,14 +211,14 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoRo
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_update(new MyDeadboltHandler, updatedId, errorForm, Map[String, String](), Map[String, String]())))

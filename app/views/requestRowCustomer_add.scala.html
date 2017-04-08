@@ -1,4 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchCustomerForm], rowForm: Form[CreateRequestRowCustomerForm], requests: Map[String, String], products: Map[String, String], product: Product, customers: Map[String, String], measures: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, requestRowId: Long, searchForm: Form[SearchCustomerForm], rowForm: Form[CreateRequestRowCustomerForm], requests: Map[String, String], products: Map[String, String], product: Product, customers: Map[String, String], measures: Map[String, String])(implicit request: AuthenticatedRequest[Any], messages: Messages)
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -28,7 +29,7 @@
         @select(field = rowForm("status"), options = options(Map("borrador" -> "Borrador")), 'id -> "status")
         @select(field = rowForm("measureId"), options = options(measures), 'id -> "measureId")
         @inputText(rowForm("observation"), 'id -> "observation")
-        <input id="addSubmit" type="submit" value=@messages("save") class="btn btn-primary btn-sm"/>
+        <input id="addSubmit" type="submit" value="save" class="btn btn-primary btn-sm"/>
         <a href="/requestRow_show/@requestRowId" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @select(field = rowForm("requestRowId"), options = options(requests), 'hidden -> "true", '_label -> "")
     }

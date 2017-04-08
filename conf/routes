@@ -8,25 +8,9 @@ GET     /                				controllers.MainController.index
 GET     /login                			controllers.LoginController.index
 GET     /logout                			controllers.LoginController.logout
 POST    /login                			controllers.LoginController.login
-GET     /index2                			controllers.Application.index
-GET     /restrict1                  	controllers.RestrictController.restrictOne
-GET     /restrict2                  	controllers.RestrictController.restrictTwo
-GET     /restrict3                  	controllers.RestrictController.restrictThree
-GET     /restrict4                  	controllers.RestrictController.restrictFour
-GET     /pureLuck                   	controllers.DynamicRestrictionsController.pureLuck
-GET     /noWayJose                  	controllers.DynamicRestrictionsController.noWayJose
-GET     /rhp_roleHolderPresent      	controllers.SubjectPresentController.loggedIn
-GET     /rhp_roleHolderNotPresent   	controllers.SubjectPresentController.notLoggedIn
-GET     /rhnp_roleHolderPresent     	controllers.SubjectNotPresentController.loggedIn
-GET     /rhnp_roleHolderNotPresent  	controllers.SubjectNotPresentController.notLoggedIn
-GET     /printersEdit               	controllers.PatternController.printersEdit
-GET     /printersFoo                	controllers.PatternController.printersFoo
-GET     /printersRegex              	controllers.PatternController.printersRegex
 
 # All searchs
-POST    /discountDetail_searchCustomer			controllers.DiscountDetailController.searchCustomerPost
 POST    /requestRow_searchProduct				controllers.RequestRowController.searchProductPost
-POST    /requestRowByInsumo_searchProduct		controllers.RequestRowByInsumoController.searchProductPost
 POST    /requestRowCustomer_searchCustomer	controllers.RequestRowCustomerController.searchCustomerPost
 POST    /customer_search		 				controllers.CustomerController.searchCustomerPost
 POST    /account_searchParent		 			controllers.AccountController.searchParentAccountPost
@@ -117,7 +101,7 @@ GET     /product_update/:id        		controllers.ProductController.getUpdate(id:
 GET     /product_remove/:id        		controllers.ProductController.delete(id: Long)
 GET     /products/:id 					controllers.ProductController.getById(id: Long)
 POST    /product_update             	controllers.ProductController.updatePost
-POST    /productUpload/:id             	controllers.ProductController.upload(id: Long)
+# POST    /productUpload/:id             	controllers.ProductController.upload(id: Long)
 
 POST    /product                 		controllers.ProductController.addProduct
 GET     /products         				controllers.ProductController.getProducts
@@ -138,20 +122,6 @@ GET     /productInv_list         				controllers.ProductInvController.index
 GET     /productInvs_add/:productId				controllers.ProductInvController.addGet(productId: Long)
 
 
-# Now for Discount Detail
-GET     /discountDetail_show/:id 				controllers.DiscountDetailController.show(id: Long)
-GET     /discountDetail_update/:id        		controllers.DiscountDetailController.getUpdate(id: Long)
-GET     /discountDetail_remove/:id        		controllers.DiscountDetailController.delete(id: Long)
-GET     /discountDetails/:id 					controllers.DiscountDetailController.getById(id: Long)
-POST    /discountDetail_update             		controllers.DiscountDetailController.updatePost
-
-POST    /discountDetail                 		controllers.DiscountDetailController.add
-GET     /discountDetails         				controllers.DiscountDetailController.getDiscountDetails
-GET     /discountDetailsByReport/:id			controllers.DiscountDetailController.getDiscountDetailsByReport(id: Long)
-GET     /discountDetailsByCustomer/:id			controllers.DiscountDetailController.getDiscountDetailsByCustomer(id: Long)
-GET     /discountDetailsByInsumo/:id			controllers.DiscountDetailController.getDiscountDetailsByInsumo(id: Long)
-GET     /discountDetail_list         			controllers.DiscountDetailController.index
-GET     /discountDetail_add/:discountId			controllers.DiscountDetailController.addGet(discountId: Long)
 
 # Now for Transaction Detail
 GET     /transactionDetail_show/:id 				controllers.TransactionDetailController.show(id: Long)
@@ -167,20 +137,6 @@ GET     /transactionDetailsByAccount/:id			controllers.TransactionDetailControll
 GET     /transactionDetail_list         			controllers.TransactionDetailController.index
 GET     /transactionDetail_addGet/:id         		controllers.TransactionDetailController.addGet(id: Long)
 
-# Now for  Discount Report
-GET     /discountReport_show/:id 				controllers.DiscountReportController.show(id: Long)
-GET     /discountReport_generarReport/:id 		controllers.DiscountReportController.generarReport(id: Long)
-GET     /discountReport_show_pdf/:id 			controllers.DiscountReportController.show_pdf(id: Long)
-GET     /discountReport_update/:id        		controllers.DiscountReportController.getUpdate(id: Long)
-GET     /discountReport_finalize/:id        	controllers.DiscountReportController.finalizeReport(id: Long)
-GET     /discountReport_remove/:id        		controllers.DiscountReportController.delete(id: Long)
-GET     /discountReports/:id 					controllers.DiscountReportController.getById(id: Long)
-POST    /discountReport_update             		controllers.DiscountReportController.updatePost
-
-POST    /discountReport                 		controllers.DiscountReportController.add
-GET     /discountReports         				controllers.DiscountReportController.getDiscountReports
-GET     /discountReport_list         			controllers.DiscountReportController.index
-GET     /discountReport_add         			controllers.DiscountReportController.addGet
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
@@ -199,20 +155,6 @@ GET     /productRequest_list         				controllers.ProductRequestController.in
 GET     /productRequest_add     					controllers.ProductRequestController.addGet
 
 
-# Now for Product requests
-GET     /productRequestByInsumo_show/:id 					controllers.ProductRequestByInsumoController.show(id: Long)
-GET     /productRequestByInsumo_update/:id 					controllers.ProductRequestByInsumoController.getUpdate(id: Long)
-GET     /productRequestByInsumo_send/:id        			controllers.ProductRequestByInsumoController.getSend(id: Long)
-GET     /productRequestByInsumo_finish/:id        			controllers.ProductRequestByInsumoController.getFinish(id: Long)
-GET     /productRequestByInsumo_remove/:id        			controllers.ProductRequestByInsumoController.delete(id: Long)
-GET     /productRequestsByInsumo/:id 						controllers.ProductRequestByInsumoController.getById(id: Long)
-POST    /productRequestByInsumo_update     					controllers.ProductRequestByInsumoController.updatePost
-
-POST    /productRequestByInsumo      						controllers.ProductRequestByInsumoController.add
-GET     /productRequestsByInsumo         					controllers.ProductRequestByInsumoController.getProductRequests
-GET     /productRequestByInsumo_list         				controllers.ProductRequestByInsumoController.index
-GET     /productRequestByInsumo_add     					controllers.ProductRequestByInsumoController.addGet
-
 
 # Now for Product requests Rows
 GET     /requestRow_show/:id 				controllers.RequestRowController.show(id: Long)
@@ -228,20 +170,6 @@ GET     /requestRowsByParent/:id         	controllers.RequestRowController.getRe
 GET     /requestRow_list         			controllers.RequestRowController.index
 GET     /requestRow_add/:requestId      	controllers.RequestRowController.addGet(requestId: Long)
 
-
-# Now for Product requests Rows
-GET     /requestRowByInsumo_show/:id 				controllers.RequestRowByInsumoController.show(id: Long)
-GET     /requestRowByInsumo_update/:id        		controllers.RequestRowByInsumoController.getUpdate(id: Long)
-GET     /requestRowByInsumo_fill/:id        		controllers.RequestRowByInsumoController.getFill(id: Long)
-GET     /requestRowByInsumo_remove/:id        		controllers.RequestRowByInsumoController.delete(id: Long)
-GET     /requestRowsByInsumo/:id 					controllers.RequestRowByInsumoController.getById(id: Long)
-POST    /requestRowByInsumo_update             		controllers.RequestRowByInsumoController.updatePost
-
-POST    /requestRowByInsumo                 		controllers.RequestRowByInsumoController.add
-GET     /requestRowsByInsumo         				controllers.RequestRowByInsumoController.getRequestRows
-GET     /requestRowsByInsumoByParent/:id         	controllers.RequestRowByInsumoController.getRequestRowsByParent(id: Long)
-GET     /requestRowByInsumo_list         			controllers.RequestRowByInsumoController.index
-GET     /requestRowByInsumo_add/:requestId         	controllers.RequestRowByInsumoController.addGet(requestId: Long)
 
 # Now for Product requests Rows Customers
 GET     /requestRowCustomer_show/:id 				controllers.RequestRowCustomerController.show(id: Long)
@@ -291,8 +219,6 @@ GET     /transaction_add/:type         				controllers.TransactionController.add
 
 GET     /transactions         						controllers.TransactionController.getTransactions
 GET     /transaction_list         					controllers.TransactionController.index
-
-GET     /clientes                    				controllers.ClienteController.getClientes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.versioned(path="/public", file: Asset)

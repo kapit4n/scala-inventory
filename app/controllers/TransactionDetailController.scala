@@ -21,7 +21,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransaction: TransactionRepository,
+class TransactionDetailController @Inject() (deadbolt: DeadboltActions, repo:TransactionDetailRepository, repoTransaction: TransactionRepository,
   repoAccounts: AccountRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   var updatedRow: TransactionDetail = _
@@ -35,11 +35,11 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       "credit" -> of[Double])(CreateTransactionDetailForm.apply)(CreateTransactionDetailForm.unapply)
   }
 
-  def index = LanguageAction {
-    Ok(views.html.transactionDetail_index())
+  def index = deadbolt.WithAuthRequest()()  { request => 
+    Future { Ok(views.html.transactionDetail_index()) }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, errorForm, transactionMap, accountMap)))
@@ -67,27 +67,27 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     Await.result(repoTransaction.getById(id).map { res => res(0).type_1 }, 500.millis)
   }
 
-  def addGet(transactionId: Long) = LanguageAction { implicit request =>
+  def addGet(transactionId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     parentId = transactionId
     var parenType = getTransactionType(transactionId)
     transactionMap = getTransactionMap(transactionId)
     accountMap = getAccountMap(parenType)
-    Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, newForm, transactionMap, accountMap))
+    Future { Ok(views.html.transactionDetail_add(new MyDeadboltHandler, parentId, newForm, transactionMap, accountMap)(request, messagesApi.preferred(request))) }
   }
 
-  def getTransactionDetails = LanguageAction.async {
+  def getTransactionDetails = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getTransactionDetailsByTransaction(id: Long) = LanguageAction.async {
+  def getTransactionDetailsByTransaction(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByTransaction(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getTransactionDetailsByAccount(id: Long) = LanguageAction.async {
+  def getTransactionDetailsByAccount(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByAccount(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -104,14 +104,14 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.transactionDetail_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.transactionDetail_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -123,7 +123,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
           "debit" -> updatedRow.debit.toString(),
           "credit" -> updatedRow.credit.toString())
         accountMap = getAccountMap(parenType)
-        Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), accountMap))
+        Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), accountMap)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -171,7 +171,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     parentId = getParentId(id)
     var deletedRecord = getByIdNow(id)
     repoAccounts.updateParentDebitCredit(deletedRecord.accountId, -deletedRecord.debit, -deletedRecord.credit);
@@ -181,17 +181,17 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, errorForm, accountMap)))
+        Future.successful(Ok(views.html.transactionDetail_update(new MyDeadboltHandler, updatedRow, errorForm, accountMap)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(

@@ -17,7 +17,7 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 import javax.inject._
 
-class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRepository, repoTransDetails: TransactionDetailRepository, repoTrans: TransactionRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class ReportController @Inject() (deadbolt: DeadboltActions, repo:ReportRepository, repoAccount: AccountRepository, repoTransDetails: TransactionDetailRepository, repoTrans: TransactionRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateReportForm] = Form {
     mapping(
@@ -26,18 +26,18 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       "cliente" -> number.verifying(min(0), max(140)))(CreateReportForm.apply)(CreateReportForm.unapply)
   }
 
-  def index = LanguageAction { implicit request =>
-    Ok(views.html.reporte_index(new MyDeadboltHandler))
+  def index = deadbolt.WithAuthRequest()()  { implicit request =>
+    Future { Ok(views.html.reporte_index(new MyDeadboltHandler)(request, messagesApi.preferred(request))) }
   }
 
-  def balance = LanguageAction { implicit request =>
+  def balance = deadbolt.WithAuthRequest()()  { implicit request =>
     val activos = getByActivo()
     val pasivos = getByPasivo()
     val patrimonios = getByPatrimonio()
-    Ok(views.html.reporte_balance(new MyDeadboltHandler, activos, pasivos, patrimonios))
+    Future { Ok(views.html.reporte_balance(new MyDeadboltHandler, activos, pasivos, patrimonios)(request, messagesApi.preferred(request))) }
   }
 
-  def diary = LanguageAction { implicit request =>
+  def diary = deadbolt.WithAuthRequest()()  { implicit request =>
     val transactions = getTransactions()
     transactions.foreach { transaction =>
       Await.result(repoTransDetails.listByTransaction(transaction.id).map {
@@ -46,17 +46,17 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
           transaction.details = res;
       }, 500.millis)
     }
-    Ok(views.html.reporte_diary(new MyDeadboltHandler, transactions))
+    Future { Ok(views.html.reporte_diary(new MyDeadboltHandler, transactions)(request, messagesApi.preferred(request))) }
   }
 
-  def mayor = LanguageAction { implicit request =>
+  def mayor = deadbolt.WithAuthRequest()()  { implicit request =>
     val details = getTransactionDetails()
-    Ok(views.html.reporte_mayor(new MyDeadboltHandler, details))
+    Future { Ok(views.html.reporte_mayor(new MyDeadboltHandler, details)) }
   }
 
-  def sumasYSaldos = LanguageAction { implicit request =>
+  def sumasYSaldos = deadbolt.WithAuthRequest()()  { implicit request =>
     val accounts = getChilAccounts()
-    Ok(views.html.reporte_sumasYSaldos(new MyDeadboltHandler, accounts))
+    Future { Ok(views.html.reporte_sumasYSaldos(new MyDeadboltHandler, accounts)(request, messagesApi.preferred(request))) }
   }
 
   //  RFB = 510 - 410
@@ -69,7 +69,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
   //  RAI = RAIYI - ACEI
   //  RNG = RAI - 460
 
-  def resultFinance = LanguageAction { implicit request =>
+  def resultFinance = deadbolt.WithAuthRequest()()  { implicit request =>
     val account510: Seq[Account] = getAccountByCode("510")
     val account410: Seq[Account] = getAccountByCode("410")
     val account540: Seq[Account] = getAccountByCode("540")
@@ -90,16 +90,16 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       && account530.length > 0 && account430.length > 0 && accountADADC.length > 0 && account450.length > 0
       && account570.length > 0 && account470.length > 0 && account580.length > 0 && account480.length > 0 &&
       accountACEI.length > 0 && account460.length > 0) {
-      Ok(views.html.report_result(new MyDeadboltHandler, account510(0), account410(0), account540(0), account440(0), account530(0),
+      Future { Ok(views.html.report_result(new MyDeadboltHandler, account510(0), account410(0), account540(0), account440(0), account530(0),
         account430(0), accountADADC(0), account450(0), account570(0), account470(0), account580(0), account480(0),
-        accountACEI(0), account460(0)))
+        accountACEI(0), account460(0))(request, messagesApi.preferred(request))) }
     } else {
       hello = "It is not complete"
-      Ok("This is an example: " + hello)
+      Future { Ok("This is an example: " + hello) }
     }
   }
 
-  def resultFinance1 = LanguageAction { implicit request =>
+  def resultFinance1 = deadbolt.WithAuthRequest()()  { implicit request =>
     val account510: Seq[Account] = getAccountByCode("510")
     val account410: Seq[Account] = getAccountByCode("410")
     val account540: Seq[Account] = getAccountByCode("540")
@@ -120,12 +120,12 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       && account530.length > 0 && account430.length > 0 && accountADADC.length > 0 && account450.length > 0
       && account570.length > 0 && account470.length > 0 && account580.length > 0 && account480.length > 0 &&
       accountACEI.length > 0 && account460.length > 0) {
-      Ok(views.html.report_result(new MyDeadboltHandler, account510(0), account410(0), account540(0), account440(0), account530(0),
+      Future { Ok(views.html.report_result(new MyDeadboltHandler, account510(0), account410(0), account540(0), account440(0), account530(0),
         account430(0), accountADADC(0), account450(0), account570(0), account470(0), account580(0), account480(0),
-        accountACEI(0), account460(0)))
+        accountACEI(0), account460(0))) }
     } else {
       hello = "It is not complete"
-      Ok("This is an example: " + hello)
+      Future { Ok("This is an example: " + hello) }
     }
   }
 
@@ -171,10 +171,10 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
     }, 1000.millis)
   }
 
-  def addReport = LanguageAction.async { implicit request =>
+  def addReport = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.reporte_index(new MyDeadboltHandler)))
+        Future.successful(Ok(views.html.reporte_index(new MyDeadboltHandler)(request, messagesApi.preferred(request))))
       },
       reporte => {
         repo.create(reporte.monto, reporte.account, reporte.cliente).map { _ =>
@@ -183,7 +183,7 @@ class ReportController @Inject() (repo: ReportRepository, repoAccount: AccountRe
       })
   }
 
-  def getReports = LanguageAction.async {
+  def getReports = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { reportes =>
       Ok(Json.toJson(reportes))
     }

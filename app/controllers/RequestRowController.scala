@@ -21,7 +21,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustomer: RequestRowCustomerRepository, repoProductReq: ProductRequestRepository, repoUnit: MeasureRepository,
+class RequestRowController @Inject() (deadbolt: DeadboltActions, repo:RequestRowRepository, repoRowCustomer: RequestRowCustomerRepository, repoProductReq: ProductRequestRepository, repoUnit: MeasureRepository,
   repoProduct: ProductRepository, repoCustomer: CustomerRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowForm] = Form {
@@ -53,25 +53,25 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
     }, 3000.millis)
   }
 
-  def index() = LanguageAction.async { implicit request =>
+  def index() = deadbolt.WithAuthRequest()() { implicit request =>
     productRequestId = 0
     repo.list().map { res =>
       Ok(views.html.requestRow_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet(requestId: Long) = LanguageAction { implicit request =>
+  def addGet(requestId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     unidades = getMeasuresMap()
     productRequestsMap = getProductRequestsMap(requestId)
     products = getProductsMap()
     requestIdParm = requestId
-    Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
+    Future { Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)(request, messagesApi.preferred(request))) }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, errorForm, productRequestsMap, products, unidades)(request, messagesApi.preferred(request))))
       },
       res => {
         var product1 = getProductById(res.productId)
@@ -90,13 +90,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
       })
   }
 
-  def getRequestRows = LanguageAction.async {
+  def getRequestRows = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getRequestRowsByParent(id: Long) = LanguageAction.async {
+  def getRequestRowsByParent(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.listByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
@@ -121,18 +121,18 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     // get the productRequestRow
     // products = getProductRequestRows(id)
     val requestRowCustomers = getRequestRowProducts(id)
     repo.getById(id).map { res =>
       productRequestId = res(0).requestId
-      Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowCustomers))
+      Ok(views.html.requestRow_show(new MyDeadboltHandler, res(0), requestRowCustomers)(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map {
       case (res) =>
         val anyData = Map(
@@ -148,7 +148,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
         println(productRequestsMap)
         products = getProductsMap()
         updatedRow = res(0)
-        Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), productRequestsMap, products, unidades))
+        Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), productRequestsMap, products, unidades)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -218,7 +218,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // update required
-  def getFill(id: Long) = LanguageAction.async {
+  def getFill(id: Long) = deadbolt.WithAuthRequest()() { request =>
     var row = getByIdObj(id)
     var canDeliver = repoProduct.canDeliver(row.productId, row.quantity)
     if (canDeliver) {
@@ -235,7 +235,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.delete(id).map { res =>
       if (productRequestId == 0) {
         Redirect(routes.RequestRowController.index)
@@ -246,19 +246,19 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         println("Some error is by there")
         println(errorForm)
-        Future.successful(Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, errorForm, productRequestsMap, products, unidades)))
+        Future.successful(Ok(views.html.requestRow_update(new MyDeadboltHandler, updatedRow, errorForm, productRequestsMap, products, unidades)(request, messagesApi.preferred(request))))
       },
       res => {
         var new_price = res.price
@@ -285,10 +285,10 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
       "search" -> text)(SearchProductForm.apply)(SearchProductForm.unapply)
   }
 
-  def searchProductPost = LanguageAction.async { implicit request =>
+  def searchProductPost = deadbolt.WithAuthRequest()() { implicit request =>
     searchProductForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)))
+        Future.successful(Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)(request, messagesApi.preferred(request))))
       },
       res => {
         repoProduct.searchProduct(res.search).map { resProducts =>
@@ -297,7 +297,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
             cache put (product.id.toString(), product.name.toString)
           }
           products = cache.toMap
-          Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades))
+          Ok(views.html.requestRow_add(new MyDeadboltHandler, requestIdParm, searchProductForm, newForm, productRequestsMap, products, unidades)(request, messagesApi.preferred(request)))
         }
       })
   }

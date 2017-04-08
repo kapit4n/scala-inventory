@@ -21,9 +21,8 @@ import security.MyDeadboltHandler
 import play.i18n.Lang
 
 
-class CustomerController @Inject() (
-  repo: CustomerRepository, repoRequests: RequestRowCustomerRepository,
-  repoCustomer: CustomerRepository, repoDiscount: DiscountDetailRepository,
+class CustomerController @Inject() (deadbolt: DeadboltActions, repo: CustomerRepository, repoRequests: RequestRowCustomerRepository,
+  repoCustomer: CustomerRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   var interval = 30
@@ -51,9 +50,9 @@ class CustomerController @Inject() (
       "account" -> text)(CreateCustomerForm.apply)(CreateCustomerForm.unapply)
   }
 
-  def addGet() = LanguageAction.async { implicit request =>
+  def addGet() = deadbolt.WithAuthRequest()() { request =>
     repo.list(0 * interval, interval).map { res =>
-      Ok(views.html.customer_add(new MyDeadboltHandler, newForm))
+      Ok(views.html.customer_add(new MyDeadboltHandler, newForm)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -61,54 +60,49 @@ class CustomerController @Inject() (
   var currentPage: Int = _
   var customers: Seq[Customer] = Seq[Customer]()
 
-  def index(start: Int) = LanguageAction.async { implicit request =>
+  def index(start: Int) = deadbolt.WithAuthRequest()() { implicit request =>
     if (start == 0) {
-      Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)))
+      Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)(request, messagesApi.preferred(request))))
     } else {
       repo.list((start - 1) * interval, interval).map { res =>
         customers = res
         total = getTotal()
         currentPage = start
-        Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval))
+        Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)(request, messagesApi.preferred(request)))
       }
     }
   }
 
   var companys: Seq[Company] = _
 
-  def index_company() = LanguageAction.async { implicit request =>
+  def index_company() = deadbolt.WithAuthRequest()() { implicit request =>
     repo.listCompany().map { res =>
       companys = res
-      Ok(views.html.company_index(new MyDeadboltHandler, companys))
+      Ok(views.html.company_index(new MyDeadboltHandler, companys)(request, messagesApi.preferred(request)))
     }
   }
 
-  def searchCustomerPost = LanguageAction.async { implicit request =>
+  def searchCustomerPost = deadbolt.WithAuthRequest()() { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)))
+        Future.successful(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)(request, messagesApi.preferred(request))))
       },
       res => {
         customers = searchCustomer(res.search)
         var total = getTotal()
         var currentPage = 1
-        Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)))
+        Future(Ok(views.html.customer_index(new MyDeadboltHandler, newForm, searchForm, customers, total, currentPage, interval)(request, messagesApi.preferred(request))))
       })
   }
 
-  def index_pdf = LanguageAction {
-    val generator = new PdfGenerator
-    Ok(generator.toBytes(views.html.reporte_customeres(), "http://localhost:9000/")).as("application/pdf")
-  }
-
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     var total = getTotal()
     var currentPage = 1
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.customer_add(new MyDeadboltHandler, errorForm)))
+        Future.successful(Ok(views.html.customer_add(new MyDeadboltHandler, errorForm)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(res.name, res.carnet, res.phone, res.address,
@@ -120,13 +114,13 @@ class CustomerController @Inject() (
       })
   }
 
-  def getCustomeres(page: Int) = LanguageAction.async {
+  def getCustomeres(page: Int) = deadbolt.WithAuthRequest()() { request =>
     repo.list((page - 1) * interval, interval).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getCustomeresReport = LanguageAction.async {
+  def getCustomeresReport = deadbolt.WithAuthRequest()() { request =>
     repo.list(0, interval).map { res =>
       Ok(Json.toJson(res))
     }
@@ -155,12 +149,6 @@ class CustomerController @Inject() (
     }, 1000.millis)
   }
 
-  def getDiscounts(id: Long): Seq[DiscountDetail] = {
-    Await.result(repoDiscount.listByCustomer(id).map { res =>
-      res
-    }, 1000.millis)
-  }
-
   def getCustomersByAsso(id: Long): Seq[Customer] = {
     Await.result(repoCustomer.listByCompany(id).map { res =>
       res
@@ -168,23 +156,22 @@ class CustomerController @Inject() (
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     val requests = getRequests(id)
-    val discounts = getDiscounts(id)
     repo.getById(id).map { res =>
-      Ok(views.html.customer_show(new MyDeadboltHandler, res(0), requests, discounts))
+      Ok(views.html.customer_show(new MyDeadboltHandler, res(0), requests)(request, messagesApi.preferred(request)))
     }
   }
 
-  def showCompany(id: Long) = LanguageAction.async { implicit request =>
+  def showCompany(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     val customeresByAsso = getCustomersByAsso(id)
     repo.getCompanyById(id).map { res =>
-      Ok(views.html.company_show(new MyDeadboltHandler, res(0), customeresByAsso))
+      Ok(views.html.company_show(new MyDeadboltHandler, res(0), customeresByAsso)(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
@@ -195,12 +182,12 @@ class CustomerController @Inject() (
         "address" -> updatedRow.address,
         "account" -> updatedRow.account.toString(),
         "totalDebt" -> updatedRow.totalDebt.toString())
-      Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData)))
+      Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData))(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async { implicit request =>
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     //var total = getTotal()
     //var currentPage = 1
     repo.delete(id).map { res =>
@@ -209,23 +196,23 @@ class CustomerController @Inject() (
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()(){ request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getCompanyById(id: Long) = LanguageAction.async {
+  def getCompanyById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getCompanyById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, errorForm)))
+        Future.successful(Ok(views.html.customer_update(new MyDeadboltHandler, updatedRow, errorForm)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(

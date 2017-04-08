@@ -1,4 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, a510: Account, a410: Account, a540: Account, a440: Account, a530: Account, a430: Account, a450: Account,  ADADC: Account, a570: Account, a470: Account, a580: Account, a480: Account, ACEI: Account, a460: Account)(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, a510: Account, a410: Account, a540: Account, a440: Account, a530: Account, a430: Account, a450: Account,  ADADC: Account, a570: Account, a470: Account, a580: Account, a480: Account, ACEI: Account, a460: Account)(implicit request: AuthenticatedRequest[Any], messages: Messages)
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 

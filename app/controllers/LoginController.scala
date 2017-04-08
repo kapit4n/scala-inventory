@@ -16,8 +16,9 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import security.MyDeadboltHandler
+import be.objectify.deadbolt.scala.DeadboltActions
 
-class LoginController @Inject() (repo: UserRepository, repoSettings: SettingRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class LoginController @Inject() (deadbolt: DeadboltActions, repo: UserRepository, repoSettings: SettingRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[LoginForm] = Form {
     mapping(
@@ -25,12 +26,12 @@ class LoginController @Inject() (repo: UserRepository, repoSettings: SettingRepo
       "password" -> nonEmptyText)(LoginForm.apply)(LoginForm.unapply)
   }
 
-  def index = LanguageAction {
-    Ok(views.html.login(newForm))
+  def index = deadbolt.WithAuthRequest()() { request =>
+    Future {Ok(views.html.login(newForm)(request, messagesApi.preferred(request)))}
   }
 
-  def logout = LanguageAction {
-    Redirect("/login").withNewSession
+  def logout = deadbolt.WithAuthRequest()() { request =>
+    Future { Redirect("/login").withNewSession }
   }
 
   def getCompanyInfo(): Setting = {
@@ -40,58 +41,58 @@ class LoginController @Inject() (repo: UserRepository, repoSettings: SettingRepo
     }, 3000.millis)
   }
 
-  def login = LanguageAction { implicit request =>
-
+  def login = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Ok(views.html.login(errorForm))
+        Future { Ok(views.html.login(errorForm)(request, messagesApi.preferred(request))) }
       },
       res => {
         val company = getCompanyInfo()
         println(company)
+
         Await.result(repo.getByLogin(res.user, res.password).map { res2 =>
           if (res2.length > 0) {
-            Ok("Welcome!").withSession(
+            Future { Ok("Welcome!").withSession(
               "userSecurity" -> res2(0).login,
               "role" -> res2(0).type_1.toLowerCase,
               "userId" -> res2(0).id.toString(),
               "userName" -> res2(0).name.toString(),
-              "lang" -> company.language)
+              "lang" -> company.language) }
             if (res2(0).type_1.toLowerCase == "admin") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login,
+              Future { Redirect("/").withSession("userSecurity" -> res2(0).login,
                 "role" -> res2(0).type_1.toLowerCase,
                 "userId" -> res2(0).id.toString(),
                 "userName" -> res2(0).name.toString(),
-                "lang" -> company.language)
+                "lang" -> company.language) }
             } else if (res2(0).type_1.toLowerCase == "employee") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login,
+              Future { Redirect("/").withSession("userSecurity" -> res2(0).login,
                 "role" -> res2(0).type_1.toLowerCase,
                 "userId" -> res2(0).id.toString(),
                 "userName" -> res2(0).name.toString(),
-                "lang" -> company.language)
+                "lang" -> company.language) }
             } else if (res2(0).type_1.toLowerCase == "insumo") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login,
+              Future { Redirect("/").withSession("userSecurity" -> res2(0).login,
                 "role" -> res2(0).type_1.toLowerCase,
                 "userId" -> res2(0).id.toString(),
                 "userName" -> res2(0).name.toString(),
-                "lang" -> company.language)
+                "lang" -> company.language) }
             } else if (res2(0).type_1.toLowerCase == "store") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login,
+              Future { Redirect("/").withSession("userSecurity" -> res2(0).login,
                 "role" -> res2(0).type_1.toLowerCase,
                 "userId" -> res2(0).id.toString(),
                 "userName" -> res2(0).name.toString(),
-                "lang" -> company.language)
+                "lang" -> company.language) }
             } else if (res2(0).type_1.toLowerCase == "contabilidad") {
-              Redirect("/").withSession("userSecurity" -> res2(0).login,
+              Future { Redirect("/").withSession("userSecurity" -> res2(0).login,
                 "role" -> res2(0).type_1.toLowerCase,
                 "userId" -> res2(0).id.toString(),
                 "userName" -> res2(0).name.toString(),
-                "lang" -> company.language)
+                "lang" -> company.language) }
             } else {
-              Redirect("/error")
+              Future { Redirect("/error") }
             }
           } else {
-            Ok(views.html.login(newForm))
+            Future { Ok(views.html.login(newForm)(request, messagesApi.preferred(request))) }
           }
         }, 3000.millis)
       })

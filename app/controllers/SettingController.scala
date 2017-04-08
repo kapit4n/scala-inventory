@@ -17,7 +17,7 @@ import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class SettingController @Inject() (repo: SettingRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class SettingController @Inject() (deadbolt: DeadboltActions, repo:SettingRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val companyes = scala.collection.immutable.Map[String, String]("0" -> "Ninguno", "1" -> "Company 1", "2" -> "Company 2")
 
@@ -33,7 +33,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
 
   var updatedRow: Setting = _
   // to copy
-  def show() = LanguageAction.async { implicit request =>
+  def show() = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getFirst().map { res =>
       if (res.size > 0) {
         updatedRow = res(0)
@@ -45,7 +45,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
   }
 
   // update required
-  def getUpdate = LanguageAction.async { implicit request =>
+  def getUpdate = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getFirst().map { res =>
       var anyData: Map[String, String] = Map[String, String]()
       if (res.size == 0) {
@@ -69,7 +69,7 @@ class SettingController @Inject() (repo: SettingRepository, val messagesApi: Mes
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.setting_update(new MyDeadboltHandler, updatedRow, errorForm)))

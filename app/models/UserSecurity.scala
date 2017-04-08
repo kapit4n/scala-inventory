@@ -1,13 +1,48 @@
 package models
 
-import play.libs.Scala
-import be.objectify.deadbolt.core.models.Subject
+import be.objectify.deadbolt.scala.models.Subject
+
+/**
+  *
+  * @author Steve Chaloner (steve@objectify.be)
+  */
+class UserSecurity(val userName: String) extends Subject {
+  override def roles: List[SecurityRole] =
+    List(
+      SecurityRole("role"), SecurityRole("roleCreate"), SecurityRole("roleList"), SecurityRole("roleShow"), SecurityRole("roleEdit"), SecurityRole("roleDelete"),
+      SecurityRole("measure"), SecurityRole("measureCreate"), SecurityRole("measureList"), SecurityRole("measureShow"), SecurityRole("measureEdit"), SecurityRole("measureDelete"),
+      SecurityRole("product"), SecurityRole("productCreate"), SecurityRole("productList"), SecurityRole("productShow"), SecurityRole("productEdit"), SecurityRole("productDelete"),
+      SecurityRole("vendor"), SecurityRole("vendorCreate"), SecurityRole("vendorList"), SecurityRole("vendorShow"), SecurityRole("vendorEdit"), SecurityRole("vendorDelete"),
+      SecurityRole("customer"), SecurityRole("customerCreate"), SecurityRole("customerList"), SecurityRole("customerShow"), SecurityRole("customerEdit"), SecurityRole("customerDelete"),
+      SecurityRole("company"), SecurityRole("companyXXXCreate"), SecurityRole("companyXXXList"), SecurityRole("companyShow"), SecurityRole("companyXXXEdit"), SecurityRole("companyXXXDelete"),
+      SecurityRole("user"), SecurityRole("userCreate"), SecurityRole("userList"), SecurityRole("userShow"), SecurityRole("userEdit"), SecurityRole("userDelete"),
+      SecurityRole("account"), SecurityRole("accountCreate"), SecurityRole("accountList"), SecurityRole("accountShow"), SecurityRole("accountEdit"), SecurityRole("accountDelete"),
+      SecurityRole("transaction"), SecurityRole("transactionCreate"), SecurityRole("transactionList"), SecurityRole("transactionShow"), SecurityRole("transactionEdit"), SecurityRole("transactionDelete"),
+      SecurityRole("transactionDetail"), SecurityRole("transactionDetailCreate"), SecurityRole("transactionDetailList"), SecurityRole("transactionDetailShow"), SecurityRole("transactionDetailEdit"), SecurityRole("transactionDetailDelete"),
+      SecurityRole("productRequest"), SecurityRole("productRequestCreate"), SecurityRole("productRequestList"), SecurityRole("productRequestShow"), SecurityRole("productRequestEdit"), SecurityRole("productRequestDelete"), SecurityRole("productRequestSend"), SecurityRole("productRequestAccept"), SecurityRole("productRequestFinish"),
+      SecurityRole("productRequestByInsumo"), SecurityRole("productRequestByInsumoCreate"), SecurityRole("productRequestByInsumoList"), SecurityRole("productRequestByInsumoShow"), SecurityRole("productRequestByInsumoEdit"), SecurityRole("productRequestByInsumoDelete"), SecurityRole("productRequestByInsumoSend"), SecurityRole("productRequestByInsumoAccept"), SecurityRole("productRequestByInsumoFinish"),
+      SecurityRole("requestRow"), SecurityRole("requestRowCreate"), SecurityRole("requestRowList"), SecurityRole("requestRowShow"), SecurityRole("requestRowEdit"), SecurityRole("requestRowDelete"),
+      SecurityRole("requestRowByInsumo"), SecurityRole("requestRowByInsumoCreate"), SecurityRole("requestRowByInsumoList"), SecurityRole("requestRowByInsumoShow"), SecurityRole("requestRowByInsumoEdit"), SecurityRole("requestRowByInsumoDelete"),
+      SecurityRole("requestRowCustomer"), SecurityRole("requestRowCustomerCreate"), SecurityRole("requestRowCustomerList"), SecurityRole("requestRowCustomerShow"), SecurityRole("requestRowCustomerEdit"), SecurityRole("requestRowCustomerDelete"),
+      SecurityRole("discountReport"), SecurityRole("discountReportCreate"), SecurityRole("discountReportList"), SecurityRole("discountReportShow"), SecurityRole("discountReportEdit"), SecurityRole("discountReportDelete"), SecurityRole("discountReportFinalize"),
+      SecurityRole("discountDetail"), SecurityRole("discountDetailCreate"), SecurityRole("discountDetailList"), SecurityRole("discountDetailShow"), SecurityRole("discountDetailEdit"), SecurityRole("discountDetailDelete"),
+      SecurityRole("productInv"), SecurityRole("productInvCreate"), SecurityRole("productInvList"), SecurityRole("productInvShow"), SecurityRole("productInvEdit"), SecurityRole("productInvDelete"),
+      SecurityRole("report"), SecurityRole("balanceShow"), SecurityRole("diaryShow"), SecurityRole("financeShow"), SecurityRole("mayorShow"), SecurityRole("sumasSaldosShow"),
+      SecurityRole("setting"), SecurityRole("settingShow"), SecurityRole("settingEdit"),
+      SecurityRole("logEntry"), SecurityRole("logEntryShow"), SecurityRole("logEntryList"))
+
+  override def permissions: List[UserPermission] =
+    List(UserPermission("printers.edit"))
+
+  override def identifier: String = userName
+}
 
 /**
  *
  * @author Steve Chaloner (steve@objectify.be)
  */
 
+/*
 class UserSecurity(val userName: String, val rolParam: String, var rolesListParam: List[SecurityRole] = List()) extends Subject {
   var rol = rolParam
 
@@ -85,3 +120,4 @@ class UserSecurity(val userName: String, val rolParam: String, var rolesListPara
 
   def getIdentifier: String = userName
 }
+*/

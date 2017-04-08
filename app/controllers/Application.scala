@@ -20,9 +20,10 @@ import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
 
-class Application @Inject() (val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
-  def index = LanguageAction {
-    implicit request =>
-      Ok(views.html.index(new MyDeadboltHandler))
+class ApplicationController @Inject() (deadbolt: DeadboltActions, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+  def index = deadbolt.WithAuthRequest()()  { request =>
+  	Future {
+      Ok(views.html.index(new MyDeadboltHandler)(request, messagesApi.preferred(request)))
+  	}
   }
 }

@@ -18,7 +18,7 @@ import play.api.data.format.Formats._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRepository,
+class ProductController @Inject() (deadbolt: DeadboltActions, repo:ProductRepository, repoVendor: VendorRepository,
                                   repoProductVendor: ProductVendorRepository, repoProdInv: ProductInvRepository,
                               repoUnit: MeasureRepository, val messagesApi: MessagesApi)
                               (implicit ec: ExecutionContext) extends Controller with I18nSupport {
@@ -59,13 +59,13 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
-  def addGet = LanguageAction { implicit request =>
+  def addGet = deadbolt.WithAuthRequest()()  { implicit request =>
     measures = getMeasureMap()
-    Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types))
+    Future { Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types)(request, messagesApi.preferred(request))) }
   }
 
   // to copy
-  def assignVendor(productId: Long, vendorId: Long) = LanguageAction.async { implicit request =>
+  def assignVendor(productId: Long, vendorId: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     //var vendor = getVendorById(vendorId)
     repoProductVendor.createProductVendor(productId, /*vendor.name, */vendorId).map(res =>
       Redirect(routes.ProductController.show(res.productId)))
@@ -73,35 +73,35 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
 
 
   // to copy
-  def removeVendor(id: Long, vendorId: Long) = LanguageAction.async { implicit request =>
+  def removeVendor(id: Long, vendorId: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repoProductVendor.deleteProductVendor(id, vendorId).map(res =>
       Redirect(routes.ProductController.show(productId)))
   }
 
   var products: Seq[Product] = _
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
       products = res
-      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
+      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)(request, messagesApi.preferred(request)))
     }
   }
 
-  def reorder_index = LanguageAction.async { implicit request =>
+  def reorder_index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.reorder_list().map { res =>
       products = res
-      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products))
+      Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)(request, messagesApi.preferred(request)))
     }
   }
 
-  def list = LanguageAction {
-    Ok(views.html.product_list())
+  def list = deadbolt.WithAuthRequest()()  { request =>
+    Future { Ok(views.html.product_list()(request, messagesApi.preferred(request))) }
   }
 
-  def addProduct = LanguageAction.async { implicit request =>
+  def addProduct = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, types)))
+        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, types)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -130,20 +130,20 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
-  def searchProductPost = LanguageAction.async { implicit request =>
+  def searchProductPost = deadbolt.WithAuthRequest()() { implicit request =>
     var total = getTotal()
     var currentPage = 1
     searchForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)))
+        Future.successful(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)(request, messagesApi.preferred(request))))
       },
       res => {
         products = searchProduct(res.search)
-        Future(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)))
+        Future(Ok(views.html.product_index(new MyDeadboltHandler, searchForm, products)(request, messagesApi.preferred(request))))
       })
   }
 
-  def getProducts = LanguageAction.async {
+  def getProducts = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { insumos =>
       Ok(Json.toJson(insumos))
     }
@@ -196,18 +196,18 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     productId = id
     reloadData()
     repo.getById(id).map { res =>
-      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors, vendorsAssigned))
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors, vendorsAssigned)(request, messagesApi.preferred(request)))
     }
   }
 
   var updatedRow: Product = _
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
       updatedRow = res(0)
       val anyData = Map(
@@ -222,29 +222,29 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
         "currentAmount" -> updatedRow.currentAmount.toString(),
         "stockLimit" -> updatedRow.stockLimit.toString(),
         "type_1" -> updatedRow.type_1.toString())
-      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, types))
+      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, types)(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.delete(id).map { res =>
       Redirect(routes.ProductController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, types)))
+        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, types)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(
@@ -257,29 +257,30 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
           }
       })
   }
-
-  def upload(id: Long) = LanguageAction(parse.multipartFormData) { request =>
-    request.body.file("picture").map { picture =>
-      import java.io.File
-      val filename = picture.filename;
-      val type1 = filename.substring(filename.length - 4);
-      val contentType = picture.contentType
-      val fileNewName = id.toString() + "_product" + type1
-      //val path_1 = "/home/llll/Desktop/projects/isystem/public/images/"
-      val path_1 = "public/images/"
-      try {
-        new File(s"$path_1$fileNewName").delete()
-      } catch {
-        case e: Exception => println(e)
+/*
+  def upload(id: Long) = deadbolt.WithAuthRequest()() (parse.multipartFormData) { request =>
+    Future {
+      request.body.file("picture").map { picture =>
+        import java.io.File
+        val filename = picture.filename;
+        val type1 = filename.substring(filename.length - 4);
+        val contentType = picture.contentType
+        val fileNewName = id.toString() + "_product" + type1
+        //val path_1 = "/home/llll/Desktop/projects/isystem/public/images/"
+        val path_1 = "public/images/"
+        try {
+          new File(s"$path_1$fileNewName").delete()
+        } catch {
+          case e: Exception => println(e)
+        }
+        picture.ref.moveTo(new File(s"$path_1$fileNewName"))
+        Redirect(routes.ProductController.show(id))
+      }.getOrElse {
+        Redirect(routes.ProductController.show(id)).flashing(
+          "error" -> "Missing file")
       }
-      picture.ref.moveTo(new File(s"$path_1$fileNewName"))
-      Redirect(routes.ProductController.show(id))
-    }.getOrElse {
-      Redirect(routes.ProductController.show(id)).flashing(
-        "error" -> "Missing file")
-    }
-  }
-
+    } 
+  }*/
 }
 
 case class SearchProductForm(search: String)

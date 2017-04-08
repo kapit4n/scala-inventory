@@ -10,6 +10,9 @@ import play.api.data.validation.Constraints._
 import play.api.libs.json.Json
 import models._
 import dal._
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+
 
 import scala.concurrent.{ ExecutionContext, Future, Await }
 
@@ -18,7 +21,7 @@ import it.innove.play.pdf.PdfGenerator
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class AccountController @Inject() (repo: AccountRepository, repoDetails: TransactionDetailRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
+class AccountController @Inject() (deadbolt: DeadboltActions, repo: AccountRepository, repoDetails: TransactionDetailRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
   val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO", "OUTCOME" -> "OUTCOME", "INCOME" -> "INCOME")
@@ -34,25 +37,27 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       "description" -> text)(CreateAccountForm.apply)(CreateAccountForm.unapply)
   }
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       accounts = res
-      Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts))
+      Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)(request, messagesApi.preferred(request)))
     }
   }
 
-  def addGet = LanguageAction { implicit request =>
+  def addGet = deadbolt.WithAuthRequest()() { request =>
     parentAccounts = getAccountNamesMap()
-    Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts))
+    Future {
+      Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)(request, messagesApi.preferred(request)))
+    }
   }
 
   var parentAccounts: Map[String, String] = _
   var accounts: Seq[Account] = _
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, errorForm, yes_no, account_type, parentAccounts)))
+        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, errorForm, yes_no, account_type, parentAccounts)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(res.code, res.name, res.type_1, res.negativo,
@@ -64,13 +69,13 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       })
   }
 
-  def getAccounts = LanguageAction.async {
+  def getAccounts = deadbolt.WithAuthRequest()() { request => 
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getAccountsReport = LanguageAction.async {
+  def getAccountsReport = deadbolt.WithAuthRequest()() { request => 
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -101,16 +106,16 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { request =>
     val children: Seq[Account] = accountChildrenSeq(id)
     val details = accountDetailsSeq(id)
     repo.getById(id).map { res =>
-      Ok(views.html.account_show(new MyDeadboltHandler, res(0), children, details))
+      Ok(views.html.account_show(new MyDeadboltHandler, res(0), children, details)(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       udpatedRow = res(0)
       val anyData = Map(
@@ -122,36 +127,36 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
         "negativo" -> udpatedRow.negativo.toString(),
         "parent" -> udpatedRow.parent.toString(),
         "description" -> udpatedRow.description)
-      Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, updateForm.bind(anyData), yes_no, account_type, getAccountNamesMap()))
+      Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, updateForm.bind(anyData), yes_no, account_type, getAccountNamesMap())(request, messagesApi.preferred(request)))
     }
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.delete(id).map { res =>
       Redirect(routes.AccountController.index)
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def accountChildren(id: Long) = LanguageAction.async {
+  def accountChildren(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getByParent(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, errorForm, yes_no, account_type, getAccountNamesMap())))
+        Future.successful(Ok(views.html.account_update(new MyDeadboltHandler, udpatedRow, errorForm, yes_no, account_type, getAccountNamesMap())(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(res.id, res.code, res.name, res.type_1, res.negativo,
@@ -181,10 +186,10 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
       "search" -> text)(SearchAccountForm.apply)(SearchAccountForm.unapply)
   }
 
-  def searchParentAccountPost = LanguageAction.async { implicit request =>
+  def searchParentAccountPost = deadbolt.WithAuthRequest()() { implicit  request =>
     searchAccountForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)))
+        Future.successful(Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.searchAccount(res.search).map { resAccounts =>
@@ -193,20 +198,20 @@ class AccountController @Inject() (repo: AccountRepository, repoDetails: Transac
             cache put (account.id.toString(), account.code.toString + ": " + account.name.toString)
           }
           parentAccounts = cache.toMap
-          Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts))
+          Ok(views.html.account_add(new MyDeadboltHandler, searchAccountForm, newForm, yes_no, account_type, parentAccounts)(request, messagesApi.preferred(request)))
         }
       })
   }
 
-  def searchAccountPost = LanguageAction.async { implicit request =>
+  def searchAccountPost = deadbolt.WithAuthRequest()() { implicit request =>
     searchAccountForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)))
+        Future.successful(Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.searchAccount(res.search).map { resAccounts =>
           accounts = resAccounts
-          Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts))
+          Ok(views.html.account_index(new MyDeadboltHandler, searchAccountForm, accounts)(request, messagesApi.preferred(request)))
         }
       })
   }

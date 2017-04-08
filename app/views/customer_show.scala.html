@@ -1,4 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Customer, reqs: Seq[RequestRowCustomer], discounts: Seq[DiscountDetail])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Customer, reqs: Seq[RequestRowCustomer])(implicit request: AuthenticatedRequest[Any], messages: Messages)
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -96,48 +97,4 @@
             </table>
         </div>
     </div>
-   
-   <div class="container">
-        <div>Discounts</div>
-        <div class="table table-bordered">
-            <table class="table table-bordered" id="descuentos_rows">
-                <thead>
-                    <tr>
-                        <th>@messages("report")</th>
-                        <th>@messages("status")</th>
-                        <th>@messages("discount")</th>
-                        <th>-----------</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(discount <- discounts) {
-                        <tr>
-                            <td>
-                                @restrictOr(roles = List(Array("discountDetailShow"))) {
-                                   <a href="/discountDetail_show/@discount.id">@discount.id
-                                </a> 
-                                }{
-                                    @discount.id                                    
-                                }
-                            </td>
-                            <td>@discount.status</td>
-                            <td>@discount.discount</td>
-                            <td>
-                               @restrict(roles = List(Array("discountDetailEdit"))) {
-                                   <a href="/discountDetail_update/@discount.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
-                               }
-                               @restrict(roles = List(Array("discountDetailDelete"))) {
-                                   <a href="/discountDetail_remove/@discount.id" class="btn btn-danger btn-sm">@messages("remove")</a>
-                               }
-                               @restrict(roles = List(Array("discountDetailShow"))) {
-                                   <a href="/discountDetail_show/@discount.id" class="btn btn-info btn-sm">@messages("view")</a>
-                               }
-                           </td> 
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-   </div>
-
 }

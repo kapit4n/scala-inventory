@@ -21,7 +21,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository, repoRequestRow: RequestRowRepository,
+class RequestRowCustomerController @Inject() (deadbolt: DeadboltActions, repo:RequestRowCustomerRepository, repoRequestRow: RequestRowRepository,
   repoProduct: ProductRepository, repoDriver: CustomerRepository, repoCustomer: CustomerRepository,
   repoUnit: MeasureRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -66,9 +66,9 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   val customerType = "customer"
   val driverType = "driver"
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
-      Ok(views.html.requestRowCustomer_index(new MyDeadboltHandler, res))
+      Ok(views.html.requestRowCustomer_index(new MyDeadboltHandler, res)(request, messagesApi.preferred(request)))
     }
   }
 
@@ -90,7 +90,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
     }, 3000.millis)
   }
 
-  def addGet(requestRowId: Long) = LanguageAction { implicit request =>
+  def addGet(requestRowId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
@@ -101,27 +101,27 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
 
     val anyData = Map("price" -> currentProduct.price.toString, "totalPrice" -> (requestRow.quantity * currentProduct.price).toString, "quantity" -> requestRow.quantity.toString, "paid" -> (requestRow.quantity * currentProduct.price).toString, "credit" -> "0")
 
-    Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm.bind(anyData), requestRows,
-      products, currentProduct, customers, measures))
+    Future { Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm.bind(anyData), requestRows,
+      products, currentProduct, customers, measures)(request, messagesApi.preferred(request))) }
   }
 
-  def addDriverGet(requestRowId: Long) = LanguageAction { implicit request =>
+  def addDriverGet(requestRowId: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     parentId = requestRowId
     requestRow = getRequestRowObj(requestRowId)
     requestRows = getRequestRowsMap(requestRowId)
     products = getProducts(requestRow.productId)
     drivers = getDrivers()
     measures = getMeasureMap()
-    Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, newDriverForm, requestRows,
-      products, drivers, measures))
+    Future { Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, newDriverForm, requestRows,
+      products, drivers, measures)(request, messagesApi.preferred(request))) }
   }
 
-  def add = LanguageAction.async { implicit request =>
+  def add = deadbolt.WithAuthRequest()() { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
         Future.successful(Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, errorForm,
-          requestRows, products, currentProduct, customers, measures)))
+          requestRows, products, currentProduct, customers, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -136,12 +136,12 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def addDriver = LanguageAction.async { implicit request =>
+  def addDriver = deadbolt.WithAuthRequest()() { implicit request =>
     newDriverForm.bindFromRequest.fold(
       errorForm => {
         println(errorForm)
         Future.successful(Ok(views.html.requestRowDriver_add(new MyDeadboltHandler, parentId, errorForm,
-          requestRows, products, drivers, measures)))
+          requestRows, products, drivers, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.create(
@@ -157,7 +157,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def getRequestRowCustomers = LanguageAction.async {
+  def getRequestRowCustomers = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -196,14 +196,14 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // to copy
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map { res =>
-      Ok(views.html.requestRowCustomer_show(new MyDeadboltHandler, res(0)))
+      Ok(views.html.requestRowCustomer_show(new MyDeadboltHandler, res(0))(request, messagesApi.preferred(request)))
     }
   }
 
   // update required
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -219,13 +219,13 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
         customers = getCustomerById(updatedRow.productId)
 
         Ok(views.html.requestRowCustomer_update(new MyDeadboltHandler, updatedRow,
-          updateForm.bind(anyData), requestRows, products, customers, measures))
+          updateForm.bind(anyData), requestRows, products, customers, measures)(request, messagesApi.preferred(request)))
 
     }
   }
 
   // update required
-  def getDriverUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getDriverUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     repo.getById(id).map {
       case (res) =>
         updatedRow = res(0)
@@ -241,7 +241,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
         drivers = getDriverById(updatedRow.productId)
 
         Ok(views.html.requestRowDriver_update(new MyDeadboltHandler, updatedRow,
-          updateDriverForm.bind(anyData), requestRows, products, drivers, measures))
+          updateDriverForm.bind(anyData), requestRows, products, drivers, measures)(request, messagesApi.preferred(request)))
 
     }
   }
@@ -331,7 +331,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getAccept(id: Long) = LanguageAction.async {
+  def getAccept(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.acceptById(id).map {
       case (res) =>
         repoProduct.updateAmount(res(0).productId, -res(0).quantity);
@@ -340,7 +340,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getSend(id: Long) = LanguageAction.async {
+  def getSend(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.sendById(id).map {
       case (res) =>
         Redirect(routes.RequestRowController.show(res(0).requestRowId))
@@ -348,7 +348,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // update required
-  def getFinish(id: Long) = LanguageAction.async {
+  def getFinish(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.finishById(id).map {
       case (res) =>
         Redirect(routes.RequestRowController.show(res(0).requestRowId))
@@ -362,7 +362,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     var requestRowId = getParentId(id)
     repo.delete(id).map { res =>
       Redirect(routes.RequestRowController.show(requestRowId)) // review this to go to the requestRow view
@@ -370,30 +370,30 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // to copy
-  def requestRowCustomersByCustomer(id: Long) = LanguageAction.async {
+  def requestRowCustomersByCustomer(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.requestRowCustomersByCustomer(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def getByRequestRow(id: Long) = LanguageAction.async {
+  def getByRequestRow(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.requestRowCustomersByRequestRow(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  def updatePost = LanguageAction.async { implicit request =>
+  def updatePost = deadbolt.WithAuthRequest()() { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowCustomer_update(new MyDeadboltHandler, updatedRow,
-          errorForm, requestRows, products, customers, measures)))
+          errorForm, requestRows, products, customers, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.customerId,
@@ -406,11 +406,11 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
       })
   }
 
-  def updateDriverPost = LanguageAction.async { implicit request =>
+  def updateDriverPost = deadbolt.WithAuthRequest()() { implicit request =>
     updateDriverForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowDriver_update(new MyDeadboltHandler, updatedRow,
-          errorForm, requestRows, products, drivers, measures)))
+          errorForm, requestRows, products, drivers, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, products(res.productId.toString), res.customerId,
@@ -429,11 +429,11 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
   }
 
 
-  def searchCustomerPost = LanguageAction.async { implicit request =>
+  def searchCustomerPost = deadbolt.WithAuthRequest()() { implicit request =>
     searchCustomerForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm,
-          newForm, requestRows, products, currentProduct, customers, measures)))
+          newForm, requestRows, products, currentProduct, customers, measures)(request, messagesApi.preferred(request))))
       },
       res => {
         repoCustomer.searchCustomer(res.search).map { resCustomers =>
@@ -442,7 +442,7 @@ class RequestRowCustomerController @Inject() (repo: RequestRowCustomerRepository
             cache put (customer.id.toString(), customer.account.toString + ": " + customer.name.toString)
           }
           customers = cache.toMap
-          Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm, requestRows, products, currentProduct, customers, measures))
+          Ok(views.html.requestRowCustomer_add(new MyDeadboltHandler, parentId, searchCustomerForm, newForm, requestRows, products, currentProduct, customers, measures)(request, messagesApi.preferred(request)))
         }
       })
   }

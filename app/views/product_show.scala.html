@@ -1,4 +1,5 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv], vendors: Seq[Vendor], vendorsByProduct: Seq[Vendor])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv], vendors: Seq[Vendor], vendorsByProduct: Seq[Vendor])(implicit request: AuthenticatedRequest[Any], messages: Messages)
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -53,7 +54,7 @@
         </div>
         <div class="container">
             <img src="@routes.Assets.versioned("images/@(row.id)_product.jpg")" width="200">
-            @helper.form(action = routes.ProductController.upload(row.id), 'enctype -> "multipart/form-data") {
+            helper.form(action = routes.ProductController.upload(row.id), 'enctype -> "multipart/form-data") {
                 <input type="file" name="picture">
                 <input type="submit">
             }

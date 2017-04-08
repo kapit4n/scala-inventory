@@ -20,8 +20,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class TransactionController @Inject() (
-  repo: TransactionRepository, repoDetail: TransactionDetailRepository,
+class TransactionController @Inject() (deadbolt: DeadboltActions, repo: TransactionRepository, repoDetail: TransactionDetailRepository,
   repoVete: UserRepository, repoSto: UserRepository,
   val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -64,22 +63,22 @@ class TransactionController @Inject() (
     }, 1000.millis)
   }
 
-  def index = LanguageAction.async { implicit request =>
+  def index = deadbolt.WithAuthRequest()() { implicit request =>
     repo.list().map { res =>
       Ok(views.html.transaction_index(new MyDeadboltHandler, res))
     }
   }
 
-  def addGet(type_t: Long) = LanguageAction { implicit request =>
+  def addGet(type_t: Long) = deadbolt.WithAuthRequest()()  { implicit request =>
     users = getUsersMap()
     if (type_t == 1) { // Income
-      Ok(views.html.transaction_add_1(new MyDeadboltHandler, newFormIncome))
+      Future { Ok(views.html.transaction_add_1(new MyDeadboltHandler, newFormIncome)) }
     } else {
-      Ok(views.html.transaction_add_2(new MyDeadboltHandler, newFormOutcome, users))
+      Future { Ok(views.html.transaction_add_2(new MyDeadboltHandler, newFormOutcome, users)) }
     }
   }
 
-  def addIncome = LanguageAction.async { implicit request =>
+  def addIncome = deadbolt.WithAuthRequest()() { implicit request =>
     newFormIncome.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transaction_add_1(new MyDeadboltHandler, errorForm)))
@@ -97,7 +96,7 @@ class TransactionController @Inject() (
       })
   }
 
-  def addOutcome = LanguageAction.async { implicit request =>
+  def addOutcome = deadbolt.WithAuthRequest()() { implicit request =>
     newFormOutcome.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transaction_add_2(new MyDeadboltHandler, errorForm, users)))
@@ -117,7 +116,7 @@ class TransactionController @Inject() (
       })
   }
 
-  def getTransactions = LanguageAction.async {
+  def getTransactions = deadbolt.WithAuthRequest()() { request =>
     repo.list().map { res =>
       Ok(Json.toJson(res))
     }
@@ -142,7 +141,7 @@ class TransactionController @Inject() (
       "autorizedBy" -> longNumber)(UpdateTransactionFormOutcome.apply)(UpdateTransactionFormOutcome.unapply)
   }
 
-  def show(id: Long) = LanguageAction.async { implicit request =>
+  def show(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     val details = getTransactionDetails(id);
     repo.getById(id).map { res =>
       if (res(0).type_1 == "Income") {
@@ -153,7 +152,7 @@ class TransactionController @Inject() (
     }
   }
 
-  def getUpdate(id: Long) = LanguageAction.async { implicit request =>
+  def getUpdate(id: Long) = deadbolt.WithAuthRequest()() { implicit request =>
     users = getUsersMap()
     repo.getById(id).map { res =>
       updatedRow = res(0)
@@ -178,21 +177,21 @@ class TransactionController @Inject() (
   }
 
   // delete required
-  def delete(id: Long) = LanguageAction.async {
+  def delete(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.delete(id).map { res =>
       Redirect(routes.TransactionController.index())
     }
   }
 
   // to copy
-  def getById(id: Long) = LanguageAction.async {
+  def getById(id: Long) = deadbolt.WithAuthRequest()() { request =>
     repo.getById(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
 
   // update required
-  def updatePostIncome = LanguageAction.async { implicit request =>
+  def updatePostIncome = deadbolt.WithAuthRequest()() { implicit request =>
     updateFormIncome.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transaction_updateIncome(new MyDeadboltHandler, updatedRow, errorForm)))
@@ -208,7 +207,7 @@ class TransactionController @Inject() (
       })
   }
 
-  def updatePostOutcome = LanguageAction.async { implicit request =>
+  def updatePostOutcome = deadbolt.WithAuthRequest()() { implicit request =>
     updateFormOutcome.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transaction_updateOutcome(new MyDeadboltHandler, updatedRow, errorForm, users)))
