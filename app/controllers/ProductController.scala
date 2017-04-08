@@ -43,7 +43,8 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   var measures = getMeasureMap()
   var productId: Long = _
   var vendors: Seq[Vendor] = _
-  var productVendors: Seq[ProductVendor] = _
+  var vendorsAssigned: Seq[Vendor] = _
+  var children: Seq[ProductInv] = _
   val types = scala.collection.immutable.Map[String, String]("Insumo" -> "Insumo", "Veterinaria" -> "Veterinaria")
   def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map {
@@ -72,8 +73,8 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
 
 
   // to copy
-  def removeVendor(id: Long) = LanguageAction.async { implicit request =>
-    repoProductVendor.deleteProductVendor(id).map(res =>
+  def removeVendor(id: Long, vendorId: Long) = LanguageAction.async { implicit request =>
+    repoProductVendor.deleteProductVendor(id, vendorId).map(res =>
       Redirect(routes.ProductController.show(productId)))
   }
 
@@ -175,20 +176,31 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
     }, 3000.millis)
   }
 
+  def getVendorsByIds(vendorIds: Seq[Long]): Seq[Vendor] = {
+    Await.result(repoVendor.getListByIds(vendorIds).map { res =>
+      res
+    }, 3000.millis)
+  }
+
   def getVendorsByProduct(): Seq[ProductVendor] = {
     Await.result(repoProductVendor.listVendorsByProductId(productId).map { res =>
       res
     }, 3000.millis)
   }
 
+  def reloadData() = {
+    children = getChildren(productId)
+    vendors = getVendors()
+    var vendorIds = repoProductVendor.getVendorsIds(productId)
+    vendorsAssigned = getVendorsByIds(vendorIds)
+  }
+
   // to copy
   def show(id: Long) = LanguageAction.async { implicit request =>
     productId = id
-    val children = getChildren(id)
-    vendors = getVendors()
-    productVendors = getVendorsByProduct()
+    reloadData()
     repo.getById(id).map { res =>
-      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors, productVendors))
+      Ok(views.html.product_show(new MyDeadboltHandler, res(0), children, vendors, vendorsAssigned))
     }
   }
 

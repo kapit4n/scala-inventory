@@ -8,6 +8,8 @@ drop table IF EXISTS customer;
 drop table IF EXISTS transaction;
 drop table IF EXISTS transactionDetail;
 drop table IF EXISTS vendor;
+drop table IF EXISTS vendorContract;
+drop table IF EXISTS vendorContractItem;
 drop table IF EXISTS reportes;
 drop table IF EXISTS product;
 drop table IF EXISTS productInv;
@@ -156,6 +158,24 @@ create table vendor (
   address VARCHAR(100),
   contact VARCHAR(100),
   account INT,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+create table vendorContract (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  vendorId VARCHAR(100) not null,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  startDate DATE,
+  dueDate DATE
+);
+
+create table vendorContractItem (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  contractId INT not null,
+  productId INT not null,
+  startDate DATE,
+  dueDate DATE,
+  cost INT,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

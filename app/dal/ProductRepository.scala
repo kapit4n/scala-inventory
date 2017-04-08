@@ -1,12 +1,13 @@
 package dal
 
+import scala.concurrent.duration._
 import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.Product
 
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Future, ExecutionContext, Await }
 
 /**
  * A repository for people.
@@ -109,7 +110,6 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-
     tableQ.result
   }
 
@@ -122,7 +122,17 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
   def updateInventary(insumoId: Long, amount: Int) = {
     val q = for { c <- tableQ if c.id === insumoId } yield c.currentAmount
     db.run(tableQ.filter(_.id === insumoId).result).map(s => s.map(insumoObj =>
-      db.run(q.update(amount + insumoObj.currentAmount))))
+    db.run(q.update(amount + insumoObj.currentAmount))))
+  }
+
+  def canDeliverAux(productId: Long, amount: Int): Future[Boolean] = {
+    db.run(tableQ.filter(s => s.id === productId && s.currentAmount > amount).result).map( d => (d.length > 0))
+  }
+
+  def canDeliver(productId: Long, amount: Int): Boolean = {
+    Await.result(canDeliverAux(productId, amount).map { result =>
+          result
+        }, 100.millis)
   }
 
   def getTotal(): Future[Int] = db.run {

@@ -1,5 +1,6 @@
 package dal
 
+import scala.concurrent.duration._
 import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
@@ -7,7 +8,7 @@ import slick.driver.JdbcProfile
 import models.ProductVendor
 import models.Roles
 
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Future, ExecutionContext, Await }
 
 /**
  * A repository for people.
@@ -36,6 +37,16 @@ class ProductVendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvide
       into ((nameAge, id) => ProductVendor(id, nameAge._1, nameAge._2))) += (productId, vendorId)
   }
 
+  def getVendorsIds(id: Long): Seq[Long] = {
+    Await.result(listVendorsIdsByProductId(id).map { res =>
+      res
+    }, 3000.millis)
+  }
+
+  def listVendorsIdsByProductId(productId: Long): Future[Seq[Long]] = db.run {
+    tableProductVendor.filter(_.productId === productId).map(s => s.vendorId).result
+  }
+
   def listVendorsByProductId(productId: Long): Future[Seq[ProductVendor]] = db.run {
     tableProductVendor.filter(_.productId === productId).result
   }
@@ -46,8 +57,8 @@ class ProductVendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvide
   }
 
   // delete required
-  def deleteProductVendor(id: Long): Future[Seq[ProductVendor]] = db.run {
-    val q = tableProductVendor.filter(_.id === id)
+  def deleteProductVendor(productId: Long, vendorId: Long): Future[Seq[ProductVendor]] = db.run {
+    val q = tableProductVendor.filter(p => p.productId === productId && p.vendorId === vendorId)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
 

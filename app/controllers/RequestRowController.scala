@@ -38,6 +38,8 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   var updatedRow: RequestRow = _
   var productRequestId: Long = 0
   var requestIdParm: Long = 0
+  var errors: List[String] = _
+  var successMessages: List[String] = _
 
   def getMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map {
@@ -218,8 +220,17 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoRowCustome
   // update required
   def getFill(id: Long) = LanguageAction.async {
     var row = getByIdObj(id)
-    repo.fillById(id, row.productId, row.quantity).map { res =>
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
+    var canDeliver = repoProduct.canDeliver(row.productId, row.quantity)
+    if (canDeliver) {
+      errors = List("")
+      successMessages = List("Product was delivered")
+      repo.fillById(id, row.productId, row.quantity).map { res =>
+        Redirect(routes.ProductRequestController.show(res(0).requestId))
+      }
+    } else {
+      successMessages = List("")
+      errors = List("It cannnot deliver products because there is not enought in the inventory")
+      Future.successful(Redirect(routes.ProductRequestController.show(id)))
     }
   }
 

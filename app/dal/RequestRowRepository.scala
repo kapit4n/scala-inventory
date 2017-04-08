@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.RequestRow
+import models.Product
 
 import scala.concurrent.{ Future, ExecutionContext, Await }
 import scala.concurrent.duration._
@@ -45,6 +46,25 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
       status, measureId, measureName) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
   }
 
+
+  private class ProductsTable(tag: Tag) extends Table[Product](tag, "product") {
+
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def name = column[String]("name")
+    def cost = column[Double]("cost")
+    def percent = column[Double]("percent")
+    def price = column[Double]("price")
+    def description = column[String]("description")
+    def measureId = column[Long]("measureId")
+    def measureName = column[String]("measureName")
+    def currentAmount = column[Int]("currentAmount")
+    def stockLimit = column[Int]("stockLimit")
+    def type_1 = column[String]("type")
+    def * = (id, name, cost, percent, price, description, measureId, measureName, currentAmount, stockLimit, type_1) <> ((Product.apply _).tupled, Product.unapply)
+  }
+
+  private val tableProduct = TableQuery[ProductsTable]
+
   private val tableQ = TableQuery[RequestRowTable]
 
   def create(
@@ -68,6 +88,14 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
 
   def list(): Future[Seq[RequestRow]] = db.run {
     tableQ.result
+  }
+
+  def listWithProduct(): Future[Seq[(Long, String, Int)]] = db.run {
+    val implicitInnerJoin = for {
+      c <- tableQ
+      s <- tableProduct if c.productId === s.id
+    } yield (c.id, s.name, s.currentAmount)
+    implicitInnerJoin.result
   }
 
   def listByParent(id: Long): Future[Seq[RequestRow]] = db.run {

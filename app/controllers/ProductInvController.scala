@@ -20,7 +20,7 @@ import javax.inject._
 import be.objectify.deadbolt.scala.DeadboltActions
 import security.MyDeadboltHandler
 
-class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: ProductRepository,
+class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: ProductRepository, repoProductVendor: ProductVendorRepository,
   repoMeasure: MeasureRepository,
   repoProvee: VendorRepository, val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -124,6 +124,13 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoProduct: P
         }
 
         cache.toMap
+    }, 3000.millis)
+  }
+
+  def getVendorIdsByProduct(): Seq[Long] = {
+    Await.result(repoProductVendor.listVendorsIdsByProductId(productId).map {
+      case (res1) =>
+      res1  
     }, 3000.millis)
   }
 

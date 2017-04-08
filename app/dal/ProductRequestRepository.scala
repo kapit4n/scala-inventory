@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.ProductRequest
+import models.Product
 
 import scala.concurrent.{ Future, ExecutionContext, Await }
 import scala.concurrent.duration._

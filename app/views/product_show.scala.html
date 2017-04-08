@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv], vendors: Seq[Vendor], vendorsByProduct: Seq[ProductVendor])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, children: Seq[ProductInv], vendors: Seq[Vendor], vendorsByProduct: Seq[Vendor])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -135,11 +135,11 @@
                                         @for(assignedVendor <- vendorsByProduct) {
                                             <tr>
                                                 </td>
-                                                <td>@assignedVendor.vendorId</td>
+                                                <td>@assignedVendor.name</td>
                                                 @restrict(roles = List(Array("role"))) {
                                                     <td>
                                                        @restrict(roles = List(Array("productEdit"))) {
-                                                           <a href="/vendor_remove/@assignedVendor.id" class="btn btn-danger btn-sm">@messages("remove")</a> 
+                                                           <a href="/vendor_remove/@row.id/@assignedVendor.id" class="btn btn-danger btn-sm">@messages("remove")</a> 
                                                        }
                                                    </td> 
                                                }

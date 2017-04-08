@@ -78,7 +78,7 @@ GET     /measure_list         		controllers.MeasureController.index
 GET     /measure_add         		controllers.MeasureController.addGet
 
 GET     /vendor_assign/:id/:vendorId 		controllers.ProductController.assignVendor(id: Long, vendorId: Long)
-GET     /vendor_remove/:vendorId 			controllers.ProductController.removeVendor(vendorId: Long)
+GET     /vendor_remove/:id/:vendorId 		controllers.ProductController.removeVendor(id: Long, vendorId: Long)
 
 
 # Now for users

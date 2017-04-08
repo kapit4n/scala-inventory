@@ -20,7 +20,7 @@ class VendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repo
   import dbConfig._
   import driver.api._
 
-  private class VendoresTable(tag: Tag) extends Table[Vendor](tag, "vendor") {
+  private class VendorTable(tag: Tag) extends Table[Vendor](tag, "vendor") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
@@ -31,12 +31,12 @@ class VendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repo
     def * = (id, name, phone, address, contact, account) <> ((Vendor.apply _).tupled, Vendor.unapply)
   }
 
-  private val tableQ = TableQuery[VendoresTable]
+  private val tableQ = TableQuery[VendorTable]
 
   def create(
     name: String, phone: Int, address: String, contact: String,
     account: Long, userId: Long, userName: String): Future[Vendor] = db.run {
-    repoLog.createLogEntry(repoLog.CREATE, repoLog.PROVEEDOR, userId, userName, name);
+    repoLog.createLogEntry(repoLog.CREATE, repoLog.VENDOR_CONTRACT, userId, userName, name);
     (tableQ.map(p => (p.name, p.phone, p.address, p.contact, p.account))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Vendor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))) += (name, phone, address, contact, account)
@@ -54,7 +54,7 @@ class VendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repo
   // update required to copy
   def update(id: Long, name: String, phone: Int, address: String, contact: String,
     account: Long, userId: Long, userName: String): Future[Seq[Vendor]] = db.run {
-    repoLog.createLogEntry(repoLog.UPDATE, repoLog.PROVEEDOR, userId, userName, name);
+    repoLog.createLogEntry(repoLog.UPDATE, repoLog.VENDOR_CONTRACT, userId, userName, name);
     val q = for { c <- tableQ if c.id === id } yield c.name
     db.run(q.update(name))
     val q3 = for { c <- tableQ if c.id === id } yield c.phone
@@ -81,4 +81,10 @@ class VendorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repo
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
     tableQ.take(200).map(s => (s.id, s.name)).result
   }
+
+  // get list of names
+  def getListByIds(vendors: Seq[Long]): Future[Seq[Vendor]] = db.run {
+    tableQ.filter(_.id inSetBind vendors).result
+  }
+
 }
