@@ -1,0 +1,100 @@
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: ProductRequest, children: Seq[RequestRow], rows: Seq[Product])(implicit messages: Messages, request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+@import helper._
+
+@main("view") {
+    @examples.templates.nav(handler)
+    <div class="container">
+        @restrict(roles = List(Array("productRequestList"))) {
+            <a href="/productRequest_list" class="btn btn-primary btn-sm">@messages("toList")</a>
+        }
+        @restrict(roles = List(Array("productRequestEdit"))) {
+            <a href="/productRequest_update/@row.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
+        }
+        @restrict(roles = List(Array("productRequestDelete"))) {
+           <a href="/productRequest_remove/@row.id" class="btn btn-danger btn-sm">@messages("remove")</a>
+        }
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="table table-bordered">
+                <table class="table table-bordered" id="rows">
+                    <thead>
+                        <tr>
+                            <th>@messages("product")</th>
+                            <th>@messages("quantity")</th>
+                            <th>@messages("price")</th>
+                            <th>@messages("status")</th>
+                            <th>-----------</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(child <- children) {
+                            <tr>
+                                <td>
+                                    @restrictOr(roles = List(Array("productShow"))) {
+                                       <a href="/product_show/@child.productId">@child.productName
+                                    </a>
+                                    }{
+                                        @child.productName                                    
+                                    }
+                                </td>
+                                <td>@child.quantity</td>
+                                <td>@child.price</td>
+                                <td>@child.status</td>
+                                <td>
+                                   @restrict(roles = List(Array("requestRowShow"))) {
+                                       <a href="/requestRow_show/@child.id" class="btn btn-info btn-sm">@messages("view")</a>
+                                   }
+                                   @restrict(roles = List(Array("requestRowEdit"))) {
+                                       <a href="/requestRow_update/@child.id" class="btn btn-primary btn-sm">@messages("edit")</a> 
+                                   }
+                                   @restrict(roles = List(Array("requestRowDelete"))) {
+                                       <a href="/requestRow_remove/@child.id" class="btn btn-danger btn-sm">@messages("remove")</a>
+                                   }
+                                   @if(child.status != "entregado") {
+                                    <a href="/requestRow_fill/@child.id" class="btn btn-primary btn-sm">@messages("deliver")</a>
+                                   }
+                               </td> 
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6" style="background: white;">
+            @for(row <- rows) {
+                <div style="background: blue; width: 80px; height: 80px; display: inline-block; border-style: solid; border-width: 2px 2px 2px 2px;">
+                    <span>@row.name</span>
+                </div>
+            }
+        </div>
+    </div>
+        <div>
+            <div style="display: inline-block;"> @messages("date"): </div>
+            <div style="display: inline-block;" id="date">@row.date</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Employee: </div>
+            <div style="display: inline-block;" id="employeeName">@row.employeeName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Store: </div>
+            <div style="display: inline-block;" id="storekeeperName">@row.storekeeperName</div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> @messages("status"): </div>
+            <div style="display: inline-block;" id="status">@row.status</div>
+        </div>
+    </div>
+    <div>
+        @restrict(roles = List(Array("requestRowCreate"))) {
+            <div style="display: inline-block;"> <a id="addDetail" href="/requestRow_add/@row.id" class="btn btn-primary btn-sm">@messages("addDetail")</a> </div>
+        }
+    </div>
+
+    <div>Lista Detail of Order</div>
+    
+
+}

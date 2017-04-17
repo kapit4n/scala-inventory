@@ -184,6 +184,7 @@ GET     /discountReport_add         			controllers.DiscountReportController.addG
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
+GET     /card_show/:id 				controllers.CardController.show(id: Long)
 GET     /productRequest_update/:id 				controllers.ProductRequestController.getUpdate(id: Long)
 GET     /productRequest_send/:id        		controllers.ProductRequestController.getSend(id: Long)
 GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
