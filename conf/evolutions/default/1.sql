@@ -2,7 +2,7 @@
 drop table IF EXISTS bancos;
 drop table IF EXISTS user;
 drop table IF EXISTS company;
-drop table IF EXISTS module;
+drop table IF EXISTS category;
 drop table IF EXISTS account;
 drop table IF EXISTS customer;
 drop table IF EXISTS transaction;
@@ -31,13 +31,9 @@ create table company (
   name VARCHAR(100) not null
 );
 
-create table module (
-  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) not null,
-  president VARCHAR(100),
-  description VARCHAR(250),
-  companyId INT(6),
-  companyName VARCHAR(100)
+create table category (
+  name VARCHAR(100) NOT NULL PRIMARY KEY,
+  description VARCHAR(100)
 );
 
 create table measure (
@@ -134,7 +130,7 @@ create table product (
   vendorId INT DEFAULT 0,
   vendorName VARCHAR(100) DEFAULT '',
   vendorCode VARCHAR(50) DEFAULT '',
-  type VARCHAR(50) DEFAULT '',
+  category VARCHAR(50) DEFAULT '',
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

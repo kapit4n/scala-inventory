@@ -13,16 +13,20 @@ INSERT INTO company(id, name) VALUES
 ('10006','ALVA'),
 ('10007','AMLECO');
 
+INSERT INTO company(name, description) VALUES
+('MILK','Description of MILK'),
+('GADGETS','Description OF GADGETS');
+
 INSERT INTO customer VALUES 
   (1, 'Daniel Campos', 22333, 22333, 'Address', '2225','Company Name 1', 'status', 0, '2016-06-17 23:53:08');
 
 
-INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, type) VALUES
+INSERT INTO product(vendorName, name, currentAmount, cost, totalValue, category) VALUES
 
-('DI',	'Product 1',	'0',	'0',	'0', 'type1'),
-('DI',	'Product 2',	'0',	'0',	'0', 'type1'),
-('DI',	'Product 3',	'2',	'0',	'0', 'type1'),
-('DI',	'Product 4',	'0',	'0',	'0', 'type1');
+('DI',	'Product 1',	'0',	'0',	'0', 'MILK'),
+('DI',	'Product 2',	'0',	'0',	'0', 'MILK'),
+('DI',	'Product 3',	'2',	'0',	'0', 'MILK'),
+('DI',	'Product 4',	'0',	'0',	'0', 'MILK');
 
 INSERT INTO vendor(name, phone, address, contact, account) VALUES
 
@@ -51,13 +55,6 @@ INSERT INTO roles(roleName, roleCode) VALUES
 ('view Vendor', "vendorShow"),
 ('Edit Vendor', "vendorEdit"),
 ('Remove Vendor', "vendorDelete"),
-
-('Modulos', "module"),
-('Create Modulo ', "moduleCreate"),
-('List Modulo ', "moduleList"),
-('view Modulo ', "moduleShow"),
-('Edit Modulo ', "moduleEdit"),
-('Remove Modulo ', "moduleDelete"),
 
 ('Customer', "customer"),
 ('Create Customer', "customerCreate"),

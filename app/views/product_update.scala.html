@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, rowForm: Form[UpdateProductForm], measures: Map[String, String], types: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Product, rowForm: Form[UpdateProductForm], measures: Map[String, String], categories: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -21,7 +21,7 @@
         @select(field = rowForm("measureId"), options = options(measures))
         @inputText(rowForm("stockLimit"))
         @inputText(rowForm("currentAmount"))
-        @select(field = rowForm("type_1"), options = options(types))
+        @select(field = rowForm("category"), options = options(categories))
         <input type="submit" class="btn btn-primary btn-sm" value=@messages("update")/>
         <a href="/product_show/@row.id" class="btn btn-primary btn-sm">@messages("cancel")</a>
         @inputText(rowForm("id"), 'hidden -> "true", '_label -> "")

@@ -32,7 +32,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
       "measureId" -> longNumber,
       "currentAmount" -> number,
       "stockLimit" -> number,
-      "type_1" -> text)(CreateProductForm.apply)(CreateProductForm.unapply)
+      "category" -> text)(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
   val searchForm: Form[SearchProductForm] = Form {
@@ -45,7 +45,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   var vendors: Seq[Vendor] = _
   var vendorsAssigned: Seq[Vendor] = _
   var children: Seq[ProductInv] = _
-  val types = scala.collection.immutable.Map[String, String]("Insumo" -> "Insumo", "Veterinaria" -> "Veterinaria")
+  val categories = scala.collection.immutable.Map[String, String]("MILK" -> "MILK", "GADGET" -> "GADGET")
   def getMeasureMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map {
       case (res1) =>
@@ -61,7 +61,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
 
   def addGet = LanguageAction { implicit request =>
     measures = getMeasureMap()
-    Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, types))
+    Ok(views.html.product_add(new MyDeadboltHandler, newForm, measures, categories))
   }
 
   // to copy
@@ -101,7 +101,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   def addProduct = LanguageAction.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, types)))
+        Future.successful(Ok(views.html.product_add(new MyDeadboltHandler, errorForm, measures, categories)))
       },
       res => {
         repo.create(
@@ -109,7 +109,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
           res.measureId, measures(res.measureId.toString),
           res.currentAmount,
           res.stockLimit,
-          res.type_1,
+          res.category,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { resNew =>
             Redirect(routes.ProductController.show(resNew.id))
@@ -161,7 +161,7 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
       "measureId" -> longNumber,
       "currentAmount" -> number,
       "stockLimit" -> number,
-      "type_1" -> text)(UpdateProductForm.apply)(UpdateProductForm.unapply)
+      "category" -> text)(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
   def getChildren(id: Long): Seq[ProductInv] = {
@@ -221,8 +221,8 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
         "measureName" -> updatedRow.measureName.toString(),
         "currentAmount" -> updatedRow.currentAmount.toString(),
         "stockLimit" -> updatedRow.stockLimit.toString(),
-        "type_1" -> updatedRow.type_1.toString())
-      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, types))
+        "category" -> updatedRow.category.toString())
+      Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, updateForm.bind(anyData), measures, categories))
     }
   }
 
@@ -244,13 +244,13 @@ class ProductController @Inject() (repo: ProductRepository, repoVendor: VendorRe
   def updatePost = LanguageAction.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, types)))
+        Future.successful(Ok(views.html.product_update(new MyDeadboltHandler, updatedRow, errorForm, measures, categories)))
       },
       res => {
         repo.update(
           res.id, res.name, res.cost, res.percent, res.price,
           res.description, res.measureId, measures(res.measureId.toString),
-          res.currentAmount, res.stockLimit, res.type_1,
+          res.currentAmount, res.stockLimit, res.category,
           request.session.get("userId").get.toLong,
           request.session.get("userName").get.toString).map { _ =>
             Redirect(routes.ProductController.show(res.id))
@@ -286,9 +286,9 @@ case class SearchProductForm(search: String)
 
 case class CreateProductForm(
   name: String, cost: Double, percent: Double,
-  description: String, measureId: Long, currentAmount: Int, stockLimit: Int, type_1: String)
+  description: String, measureId: Long, currentAmount: Int, stockLimit: Int, category: String)
 
 case class UpdateProductForm(
   id: Long, name: String, cost: Double,
   percent: Double, price: Double, description: String,
-  measureId: Long, currentAmount: Int, stockLimit: Int, type_1: String)
+  measureId: Long, currentAmount: Int, stockLimit: Int, category: String)

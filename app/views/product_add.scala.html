@@ -1,4 +1,4 @@
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductForm], measures: Map[String, String], types: Map[String, String])(implicit messages: Messages, request: Request[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, row: Form[CreateProductForm], measures: Map[String, String], categories: Map[String, String])(implicit messages: Messages, request: Request[Any])
 @import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
@@ -18,7 +18,7 @@
                 @inputText(row("stockLimit"), 'id -> "stockLimit")
                 @inputText(row("currentAmount"), 'id -> "currentAmount")
                 @textarea(row("description"), 'rows -> 3, 'cols -> 100, 'id -> "description")
-                @select(field = row("type_1"), options = options(types), 'id -> "type")
+                @select(field = row("category"), options = options(categories), 'id -> "category")
                 <br/>
                 <br/>
                 <br/>

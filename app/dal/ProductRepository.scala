@@ -34,8 +34,8 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     def measureName = column[String]("measureName")
     def currentAmount = column[Int]("currentAmount")
     def stockLimit = column[Int]("stockLimit")
-    def type_1 = column[String]("type")
-    def * = (id, name, cost, percent, price, description, measureId, measureName, currentAmount, stockLimit, type_1) <> ((Product.apply _).tupled, Product.unapply)
+    def category = column[String]("category")
+    def * = (id, name, cost, percent, price, description, measureId, measureName, currentAmount, stockLimit, category) <> ((Product.apply _).tupled, Product.unapply)
   }
 
   private val tableQ = TableQuery[ProductsTable]
@@ -43,16 +43,16 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
   def create(
     name: String, cost: Double, percent: Double, price: Double,
     description: String, measureId: Long, measureName: String,
-    currentAmount: Int, stockLimit: Int, type_1: String, userId: Long, userName: String): Future[Product] = db.run {
+    currentAmount: Int, stockLimit: Int, category: String, userId: Long, userName: String): Future[Product] = db.run {
     repoLog.createLogEntry(repoLog.CREATE, repoLog.PRODUCT, userId, userName, name);
     (tableQ.map(
       p => (
         p.name, p.cost, p.percent, p.price, p.description,
-        p.measureId, p.measureName, p.currentAmount, p.stockLimit, p.type_1)) returning tableQ.map(_.id) into (
+        p.measureId, p.measureName, p.currentAmount, p.stockLimit, p.category)) returning tableQ.map(_.id) into (
         (nameAge, id) => Product(
           id, nameAge._1, nameAge._2, nameAge._3,
           nameAge._4, nameAge._5, nameAge._6,
-          nameAge._7, nameAge._8, nameAge._9, nameAge._10))) += (name, cost, percent, cost + cost * percent, description, measureId, measureName, currentAmount, stockLimit, type_1)
+          nameAge._7, nameAge._8, nameAge._9, nameAge._10))) += (name, cost, percent, cost + cost * percent, description, measureId, measureName, currentAmount, stockLimit, category)
   }
 
   def list(): Future[Seq[Product]] = db.run {
@@ -79,7 +79,7 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
   // update required to copy
   def update(id: Long, name: String, cost: Double, percent: Double, price: Double,
     description: String, measureId: Long, measureName: String,
-    currentAmount: Int, stockLimit: Int, type_1: String, userId: Long, userName: String): Future[Seq[Product]] = db.run {
+    currentAmount: Int, stockLimit: Int, category: String, userId: Long, userName: String): Future[Seq[Product]] = db.run {
     repoLog.createLogEntry(repoLog.UPDATE, repoLog.PRODUCT, userId, userName, name)
 
     val q = for { c <- tableQ if c.id === id } yield c.name
@@ -100,8 +100,8 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     db.run(q6.update(currentAmount))
     val q7 = for { c <- tableQ if c.id === id } yield c.stockLimit
     db.run(q7.update(stockLimit))
-    val q8 = for { c <- tableQ if c.id === id } yield c.type_1
-    db.run(q8.update(type_1))
+    val q8 = for { c <- tableQ if c.id === id } yield c.category
+    db.run(q8.update(category))
     tableQ.filter(_.id === id).result
   }
 
