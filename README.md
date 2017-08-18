@@ -27,3 +27,12 @@ Hi Stock is a system that will help us to manage the stock in the store and have
 ## Load dependencies with activator
 * activator libraryDependencies
 * activator "show dependencyClasspath"
+
+## Features done
+* Register product, vendor, customer
+* Register orders
+
+## Features in progress
+* Purchase order
+* Shopping card 2.0
+* Chart reports
