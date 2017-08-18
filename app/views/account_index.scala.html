@@ -13,7 +13,7 @@
     <div style="container">
         @form(routes.AccountController.searchAccountPost()) {
             @inputText(searchForm("search"))
-            <input type="submit" value="Search Account" class="btn btn-primary btn-sm"/>
+            <input type="submit" value=@messages("search") class="btn btn-primary btn-sm"/>
         }        
     </div>
 

@@ -139,3 +139,10 @@ send = Enviar
 finish = Finalizar
 listReorder = Listar reorden
 language = Lenguage
+
+debitResult = Resultado del Debito
+creditResult = Resultado del Credito
+banking = Bancaria
+sales = Venta
+expenses = Gastos
+registers = Registros
