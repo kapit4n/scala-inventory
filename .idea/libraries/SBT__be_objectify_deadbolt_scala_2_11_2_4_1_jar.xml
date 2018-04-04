@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: be.objectify:deadbolt-scala_2.11:2.4.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/be.objectify/deadbolt-scala_2.11/jars/deadbolt-scala_2.11-2.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/be.objectify/deadbolt-scala_2.11/srcs/deadbolt-scala_2.11-2.4.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
