@@ -1,6 +1,7 @@
 # Hi-Stock (Scala)
 
 Hi Stock is a system that will help us to manage the stock in the store and have the reports of the movement of the products.
+![Inventory](https://github.com/kapit4n/hi-stock/raw/master/mockups/Inventory_page.png)
 
 
 # Prerequisites
@@ -19,10 +20,6 @@ Hi Stock is a system that will help us to manage the stock in the store and have
 * Run
 * Go to localhost:9000
 * Open the application with sublime
-
-## mockup
-![Inventory](https://github.com/kapit4n/hi-stock/raw/master/mockups/Inventory_page.png)
-
 
 ## Load dependencies with activator
 * activator libraryDependencies
